@@ -156,3 +156,7 @@ body {
   border-radius: 10px;
   color: white;
 }
+
+img {
+  user-select: none;
+}

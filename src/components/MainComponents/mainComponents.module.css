@@ -41,10 +41,6 @@
 }
 
 
-.alert {
-    
-}
-
 .alertContent {
     display: flex;
     
@@ -99,3 +95,32 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+
+/* Стили для бейджа результата запуска */
+.resultBadge {
+    position: absolute;
+    top: 0;   /* можно подстроить под дизайн */
+    right: 0; /* можно подстроить под дизайн */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 50;
+  }
+  
+  .resultIcon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .resultText {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* Остальные ваши стили (например, для alert, rocketImg и rocketBlured) остаются без изменений */
+  
