@@ -1,0 +1,38 @@
+
+.balanceBadge {
+    background-color: #2C2C2C;
+    padding: 4px 12px;
+    border-radius: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    min-width: 64px;
+    height: 28px;
+    gap: 6px;
+    /* justify-content: space-between; */
+  }
+
+.badgeImg {
+  width: 24px;
+  height: 24px;
+}
+
+.badgeText {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.navButton {
+    position: relative;
+    z-index: 1; /* Кнопки выше индикатора */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+}
+
+.navButton svg {
+    width: 32px;
+    height: 32px;
+}

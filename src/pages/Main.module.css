@@ -1,0 +1,63 @@
+
+.mainPage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.carouselItem {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+
+.navigation {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    padding: 12px 0;
+}
+
+.navButtons {
+    position: relative; /* Для абсолютного позиционирования индикатора */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: fit-content;
+    gap: 12px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    background-color: #141414;
+}
+
+/* Индикатор активного таба */
+.activeIndicator {
+    position: absolute;
+    width: 72px;
+    height: 100%;
+    background-color: #2C2C2C;
+    border-radius: 30px;
+    transition: left 0.3s ease;
+    z-index: 0;
+}
