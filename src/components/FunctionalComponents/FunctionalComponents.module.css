@@ -24,13 +24,13 @@
 /* Стили для ссылки Telegram */
 .telegramLink {
   color: blue;
-  text-decoration: underline;
   cursor: pointer;
 }
 
 /* Стили для кнопки OK */
 .alertButton {
   background-color: transparent;
+  margin-right: 4px;
   border: none;
   color: var(--foreground);
   font-weight: bold;

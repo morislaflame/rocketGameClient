@@ -36,3 +36,21 @@
     width: 32px;
     height: 32px;
 }
+
+
+.card {
+    width: 100%;
+    border: 1px solid #E0E0E0;
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+}
+
+.cardTitle {
+    display: flex;
+    gap: 6px;
+}
