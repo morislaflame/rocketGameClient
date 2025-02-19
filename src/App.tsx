@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "./main";
 import "./App.css";
 import LoadingIndicator from "./components/ui/LoadingIndicator";
+import DailyRewardModal from "./components/FunctionalComponents/DailyRewardModal";
 
 // Lazy-loaded Components
 const Header = lazy(() => import("./components/MainComponents/Header"));
@@ -11,7 +12,7 @@ const AppRouter = lazy(() => import("./AppRouter"));
 
 
 const App = observer(() => {
-  const { user } = useContext(Context);
+  const { user, dailyReward } = useContext(Context);
   const [loading, setLoading] = useState(true);
 
 
@@ -50,6 +51,19 @@ const App = observer(() => {
     authenticate();
   }, [user]);
 
+  useEffect(() => {
+    if (!loading && user.isAuth) {
+      const checkDailyRewardFn = async () => {
+        try {
+          await dailyReward.checkDailyReward();
+        } catch (error) {
+          console.error("Error checking daily reward:", error);
+        }
+      };
+      checkDailyRewardFn();
+    }
+  }, [loading, user.isAuth, dailyReward]);
+
   if (loading) {
     return (
       <div className="loading">
@@ -78,6 +92,7 @@ const App = observer(() => {
       >
         <Header />
         <AppRouter />
+        <DailyRewardModal />
       </Suspense>
     </BrowserRouter>
   );

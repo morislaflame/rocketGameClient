@@ -49,6 +49,7 @@ const RocketLaunch = observer(() => {
         user.setUser({
           ...user.user,
           balance: game.newBalance ?? 0,
+          attempts: game.attemptsLeft ?? 0,
         });
       }
       console.log(user);

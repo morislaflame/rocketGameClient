@@ -4,6 +4,7 @@ import { launchRocket } from "../http/gameAPI";
 export default class GameStore {
     _rocketResult: number | null = null;
     _newBalance: number | null = null;
+    _attemptsLeft: number | null = null;
     _loading: boolean = false;
     _error: boolean = false;
 
@@ -17,6 +18,10 @@ export default class GameStore {
 
     setNewBalance(newBalance: number | null) {
         this._newBalance = newBalance;
+    }
+
+    setAttemptsLeft(attemptsLeft: number | null) {
+        this._attemptsLeft = attemptsLeft;
     }
 
     setLoading(loading: boolean) {
@@ -35,6 +40,7 @@ export default class GameStore {
             const data = await launchRocket();
             this.setRocketResult(data.rocketResult);
             this.setNewBalance(data.newBalance);
+            this.setAttemptsLeft(data.attemptsLeft);
             this.setLoading(false);
         } catch (error) {
             console.error("Error during launching rocket:", error);
@@ -50,6 +56,10 @@ export default class GameStore {
 
     get newBalance() {
         return this._newBalance;
+    }
+
+    get attemptsLeft() {
+        return this._attemptsLeft;
     }
 
     get loading() {

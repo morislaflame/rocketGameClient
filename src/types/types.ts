@@ -43,3 +43,35 @@ export interface Task {
   // Если задачи получены с join-данными, то сюда попадёт массив пользователей с информацией о выполнении задания
   users?: TaskUser[];
 }
+
+
+export interface DailyRewardCheckResponse {
+  available: boolean;
+  dailyRewardDay: number;
+  lastDailyRewardClaimAt: string | null;
+  nextDay: number;
+  rewardInfo: {
+    day: number;
+    reward: number;
+    rewardType: "attempts" | "tokens";
+    description: string;
+  } | null;
+}
+
+// Описание структуры, возвращаемой сервером при claimDailyReward
+export interface DailyRewardClaimResponse {
+  message: string;
+  reward: {
+    id: number;
+    day: number;
+    reward: number;
+    rewardType: "attempts" | "tokens";
+    description: string;
+  };
+  user: {
+    dailyRewardDay: number;
+    lastDailyRewardClaimAt: string;
+    balance: number;
+    attempts: number;
+  };
+}
