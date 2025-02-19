@@ -20,7 +20,7 @@ const Header: React.FC = observer(() => {
   return (
     <header className={styles.header}>
         <MainBadge img={getPlanetImg()} alt="Planet" text={user?.user?.balance ?? 0} />
-        <MainBadge img={getTriesImg()} alt="Tries" text='10' />
+        <MainBadge img={getTriesImg()} alt="Tries" text={user?.user?.attempts ?? 0} />
       </header>
   );
 });

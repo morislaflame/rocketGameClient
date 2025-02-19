@@ -7,10 +7,8 @@ import UserAccCard from '@/components/ui/UserAccCard';
 import { MdLeaderboard } from "react-icons/md";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
