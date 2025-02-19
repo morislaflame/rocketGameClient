@@ -5,6 +5,7 @@ import planetImg from '../../assets/planet.svg';
 import triesImg from '../../assets/tries.svg';
 import MainBadge from "../ui/MainBadge";
 import styles from './mainComponents.module.css';
+
 const Header: React.FC = observer(() => {
   const { user, game } = useContext(Context);
 

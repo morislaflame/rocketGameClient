@@ -1,0 +1,38 @@
+.alert {
+    position: absolute;
+    width: 350px;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 100;
+}
+
+/* Обертка для заголовка и описания */
+.alertContent {
+    display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Стили для ссылки Telegram */
+.telegramLink {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Стили для кнопки OK */
+.alertButton {
+  background-color: transparent;
+  border: none;
+  color: var(--foreground);
+  font-weight: bold;
+  cursor: pointer;
+}
