@@ -2,7 +2,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '@/main';
-import styles from './UserAccount.module.css';
+import styles from './mainComponents.module.css';
 import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHeader';
 import LeaderboardDrawer from '@/components/MainComponents/UserAccountComponents/LeaderBoardDrawer';
 import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskDrawer';

@@ -5,6 +5,7 @@ import { Context } from "./main";
 import "./App.css";
 import LoadingIndicator from "./components/ui/LoadingIndicator";
 import DailyRewardModal from "./components/FunctionalComponents/DailyRewardModal";
+import { postEvent } from "@telegram-apps/sdk-react";
 
 // Lazy-loaded Components
 const Header = lazy(() => import("./components/MainComponents/Header"));
@@ -16,13 +17,18 @@ const App = observer(() => {
   const [loading, setLoading] = useState(true);
 
 
-  // useEffect(() => {
-  //   let tg =  window.Telegram.WebApp;
-
-  //       if(['ios', 'android'].indexOf(tg.platform) !== -1) {
-  //         tg.requestFullscreen();
-  //       }
-  // }, []);
+  useEffect(() => {
+    try {
+      postEvent("web_app_expand");
+      postEvent("web_app_set_header_color", { color: "#000000" });
+      postEvent("web_app_set_background_color", { color: "#000000" });
+      postEvent("web_app_setup_swipe_behavior", {
+        allow_vertical_swipe: false,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   useEffect(() => {
     const authenticate = async () => {

@@ -92,6 +92,7 @@ const RocketLaunch = observer(() => {
           onClick={() => setShowAlert(true)}
           onContextMenu={(e) => e.preventDefault()}
         />
+        
         {/* Результат запуска, показываемый в правом верхнем углу */}
         {showResult && (
           <div ref={resultRef} className={styles.resultBadge}>

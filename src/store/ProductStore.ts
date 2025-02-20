@@ -1,0 +1,73 @@
+// src/store/ProductStore.ts
+import { makeAutoObservable, runInAction } from "mobx";
+import { Product } from "@/types/types";
+import { getProducts, generateInvoice } from "@/http/productAPI";
+// Используем @telegram-apps/sdk-react для открытия счёта
+import { openInvoice } from "@telegram-apps/sdk-react";
+
+export default class ProductStore {
+  private _products: Product[] = [];
+  private _loading = false;
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  setProducts(products: Product[]) {
+    this._products = products;
+  }
+  setLoading(loading: boolean) {
+    this._loading = loading;
+  }
+
+  // Загрузить товары
+  async fetchProducts() {
+    this.setLoading(true);
+    try {
+      const products = await getProducts();
+      runInAction(() => {
+        this._products = products;
+      });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      runInAction(() => {
+        this._loading = false;
+      });
+    }
+  }
+
+  // Купить товар (через Mini App)
+  async buyProduct(productId: number) {
+    this.setLoading(true);
+    try {
+      // 1) Запрос на сервер: получаем invoiceLink
+      const invoiceLink = await generateInvoice(productId);
+      console.log("invoiceLink =>", invoiceLink);
+
+      // 2) Открываем окно оплаты через openInvoice
+      try {
+        const status = await openInvoice(invoiceLink, "url");
+        if (status === "paid") {
+          console.log("Invoice status =>", status);
+        }
+      } catch (err) {
+        console.error("Open invoice error:", err);
+      }
+      
+    } catch (error) {
+      console.error("Error generating invoice or opening invoice:", error);
+    } finally {
+      runInAction(() => {
+        this._loading = false;
+      });
+    }
+  }
+
+  get products() {
+    return this._products;
+  }
+  get loading() {
+    return this._loading;
+  }
+}

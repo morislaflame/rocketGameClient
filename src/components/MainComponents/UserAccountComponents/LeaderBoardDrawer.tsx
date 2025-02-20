@@ -47,7 +47,7 @@ const LeaderboardDrawer: React.FC = observer(() => {
           <DrawerTitle>Leaderboard</DrawerTitle>
           <DrawerDescription>The most active users will receive more rewards</DrawerDescription>
         </DrawerHeader>
-        <ScrollArea className="h-[70vh] w-[100%] rounded-md">
+        <ScrollArea className="h-[70vh] w-[100%] rounded-md" style={{ scrollbarWidth: "none" }}>
         <div className={styles.topUsersList}>
           {user.users.length ? (
             user.users.map((u: UserInfo, index: number) => (

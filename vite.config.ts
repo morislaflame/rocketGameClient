@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ['8bhwqk5vpbaz.share.zrok.io', 'localhost', 'uztxcmq864hd.share.zrok.io'],
+    allowedHosts: ['8bhwqk5vpbaz.share.zrok.io', 'localhost', 'uztxcmq864hd.share.zrok.io', 'ije9llq539h2.share.zrok.io' ],
   },
   resolve: {
     alias: {

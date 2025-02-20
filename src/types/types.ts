@@ -75,3 +75,11 @@ export interface DailyRewardClaimResponse {
     attempts: number;
   };
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  attempts: number;
+  starsPrice: number;
+}
+

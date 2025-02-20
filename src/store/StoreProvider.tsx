@@ -4,12 +4,14 @@ import GameStore from "./GameStore";
 import UserStore from "./UserStore";
 import TaskStore from "./TaskStore";
 import DailyRewardStore from "./DailyRewardStore";
+import ProductStore from "./ProductStore";
 // Create Context
 export const Context = createContext<{
   user: UserStore;
   game: GameStore;
   task: TaskStore;
   dailyReward: DailyRewardStore;
+  product: ProductStore;
 } | null>(null);
 
 
@@ -19,6 +21,7 @@ const StoreProvider = ({ children }) => {
     game: GameStore;
     task: TaskStore;
     dailyReward: DailyRewardStore;
+    product: ProductStore;
   } | null>(null);
 
   useEffect(() => {
@@ -28,11 +31,13 @@ const StoreProvider = ({ children }) => {
         { default: GameStore },
         { default: TaskStore },
         { default: DailyRewardStore },
+        { default: ProductStore },
       ] = await Promise.all([
         import("./UserStore"),
         import("./GameStore"),
         import("./TaskStore"),
         import("./DailyRewardStore"),
+        import("./ProductStore"),
       ]);
 
       setStores({
@@ -40,6 +45,7 @@ const StoreProvider = ({ children }) => {
         game: new GameStore(),
         task: new TaskStore(),
         dailyReward: new DailyRewardStore(),
+        product: new ProductStore(),
       });
     };
 
