@@ -2,8 +2,12 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Product } from "@/types/types";
 import { getProducts, generateInvoice } from "@/http/productAPI";
-// Используем @telegram-apps/sdk-react для открытия счёта
-import { openInvoice } from "@telegram-apps/sdk-react";
+// Используем @telegram-apps/sdk для открытия счёта
+import { openInvoice } from "@telegram-apps/sdk";
+
+const tg = window.Telegram?.WebApp;
+console.log("tg =>", tg);
+
 
 export default class ProductStore {
   private _products: Product[] = [];
@@ -47,14 +51,10 @@ export default class ProductStore {
 
       // 2) Открываем окно оплаты через openInvoice
       try {
-        const status = await openInvoice(invoiceLink, "url");
-        if (status === "paid") {
-          console.log("Invoice status =>", status);
-        }
-      } catch (err) {
-        console.error("Open invoice error:", err);
+        tg.openInvoice(invoiceLink);
+      } catch (error) {
+        console.error("Error opening invoice:", error);
       }
-      
     } catch (error) {
       console.error("Error generating invoice or opening invoice:", error);
     } finally {

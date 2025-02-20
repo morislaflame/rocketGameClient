@@ -10,18 +10,37 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./ShopComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import starImg from "@/assets/stars.svg";
+import { generateInvoice } from "@/http/productAPI";
 
 const ProductsList: React.FC = observer(() => {
   // Предположим, вы храните productStore в Context
-  const { product } = useContext(Context);
+  const { product, user } = useContext(Context);
+
+  const tg = window.Telegram?.WebApp;
 
   useEffect(() => {
     product.fetchProducts();
   }, [product]);
 
-//   if (product.loading) {
-//     return <div>Loading products...</div>;
-//   }
+const buyProduct = async (productId: number) => {
+  try {
+    // 1) Запрос на сервер: получаем invoiceLink
+    const invoiceLink = await generateInvoice(productId);
+    console.log("invoiceLink =>", invoiceLink);
+    try {
+      tg.openInvoice(invoiceLink, (status: any) => {
+        console.log("status =>", status);
+        if (status === "paid") {
+          user.fetchMyInfo();
+        }
+      });
+    } catch (error) {
+      console.error("Error opening invoice:", error);
+    }
+  } catch (error) {
+    console.error("Error generating invoice:", error);
+  } 
+}
 
   const rewardImg = <img src={getTriesImg()} alt="Tries" />;
 
@@ -40,7 +59,7 @@ const ProductsList: React.FC = observer(() => {
                 <CardContent className={styles.productCardContent}>
                     <p>{p.starsPrice} </p>
                     <img src={starImg} alt="Star" className={styles.productCardStar} />
-                    <Button onClick={() => product.buyProduct(p.id)}>Buy</Button>
+                    <Button onClick={() => buyProduct(p.id)}>Buy</Button>
                 </CardContent>
                 </Card>
             ))}

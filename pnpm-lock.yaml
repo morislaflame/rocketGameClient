@@ -29,9 +29,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.6
         version: 4.0.6(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
-      '@telegram-apps/sdk-react':
-        specifier: ^3.1.0
-        version: 3.1.0(@types/react@19.0.10)(react@19.0.0)(typescript@5.7.3)
+      '@telegram-apps/sdk':
+        specifier: ^3.4.0
+        version: 3.4.0(typescript@5.7.3)
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -913,15 +913,6 @@ packages:
 
   '@telegram-apps/navigation@1.0.13':
     resolution: {integrity: sha512-TsUueB5LQp77GQHoMa93nq26Uw7GJjrFCPbyseMVU7aBBxAc+8CV2IYytRwcVp5sv/q7ThK5X4JaKn2V1yBHDQ==}
-
-  '@telegram-apps/sdk-react@3.1.0':
-    resolution: {integrity: sha512-Bg5n2EIDGSYJYe020FsbmiQTBekfIXFQbs4DWKGEl9kk4SA3LShsx3ZJdwyTwWf421mxwuQtrxedhbhsoVPg9g==}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   '@telegram-apps/sdk@3.4.0':
     resolution: {integrity: sha512-S6eikueP+NcJvmXWjUIf7jUa2CvMkqmXq9JtvGEhd5iZ8d9puB5Sit/LV6wVzDgIR75Tso5bvrfZLKsftmboFA==}
@@ -2599,15 +2590,6 @@ snapshots:
       '@telegram-apps/bridge': 1.9.2
       '@telegram-apps/signals': 1.1.1
       '@telegram-apps/toolkit': 1.1.1
-
-  '@telegram-apps/sdk-react@3.1.0(@types/react@19.0.10)(react@19.0.0)(typescript@5.7.3)':
-    dependencies:
-      '@telegram-apps/sdk': 3.4.0(typescript@5.7.3)
-      react: 19.0.0
-    optionalDependencies:
-      '@types/react': 19.0.10
-    transitivePeerDependencies:
-      - typescript
 
   '@telegram-apps/sdk@3.4.0(typescript@5.7.3)':
     dependencies:
