@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, lazy, Suspense } from 'react';
 import { Context } from '../main';
 import { observer } from 'mobx-react-lite';
 import {
@@ -13,8 +13,12 @@ import { AiFillDollarCircle } from 'react-icons/ai';
 import NavButton from '@/components/ui/NavButton';
 import { AiOutlineUser } from 'react-icons/ai';
 import styles from './Main.module.css';
-import UserAccount from '@/components/MainComponents/UserAccount';
-import Shop from '@/components/MainComponents/Shop';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
+import ListSkeleton from '@/components/MainComponents/ListSkeleton';
+
+const UserAccount = lazy(() => import('@/components/MainComponents/UserAccount'));
+const Shop = lazy(() => import('@/components/MainComponents/Shop'));
+
 
 const MainPage: React.FC = observer(() => {
   const { user, game } = useContext(Context);
@@ -61,10 +65,14 @@ const MainPage: React.FC = observer(() => {
                 <RocketLaunch />
               </CarouselItem>
               <CarouselItem className={styles.carouselItem} id="1">
-                <Shop />
+                <Suspense fallback={<ListSkeleton />}>
+                  <Shop />
+                </Suspense>
               </CarouselItem>
               <CarouselItem className={styles.carouselItem} id="2">
-                <UserAccount />
+                <Suspense fallback={<LoadingIndicator />}>
+                  <UserAccount />
+                </Suspense>
               </CarouselItem>
             </CarouselContent>
           </Carousel>

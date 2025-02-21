@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import styles from './MainUi.module.css';
 import gsap from 'gsap';
@@ -9,7 +9,7 @@ interface UserAccCardProps {
   description: string;
 }
 
-const UserAccCard: React.FC<UserAccCardProps> = ({ title, icon, description }) => {
+const UserAccCard: React.FC<UserAccCardProps> = memo(({ title, icon, description }) => {
   const cardContainerRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
@@ -38,6 +38,6 @@ const UserAccCard: React.FC<UserAccCardProps> = ({ title, icon, description }) =
         </CardHeader>
       </Card>
   );
-};
+});
 
 export default UserAccCard;

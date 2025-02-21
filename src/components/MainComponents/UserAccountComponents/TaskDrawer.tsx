@@ -1,5 +1,5 @@
 // src/components/UserAccount/TasksDrawer.tsx
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { FaTasks, FaCheckCircle } from "react-icons/fa";
 import UserAccCard from "@/components/ui/UserAccCard";
@@ -19,14 +19,23 @@ import { Task, TaskType } from "@/types/types";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowForward } from "react-icons/io";
+import ListSkeleton from "../ListSkeleton";
 
 const TasksDrawer: React.FC = observer(() => {
   const { task, user } = useContext(Context);
   const [selectedType, setSelectedType] = useState<TaskType>("DAILY");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // При монтировании (или открытии) запрашиваем задания пользователя
-  useEffect(() => {
-    task.fetchMyTasks();
+  // При открытии Drawer загружаем задания и отображаем скелетоны до окончания загрузки
+  const handleTasksOpen = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      await task.fetchMyTasks();
+    } catch (error) {
+      console.error("Error during fetching my tasks:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [task]);
 
   const handleComplete = async (taskId: number) => {
@@ -35,7 +44,6 @@ const TasksDrawer: React.FC = observer(() => {
       // После успешного выполнения задания обновляем данные пользователя,
       // чтобы в Header сразу отобразилось новое количество попыток.
       await user.fetchMyInfo();
-    //   await task.fetchMyTasks();
     } catch (error) {
       console.error("Ошибка при выполнении задания:", error);
     }
@@ -46,7 +54,7 @@ const TasksDrawer: React.FC = observer(() => {
   return (
     <Drawer>
       <DrawerTrigger asChild style={{ width: "100%" }}>
-        <div>
+        <div onClick={handleTasksOpen}>
           <UserAccCard
             title="Tasks"
             icon={<FaTasks />}
@@ -61,31 +69,32 @@ const TasksDrawer: React.FC = observer(() => {
             Complete tasks to earn rewards and improve your ranking.
           </DrawerDescription>
           <div className={styles.taskTabs}>
-          <Button
-            onClick={() => setSelectedType("DAILY")}
-            variant={selectedType === "DAILY" ? "secondary" : "default"}
-          >
-            Daily
-          </Button>
-          <Button
-            onClick={() => setSelectedType("ONE_TIME")}
-            variant={selectedType === "ONE_TIME" ? "secondary" : "default"}
-          >
-            One-Time
-          </Button>
-          <Button
-            onClick={() => setSelectedType("SPECIAL")}
-            variant={selectedType === "SPECIAL" ? "secondary" : "default"}
-          >
-            Special
+            <Button
+              onClick={() => setSelectedType("DAILY")}
+              variant={selectedType === "DAILY" ? "secondary" : "default"}
+            >
+              Daily
+            </Button>
+            <Button
+              onClick={() => setSelectedType("ONE_TIME")}
+              variant={selectedType === "ONE_TIME" ? "secondary" : "default"}
+            >
+              One-Time
+            </Button>
+            <Button
+              onClick={() => setSelectedType("SPECIAL")}
+              variant={selectedType === "SPECIAL" ? "secondary" : "default"}
+            >
+              Special
             </Button>
           </div>
         </DrawerHeader>
         <ScrollArea className="h-[70vh] w-[100%] rounded-md">
           <div className={styles.topUsersList}>
-            {filteredTasks && filteredTasks.length > 0 ? (
+            {isLoading ? (
+              <ListSkeleton count={5}/>
+            ) : filteredTasks && filteredTasks.length > 0 ? (
               filteredTasks.map((t: Task) => {
-                // Ожидается, что в join-данных будет массив users с данными из таблицы UserTask
                 const userTaskData =
                   t.users && t.users.length > 0 ? t.users[0].user_task : null;
                 const progress = userTaskData ? userTaskData.progress : 0;

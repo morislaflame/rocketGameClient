@@ -7,7 +7,7 @@ import { getPlanetImg } from "@/utils/getPlanetImg";
 import { getTriesImg } from "@/utils/getPlanetImg";
 
 const Header: React.FC = observer(() => {
-  const { user, game } = useContext(Context);
+  const { user } = useContext(Context);
 
   useEffect(() => {
     try {
@@ -21,7 +21,7 @@ const Header: React.FC = observer(() => {
     <header className={styles.header}>
         <MainBadge img={getPlanetImg()} alt="Planet" text={user?.user?.balance ?? 0} />
         <MainBadge img={getTriesImg()} alt="Tries" text={user?.user?.attempts ?? 0} />
-      </header>
+    </header>
   );
 });
 

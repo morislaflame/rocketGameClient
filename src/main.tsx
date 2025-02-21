@@ -3,9 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import StoreProvider, { Context } from "./store/StoreProvider";
-// import { init } from "@telegram-apps/sdk";
 
-// init();
 export { Context };
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);

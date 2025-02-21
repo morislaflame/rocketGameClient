@@ -5,7 +5,8 @@ import { Context } from "./main";
 import "./App.css";
 import LoadingIndicator from "./components/ui/LoadingIndicator";
 import DailyRewardModal from "./components/FunctionalComponents/DailyRewardModal";
-import { postEvent } from "@telegram-apps/sdk-react";
+import { postEvent } from "@telegram-apps/sdk";
+import HeaderSkeleton from "./components/MainComponents/HeaderSkeleton";
 
 // Lazy-loaded Components
 const Header = lazy(() => import("./components/MainComponents/Header"));
@@ -88,19 +89,25 @@ const App = observer(() => {
   }
 
   return (
-    <BrowserRouter>
-      <Suspense
-        fallback={
-          <div className="loading">
-            <LoadingIndicator />
-          </div>
-        }
+    // <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
+      <BrowserRouter>
+        <Suspense
+          fallback={
+            <HeaderSkeleton />
+          }
       >
         <Header />
-        <AppRouter />
-        <DailyRewardModal />
       </Suspense>
+      <Suspense
+        fallback={
+          <LoadingIndicator />
+        }
+      >
+        <AppRouter />
+      </Suspense>
+        <DailyRewardModal />
     </BrowserRouter>
+    // </TonConnectUIProvider>
   );
 });
 
