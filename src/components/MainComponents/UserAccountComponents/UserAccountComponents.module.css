@@ -43,7 +43,6 @@
 .topUserCardTitle {
     font-size: 16px;
     font-weight: 600;
-    color: #FFFFFF;
 }
 
 .topUserCardContent {
@@ -53,7 +52,6 @@
     justify-content: center;
     gap: 6px;
     padding: 0px;
-    color: #FFFFFF;
 }
 
 
@@ -62,14 +60,12 @@
     flex-direction: column;
     padding: 0px;
     max-width: 60%;
-    color: #FFFFFF;
     gap: 6px;
 }
 
 .taskCardTitle {
     font-size: 16px;
     font-weight: 600;
-    color: #FFFFFF;
 }
 
 .taskCardReward {

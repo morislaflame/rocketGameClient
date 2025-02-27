@@ -15,6 +15,8 @@ const RocketLaunch = observer(() => {
   const [showAlert, setShowAlert] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+  const tapToLaunchRef = useRef<HTMLDivElement>(null);
+  const [isLaunching, setIsLaunching] = useState(false);
 
   // При изменении результата запуска устанавливаем showResult в true
   useEffect(() => {
@@ -22,6 +24,23 @@ const RocketLaunch = observer(() => {
       setShowResult(true);
     }
   }, [game.rocketResult]);
+
+  // Анимация для текста "Tap to launch"
+  useEffect(() => {
+    if (tapToLaunchRef.current && !showResult && !isLaunching) {
+      const tl = gsap.timeline({ repeat: -1, yoyo: true });
+      tl.to(tapToLaunchRef.current, {
+        opacity: 0.5,
+        scale: 0.95,
+        duration: 1.2,
+        ease: "power1.inOut"
+      });
+      
+      return () => {
+        tl.kill();
+      };
+    }
+  }, [showResult, isLaunching]);
 
   // Когда showResult становится true, запускаем анимацию
   useEffect(() => {
@@ -43,6 +62,7 @@ const RocketLaunch = observer(() => {
 
   const handleLaunchClick = async () => {
     try {
+      setIsLaunching(true);
       if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred("soft");
       }
@@ -55,8 +75,10 @@ const RocketLaunch = observer(() => {
         });
       }
       console.log(user);
+      setIsLaunching(false);
     } catch (err) {
       console.error("Error launching rocket:", err);
+      setIsLaunching(false);
     }
   };
 
@@ -65,6 +87,24 @@ const RocketLaunch = observer(() => {
       <div className={styles.shopButtonContainer}>
       <ShopDrawer />
       </div>
+      {!showResult && !isLaunching && (
+          <div 
+            ref={tapToLaunchRef}
+            className={styles.tapToLaunch}
+            style={{
+              position: "absolute",
+              top: "15%",
+              textAlign: "center",
+              fontSize: "16px",
+              fontWeight: "500",
+              color: "rgb(178 177 177)",
+              textShadow: "0 0 5px rgba(0,0,0,0.5)",
+              zIndex: 10
+            }}
+          >
+            Tap to launch
+          </div>
+        )}
       <div
         style={{
           cursor: "pointer",
@@ -74,6 +114,9 @@ const RocketLaunch = observer(() => {
           position: "relative",
         }}
       >
+        {/* Текст "Tap to launch" */}
+        
+        
         {/* Клики на заблюренную ракету открывают Alert */}
         <img
           src={rocketBlured}
@@ -83,13 +126,13 @@ const RocketLaunch = observer(() => {
           onContextMenu={(e) => e.preventDefault()}
         />
         
-          <img
-            src={rocketImg}
-            alt="Rocket"
-            className={styles.rocketImg}
-            onClick={handleLaunchClick}
-            onContextMenu={(e) => e.preventDefault()}
-          />
+        <img
+          src={rocketImg}
+          alt="Rocket"
+          className={styles.rocketImg}
+          onClick={handleLaunchClick}
+          onContextMenu={(e) => e.preventDefault()}
+        />
         <img
           src={rocketBlured}
           alt="Rocket"
