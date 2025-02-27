@@ -1,6 +1,14 @@
+.raffleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .drawerContent {
     padding: 12px;
     height: 90vh;
+    will-change: transform;
 }
 
 .trophyIcon {
@@ -22,6 +30,7 @@
     display: flex;
     flex-wrap: nowrap;
     white-space: nowrap;
+    will-change: transform;
   }
   
   .sliderItem {
@@ -83,3 +92,21 @@
     height: 20px;
   }
 
+  .ticketsContainer {
+    width: 90vw;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid hsl(0 0% 14.9%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .ticketsHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  

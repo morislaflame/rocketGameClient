@@ -59,8 +59,8 @@ const MainPage: React.FC = observer(() => {
     <div data-count={count} className={styles.mainPage}>
       {user?.isAuth ? (
         <div className={styles.mainContent}>
-          <Carousel setApi={setApi} style={{ width: '100%', flex: '1' }}>
-            <CarouselContent style={{ width: '100vw', height: '100vh', margin: '0', padding: '0' }}>
+          <Carousel setApi={setApi} style={{ width: '100%', flex: '1', willChange: 'transform' }}>
+            <CarouselContent style={{ width: '100vw', height: '100vh', margin: '0', padding: '0', willChange: 'transform' }}>
               <CarouselItem className={styles.carouselItem} id="0">
                 <RocketLaunch />
               </CarouselItem>

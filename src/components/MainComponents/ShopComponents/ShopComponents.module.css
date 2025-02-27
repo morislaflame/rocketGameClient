@@ -64,4 +64,5 @@
 .drawerContent {
     padding: 12px;
     height: 90vh;
+    will-change: transform;
 }

@@ -1,15 +1,12 @@
 import { observer } from "mobx-react-lite"
-import styles from "./mainComponents.module.css"
-import TicketsDrawer from "./RaffleComponents/TicketsDrawer"
-import CurrentRaffle from "./RaffleComponents/CurrentRaffle"
+  import styles from "./mainComponents.module.css"
+  import CurrentRaffle from "./RaffleComponents/CurrentRaffle"
 
 const Shop: React.FC = observer(() => { 
   return (
     <div className={styles.productsContainer}>
       
       <CurrentRaffle />
-      {/* <Slider /> */}
-      <TicketsDrawer />
     </div>
   )
 })

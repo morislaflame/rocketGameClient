@@ -102,7 +102,8 @@ const RocketLaunch = observer(() => {
               fontWeight: "500",
               color: "rgb(178 177 177)",
               textShadow: "0 0 5px rgba(0,0,0,0.5)",
-              zIndex: 10
+              zIndex: 10,
+              willChange: 'transform, opacity'
             }}
           >
             Tap to launch

@@ -4,6 +4,8 @@ import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import styles from './RaffleComponents.module.css';
 import InfiniteSlider from './InfiniteSlider';
+import { FaTicketAlt } from 'react-icons/fa';
+import TicketsDrawer from './TicketsDrawer';
 
 const CurrentRaffle: React.FC = observer(() => {
   const { raffle, user } = useContext(Context) as IStoreContext;
@@ -66,48 +68,36 @@ const CurrentRaffle: React.FC = observer(() => {
   const userTickets = user.user?.tickets || 0;
   const ticketPercentage = totalTickets > 0 ? (userTickets / totalTickets) * 100 : 0;
 
+  const haveTickets = userTickets > 0;
+
   return (
     <div className={styles.raffleContainer}>
         <div className='gap-1.5 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
             <h2 className='text-3xl font-semibold leading-none tracking-tight'>Raffle #{currentRaffle.id}</h2>
             
-            <p className="text-sm text-muted-foreground">Начало: {formatDate(currentRaffle.startTime)}</p>
+            <p className="text-sm text-muted-foreground">Start: {formatDate(currentRaffle.startTime)}</p>
             <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/1st%20Place%20Medal.webp" alt="1st Place Medal" className={styles.trophyIcon} />
             <InfiniteSlider />
         </div>
-        
-            {/* <Card className={styles.raffleCard}>
-                <CardHeader>
-                    <CardTitle className={styles.raffleTitle}>
-            <FaTrophy className={styles.trophyIcon} />
-            Текущий розыгрыш
-            </CardTitle>
-            <CardDescription>
-            Начало: {formatDate(currentRaffle.startTime)}
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className={styles.prizeContainer}>
-            <h3 className={styles.prizeTitle}>Приз:</h3>
-            <p className={styles.prizeValue}>{currentRaffle.prize}</p>
-            </div>
-
-
-            <div className={styles.ticketsContainer}>
+        <div className={styles.ticketsContainer}>
+            {haveTickets ? (
             <div className={styles.ticketsHeader}>
                 <FaTicketAlt className={styles.ticketIcon} />
-                <p className={styles.ticketsLabel}>Ваши билеты:</p>
-                <p className={styles.ticketsValue}>{userTickets} из {totalTickets}</p>
+                <strong className={styles.ticketsLabel}>Your tickets: {userTickets} of {totalTickets}</strong>
+                <p className="text-sm text-muted-foreground">
+                    Your chance to win: {ticketPercentage.toFixed(2)}%
+                </p>
             </div>
-            <p className={styles.ticketsPercentage}>
-                Ваш шанс на победу: {ticketPercentage.toFixed(2)}%
-            </p>
-            </div>
-        </CardContent>
-        <CardFooter className={styles.raffleFooter}>
+            ) : (
+                <div className={styles.ticketsHeader}>
+                    <FaTicketAlt className={styles.ticketIcon} />
+                    <strong className={styles.ticketsLabel}>You don't have any tickets yet</strong>
+                    <p className="text-sm text-muted-foreground">Buy tickets to participate in the raffle</p>
+                </div>
+            )}
             <TicketsDrawer />
-        </CardFooter>
-        </Card> */}
+        </div>
+        
     </div>
   );
 });
