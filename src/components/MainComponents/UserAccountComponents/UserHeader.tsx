@@ -15,6 +15,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
       <h1>{username}</h1>
       <Avatar className={styles.avatar}>
         <AvatarImage src={avatarImg} />
+        
         <AvatarFallback>
           <img src={avatarImg} alt="Avatar" />
         </AvatarFallback>

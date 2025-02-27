@@ -98,6 +98,7 @@ const App = observer(() => {
       >
         <Header />
       </Suspense>
+      
       <Suspense
         fallback={
           <LoadingIndicator />

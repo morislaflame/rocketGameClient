@@ -2,14 +2,15 @@
 import React, { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RafflePackage } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./RaffleComponents.module.css";
-import starImg from "@/assets/stars.svg";
 import ListSkeleton from "../ListSkeleton";
 import ticketImg from "@/assets/rocket.svg";
+import tonImg from "@/assets/TonIcon.svg";
+
 
 interface TicketsListProps {
   isLoading: boolean;
@@ -23,8 +24,10 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading }) => {
     raffle.fetchRafflePackages();
   }, [raffle]);
 
+  if (raffle.rafflePackages.length === 0) {
+    return <p>Билеты не найдены</p>;
+  }
   
-
   const ticketIconImg = <img src={ticketImg} alt="Tickets" style={{ width: '24px', height: '24px' }} />;
 
   return (
@@ -38,13 +41,24 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading }) => {
               <Card key={p.id} className={styles.ticketCard}>
                 <CardHeader className={styles.ticketCardHeader}>
                     <CardTitle className={styles.ticketCardTitle}>
-                        +{p.ticketCount} Tickets {ticketIconImg}
+                        {p.name}
+                        
                     </CardTitle>
+                    <CardDescription className={styles.ticketCardDescription}>
+                        +{p.ticketCount} Tickets {ticketIconImg}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className={styles.ticketCardContent}>
-                    <p>{p.price} </p>
-                    <img src={starImg} alt="Star" className={styles.ticketCardStar} />
-                    <Button variant="secondary">Buy</Button>
+                    
+                    <Button 
+                    variant="secondary"
+                    style={{
+                        minWidth: "90px",
+                    }}
+                    >
+                        {p.price}
+                        <img src={tonImg} alt="Ton" className={styles.ticketCardTon} />
+                    </Button>
                 </CardContent>
               </Card>
             ))

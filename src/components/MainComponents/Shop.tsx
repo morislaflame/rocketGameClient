@@ -8,6 +8,7 @@ const Shop: React.FC = observer(() => {
     <div className={styles.productsContainer}>
       
       <CurrentRaffle />
+      {/* <Slider /> */}
       <TicketsDrawer />
     </div>
   )

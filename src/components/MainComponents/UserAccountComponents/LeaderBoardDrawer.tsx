@@ -20,6 +20,7 @@ import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from '@/utils/getPlanetImg';
 import ListSkeleton from '../ListSkeleton';
 
+
 const LeaderboardDrawer: React.FC = observer(() => {
   const { user } = React.useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState<boolean>(false);

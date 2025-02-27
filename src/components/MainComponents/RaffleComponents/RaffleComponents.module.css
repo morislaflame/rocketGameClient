@@ -1,3 +1,8 @@
+.drawerContent {
+    padding: 12px;
+    height: 90vh;
+}
+
 .trophyIcon {
     width: 150px;
     height: 150px;
@@ -5,3 +10,76 @@
     border: 1px solid hsl(0 0% 14.9%);
     margin-top: 10px;
 }
+
+.sliderContainer {
+    width: 90vw;
+    overflow: hidden;
+    position: relative;
+    margin: 20px 0;
+  }
+  
+  .sliderTrack {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  
+  .sliderItem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 60px;
+    margin: 0 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .ticketCard {
+    /* background-color: #2C2C2C;
+    border: none !important; */
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+  }
+
+  .ticketCardHeader {
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    max-width: 60%;
+    gap: 6px;
+  }
+
+  .ticketCardDescription {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .ticketCardTitle {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .ticketCardContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0px;
+  }
+
+  .ticketCardTon {
+    width: 20px;
+    height: 20px;
+  }
+

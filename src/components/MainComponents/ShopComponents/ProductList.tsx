@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider"; 
 // Или если вы отдельно импортируете productStore
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -60,13 +60,25 @@ const buyProduct = async (productId: number) => {
               <Card key={p.id} className={styles.productCard}>
                 <CardHeader className={styles.productCardHeader}>
                     <CardTitle className={styles.productCardTitle}>
-                        +{p.attempts} Launches {rewardImg}
+                        {p.name}
                     </CardTitle>
+                    <CardDescription className={styles.productCardDescription}>
+                      +{p.attempts} Launches {rewardImg}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className={styles.productCardContent}>
-                    <p>{p.starsPrice} </p>
-                    <img src={starImg} alt="Star" className={styles.productCardStar} />
-                    <Button onClick={() => buyProduct(p.id)} variant="secondary">Buy</Button>
+                    
+                    <Button 
+                    onClick={() => buyProduct(p.id)} 
+                    variant="secondary" 
+                    style={{
+                      minWidth: "70px",
+                    }}
+                    >
+                      {p.starsPrice}
+                      <img src={starImg} alt="Star" className={styles.productCardStar} />
+                      
+                    </Button>
                 </CardContent>
               </Card>
             ))
