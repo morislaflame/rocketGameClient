@@ -4,12 +4,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from '@/assets/avatar.svg';
 import { IoCard } from "react-icons/io5";
 import styles from './UserAccountComponents.module.css';
+import { useTonConnectUI } from '@tonconnect/ui-react';
 
 interface UserHeaderProps {
   username: string;
 }
 
 const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
+  const [tonConnectUI] = useTonConnectUI();
   return (
     <div className={styles.pageTitle}>
       <h1>{username}</h1>
@@ -20,7 +22,11 @@ const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
           <img src={avatarImg} alt="Avatar" />
         </AvatarFallback>
       </Avatar>
-      <h3
+      <button
+      id="ton-connect"
+      onClick={() => {
+        tonConnectUI.openModal();
+      }}
         style={{
           color: "#358FF2",
           fontSize: "15px",
@@ -30,8 +36,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
           gap: "4px",
         }}
       >
+        
         <IoCard /> Connect your wallet
-      </h3>
+      </button>
     </div>
   );
 };
