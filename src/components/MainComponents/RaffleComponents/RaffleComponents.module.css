@@ -1,0 +1,7 @@
+.trophyIcon {
+    width: 150px;
+    height: 150px;
+    border-radius: 36px;
+    border: 1px solid hsl(0 0% 14.9%);
+    margin-top: 10px;
+}

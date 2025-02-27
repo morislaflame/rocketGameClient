@@ -61,6 +61,9 @@ const RocketLaunch = observer(() => {
   }, [showResult]);
 
   const handleLaunchClick = async () => {
+    // Проверяем, что ракета не запущена и нет анимации результата
+    if (isLaunching || showResult) return;
+    
     try {
       setIsLaunching(true);
       if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -104,6 +107,7 @@ const RocketLaunch = observer(() => {
           >
             Tap to launch
           </div>
+          
         )}
       <div
         style={{
@@ -129,9 +133,13 @@ const RocketLaunch = observer(() => {
         <img
           src={rocketImg}
           alt="Rocket"
-          className={styles.rocketImg}
+          className={`${styles.rocketImg} ${(isLaunching || showResult) ? styles.disabledRocket : ''}`}
           onClick={handleLaunchClick}
           onContextMenu={(e) => e.preventDefault()}
+          style={{ 
+            cursor: (isLaunching || showResult) ? 'default' : 'pointer',
+            opacity: (isLaunching || showResult) ? 0.7 : 1
+          }}
         />
         <img
           src={rocketBlured}

@@ -23,6 +23,7 @@ export interface UserInfo {
   tonAddress: string | null;
   premium: boolean;
   attempts: number;
+  tickets: number;
   // Если нужно, можно добавить другие поля
 }
 
@@ -83,3 +84,32 @@ export interface Product {
   starsPrice: number;
 }
 
+export interface RafflePackage {
+  id: number;
+  name: string;
+  ticketCount: number;
+  price: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Raffle {
+  id: number;
+  status: string;
+  startTime: string;
+  endTime: string | null;
+  prize: string;
+  winnerUserId: number | null;
+  createdAt: string;
+  updatedAt: string;
+  winner: null;
+}
+
+export interface CurrentRaffle {
+  raffle: Raffle;
+  totalTickets: number;
+}
+
+export interface RaffleHistory {
+  raffle: Raffle[];
+}
