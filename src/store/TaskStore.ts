@@ -7,12 +7,12 @@ import {
   completeTask,
   getMyTasks,
 } from "../http/taskAPI";
-import { Task, UserTaskInfo } from "@/types/types";
+import { Task } from "@/types/types";
 
 
 export default class TaskStore {
   _tasks: Task[] = [];
-  _myTasks: UserTaskInfo[] = [];
+  _myTasks: Task[] = [];
   _loading = false;
 
   constructor() {
@@ -23,7 +23,7 @@ export default class TaskStore {
     this._tasks = tasks;
   }
 
-  setMyTasks(tasks: UserTaskInfo[]) {
+  setMyTasks(tasks: Task[]) {
     this._myTasks = tasks;
   }
 

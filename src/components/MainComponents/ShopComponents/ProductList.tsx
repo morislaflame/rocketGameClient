@@ -1,7 +1,7 @@
 // src/components/ProductsList.tsx
 import React, { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { Context } from "@/main"; 
+import { Context, IStoreContext } from "@/store/StoreProvider"; 
 // Или если вы отдельно импортируете productStore
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,15 @@ import styles from "./ShopComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import starImg from "@/assets/stars.svg";
 import { generateInvoice } from "@/http/productAPI";
+import ListSkeleton from '../ListSkeleton';
 
-const ProductsList: React.FC = observer(() => {
+interface ProductListProps {
+  isLoading: boolean;
+}
+
+const ProductList: React.FC<ProductListProps> = observer(({ isLoading }) => {
   // Предположим, вы храните productStore в Context
-  const { product, user } = useContext(Context);
+  const { product, user } = useContext(Context) as IStoreContext;
 
   const tg = window.Telegram?.WebApp;
 
@@ -28,7 +33,7 @@ const buyProduct = async (productId: number) => {
     const invoiceLink = await generateInvoice(productId);
     console.log("invoiceLink =>", invoiceLink);
     try {
-      tg.openInvoice(invoiceLink, (status: any) => {
+      tg?.openInvoice(invoiceLink, (status: string) => {
         console.log("status =>", status);
         if (status === "paid") {
           user.fetchMyInfo();
@@ -45,12 +50,14 @@ const buyProduct = async (productId: number) => {
   const rewardImg = <img src={getTriesImg()} alt="Tries" />;
 
   return (
-    <div className={styles.productList}>
-        <ScrollArea className="h-[70vh] w-[100%] rounded-md" scrollHideDelay={1000}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            {product.products.map((p: Product) => (
-              
-                <Card key={p.id} className={styles.productCard}>
+    <ScrollArea className="h-[70vh] w-[100%] rounded-md" scrollHideDelay={1000}>
+      <div className={styles.productList}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px", width: "100%" }}>
+          {isLoading ? (
+            <ListSkeleton count={5}/>
+          ) : product.products.length ? (
+            product.products.map((p: Product) => (
+              <Card key={p.id} className={styles.productCard}>
                 <CardHeader className={styles.productCardHeader}>
                     <CardTitle className={styles.productCardTitle}>
                         +{p.attempts} Launches {rewardImg}
@@ -59,14 +66,17 @@ const buyProduct = async (productId: number) => {
                 <CardContent className={styles.productCardContent}>
                     <p>{p.starsPrice} </p>
                     <img src={starImg} alt="Star" className={styles.productCardStar} />
-                    <Button onClick={() => buyProduct(p.id)}>Buy</Button>
+                    <Button onClick={() => buyProduct(p.id)} variant="secondary">Buy</Button>
                 </CardContent>
-                </Card>
-            ))}
-            </div>
-        </ScrollArea>
-    </div>
+              </Card>
+            ))
+          ) : (
+            <p>Товары не найдены</p>
+          )}
+        </div>
+      </div>
+    </ScrollArea>
   );
 });
 
-export default ProductsList;
+export default ProductList;

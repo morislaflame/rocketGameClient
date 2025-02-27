@@ -1,5 +1,5 @@
 import React, { useContext, lazy, Suspense } from 'react';
-import { Context } from '../main';
+import { Context, IStoreContext } from '@/store/StoreProvider';
 import { observer } from 'mobx-react-lite';
 import {
   Carousel,
@@ -21,7 +21,7 @@ const Shop = lazy(() => import('@/components/MainComponents/Shop'));
 
 
 const MainPage: React.FC = observer(() => {
-  const { user, game } = useContext(Context);
+  const { user } = useContext(Context) as IStoreContext;
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -56,7 +56,7 @@ const MainPage: React.FC = observer(() => {
   const indicatorLeft = buttonCenter - indicatorWidth / 2 + 2;
 
   return (
-    <div className={styles.mainPage}>
+    <div data-count={count} className={styles.mainPage}>
       {user?.isAuth ? (
         <div className={styles.mainContent}>
           <Carousel setApi={setApi} style={{ width: '100%', flex: '1' }}>

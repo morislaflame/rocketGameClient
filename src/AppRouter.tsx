@@ -1,21 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { privateRoutes, publicRoutes } from './routes';
+import { publicRoutes } from './routes';
 import { MAIN_ROUTE } from './utils/consts';
-import { Context } from './store/StoreProvider';
+import { Context, IStoreContext } from './store/StoreProvider';
 
 
 const AppRouter = () => {
-    const { user } = useContext(Context);
-    const [routes, setRoutes] = useState([]);
+    const { user } = useContext(Context) as IStoreContext;
 
     return (
         <Routes>
-            {user.isAuth && routes.map(({ path, Component }) => (
-                <Route key={path} path={path} element={Component} />
-            ))}
-
-            {publicRoutes.map(({ path, Component }) => (
+            {user.isAuth && publicRoutes.map(({ path, Component }) => (
                 <Route key={path} path={path} element={<Component />} />
             ))}
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import { Context } from "./main";
+import { Context, IStoreContext } from "./store/StoreProvider";
 import "./App.css";
 import LoadingIndicator from "./components/ui/LoadingIndicator";
 import DailyRewardModal from "./components/FunctionalComponents/DailyRewardModal";
@@ -14,7 +14,7 @@ const AppRouter = lazy(() => import("./AppRouter"));
 
 
 const App = observer(() => {
-  const { user, dailyReward } = useContext(Context);
+  const { user, dailyReward } = useContext(Context) as IStoreContext;
   const [loading, setLoading] = useState(true);
 
 

@@ -16,9 +16,6 @@
 
 
 .drawerContent {
-    background-color: black;
-    color: #FFFFFF;
-    border: 1px solid #2C2C2C !important;
     padding: 12px;
     height: 90vh;
 }

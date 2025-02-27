@@ -61,3 +61,8 @@
     height: 16px;
 }
 
+
+.drawerContent {
+    padding: 12px;
+    height: 90vh;
+}

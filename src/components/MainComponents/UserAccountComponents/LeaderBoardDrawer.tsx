@@ -1,7 +1,7 @@
 // src/components/UserAccount/LeaderboardDrawer.tsx
 import React, { useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Context } from '@/main';
+import { Context, IStoreContext } from '@/store/StoreProvider';
 import styles from './UserAccountComponents.module.css';
 import UserAccCard from '@/components/ui/UserAccCard';
 import { MdLeaderboard } from "react-icons/md";
@@ -18,11 +18,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserInfo } from '@/types/types';
 import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from '@/utils/getPlanetImg';
-import CardSkeleton from '@/components/ui/CardSkeleton';
 import ListSkeleton from '../ListSkeleton';
 
 const LeaderboardDrawer: React.FC = observer(() => {
-  const { user } = React.useContext(Context);
+  const { user } = React.useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Вызываем fetchTopUsers при открытии Drawer и устанавливаем состояние загрузки

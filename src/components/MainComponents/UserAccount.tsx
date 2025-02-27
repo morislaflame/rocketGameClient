@@ -1,7 +1,7 @@
 // src/components/UserAccount/UserAccount.tsx
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Context } from '@/main';
+import { Context, IStoreContext } from '@/store/StoreProvider';
 import styles from './mainComponents.module.css';
 import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHeader';
 import LeaderboardDrawer from '@/components/MainComponents/UserAccountComponents/LeaderBoardDrawer';
@@ -9,11 +9,11 @@ import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskD
 import { getUserName } from '@/utils/getUserName';
 
 const UserAccount: React.FC = observer(() => {
-  const { user } = React.useContext(Context);
+  const { user } = React.useContext(Context) as IStoreContext;
 
   return (
     <div className={styles.pageContent}>
-      <UserHeader username={getUserName(user.user)} />
+      <UserHeader username={getUserName(user?.user)} />
       <div className={styles.cardContainer}>
         <LeaderboardDrawer />
         <TasksDrawer />

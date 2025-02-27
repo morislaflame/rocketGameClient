@@ -1,13 +1,12 @@
 // src/components/DailyRewardModal.tsx
 import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import { Context } from "@/main";
+import { Context, IStoreContext } from "@/store/StoreProvider";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogFooter,
-  DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"; // <-- вместо alert-dialog
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,7 @@ import styles from "./FunctionalComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
 
 const DailyRewardModal: React.FC = observer(() => {
-  const { user, dailyReward } = useContext(Context);
+  const { user, dailyReward } = useContext(Context) as IStoreContext;
 
   const [open, setOpen] = useState(false);
 

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Context } from "../../main";
+import { Context, IStoreContext } from "@/store/StoreProvider";
 import { useContext, useEffect } from "react";
 import MainBadge from "../ui/MainBadge";
 import styles from './mainComponents.module.css';
@@ -7,7 +7,7 @@ import { getPlanetImg } from "@/utils/getPlanetImg";
 import { getTriesImg } from "@/utils/getPlanetImg";
 
 const Header: React.FC = observer(() => {
-  const { user } = useContext(Context);
+  const { user } = useContext(Context) as IStoreContext;
 
   useEffect(() => {
     try {

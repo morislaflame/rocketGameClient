@@ -1,5 +1,5 @@
 import { useContext, useRef, useEffect, useState } from "react";
-import { Context } from "@/main";
+import { Context, IStoreContext } from "@/store/StoreProvider";
 import rocketImg from '../../assets/rocket.svg';
 import rocketBlured from '../../assets/rocketblured.svg';
 import planetImg from '../../assets/planet.svg';
@@ -7,9 +7,11 @@ import { observer } from "mobx-react-lite";
 import styles from './mainComponents.module.css';
 import gsap from "gsap";
 import SoonAlert from "../FunctionalComponents/SoonAlert";
+import ShopDrawer from "./ShopComponents/ShopDrawer";
+
 
 const RocketLaunch = observer(() => {
-  const { user, game } = useContext(Context);
+  const { user, game } = useContext(Context) as IStoreContext;
   const [showAlert, setShowAlert] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -59,7 +61,10 @@ const RocketLaunch = observer(() => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center">
+      <div className={styles.shopButtonContainer}>
+      <ShopDrawer />
+      </div>
       <div
         style={{
           cursor: "pointer",

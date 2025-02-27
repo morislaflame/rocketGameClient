@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Context } from "@/main";
+import { Context, IStoreContext } from "@/store/StoreProvider";
 import styles from "./UserAccountComponents.module.css";
 import { Task, TaskType } from "@/types/types";
 import { getTriesImg } from "@/utils/getPlanetImg";
@@ -22,7 +22,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import ListSkeleton from "../ListSkeleton";
 
 const TasksDrawer: React.FC = observer(() => {
-  const { task, user } = useContext(Context);
+  const { task, user } = useContext(Context) as IStoreContext;
   const [selectedType, setSelectedType] = useState<TaskType>("DAILY");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -71,19 +71,19 @@ const TasksDrawer: React.FC = observer(() => {
           <div className={styles.taskTabs}>
             <Button
               onClick={() => setSelectedType("DAILY")}
-              variant={selectedType === "DAILY" ? "secondary" : "default"}
+              variant={selectedType === "DAILY" ? "default" : "secondary"}
             >
               Daily
             </Button>
             <Button
               onClick={() => setSelectedType("ONE_TIME")}
-              variant={selectedType === "ONE_TIME" ? "secondary" : "default"}
+              variant={selectedType === "ONE_TIME" ? "default" : "secondary"}
             >
               One-Time
             </Button>
             <Button
               onClick={() => setSelectedType("SPECIAL")}
-              variant={selectedType === "SPECIAL" ? "secondary" : "default"}
+              variant={selectedType === "SPECIAL" ? "default" : "secondary"}
             >
               Special
             </Button>

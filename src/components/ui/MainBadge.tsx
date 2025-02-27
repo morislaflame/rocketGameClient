@@ -1,6 +1,6 @@
 import styles from './MainUi.module.css'
 
-const MainBadge = ( {img, alt, text} : {img: string, alt: string, text: string} ) => {
+const MainBadge = ( {img, alt, text} : {img: string, alt: string, text: number} ) => {
   return (
     <div className={styles.balanceBadge}>
           <img
