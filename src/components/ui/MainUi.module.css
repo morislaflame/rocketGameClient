@@ -40,6 +40,8 @@
 
 .card {
     width: 100%;
+    background-color: hsl(0 1% 10%) !important;
+    /* border-color: hsl(20deg 0.67% 27.27%) !important; */
 }
 
 .cardHeader {

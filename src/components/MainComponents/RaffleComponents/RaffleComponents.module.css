@@ -48,9 +48,11 @@
     flex-shrink: 0;
   }
 
+  .ticketsButton {
+    border: 1px solid hsl(0deg 0.67% 27.27%) !important;
+  }
+
   .ticketCard {
-    /* background-color: #2C2C2C;
-    border: none !important; */
     display: flex;
     justify-content: space-between;
     padding: 12px;

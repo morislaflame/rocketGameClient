@@ -3,13 +3,12 @@ import React, { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { RafflePackage } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./RaffleComponents.module.css";
 import ListSkeleton from "../ListSkeleton";
 import ticketImg from "@/assets/rocket.svg";
-import tonImg from "@/assets/TonIcon.svg";
+import SendTx from "@/utils/sendTx";
 
 
 interface TicketsListProps {
@@ -49,16 +48,8 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading }) => {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className={styles.ticketCardContent}>
+                    <SendTx price={p.price} />
                     
-                    <Button 
-                    variant="secondary"
-                    style={{
-                        minWidth: "90px",
-                    }}
-                    >
-                        {p.price}
-                        <img src={tonImg} alt="Ton" className={styles.ticketCardTon} />
-                    </Button>
                 </CardContent>
               </Card>
             ))

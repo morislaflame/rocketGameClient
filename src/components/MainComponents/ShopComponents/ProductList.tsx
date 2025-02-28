@@ -73,6 +73,7 @@ const buyProduct = async (productId: number) => {
                     variant="secondary" 
                     style={{
                       minWidth: "70px",
+                      border: "1px solid hsl(0deg 0.67% 27.27%)",
                     }}
                     >
                       {p.starsPrice}

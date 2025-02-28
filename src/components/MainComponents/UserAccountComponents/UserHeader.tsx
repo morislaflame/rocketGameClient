@@ -2,9 +2,9 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from '@/assets/avatar.svg';
-import { IoCard } from "react-icons/io5";
 import styles from './UserAccountComponents.module.css';
-import { useTonConnectUI } from '@tonconnect/ui-react';
+import { TonConnectButton, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
+import { TonConnectWallet } from '@/types/types';
 
 interface UserHeaderProps {
   username: string;
@@ -12,6 +12,13 @@ interface UserHeaderProps {
 
 const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
   const [tonConnectUI] = useTonConnectUI();
+
+  const wallet = useTonWallet() as TonConnectWallet | undefined;
+
+  const isConnected = tonConnectUI.connected;
+
+  console.log(wallet);
+
   return (
     <div className={styles.pageTitle}>
       <h1>{username}</h1>
@@ -22,23 +29,13 @@ const UserHeader: React.FC<UserHeaderProps> = ({ username }) => {
           <img src={avatarImg} alt="Avatar" />
         </AvatarFallback>
       </Avatar>
-      <button
-      id="ton-connect"
-      onClick={() => {
-        tonConnectUI.openModal();
-      }}
-        style={{
-          color: "#358FF2",
-          fontSize: "15px",
-          fontWeight: "400",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-        }}
-      >
-        
-        <IoCard /> Connect your wallet
-      </button>
+        <TonConnectButton />
+        {isConnected && (
+          <div className={styles.walletInfo}>
+            <img src={wallet?.imageUrl} alt="Wallet" className={styles.walletImage}/>
+            <p className={styles.walletName}>{wallet?.name}</p>
+          </div>
+        )}
     </div>
   );
 };

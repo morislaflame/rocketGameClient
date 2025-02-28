@@ -28,8 +28,7 @@
 }
 
 .topUserCard {
-    /* background-color: #2C2C2C;
-    border: none !important; */
+    /* background-color: hsl(0 1% 10%); */
     display: flex;
     justify-content: space-between;
     padding: 12px;
@@ -89,6 +88,8 @@
 .completeTaskBtn {
     border-radius: 10px;
     padding: 6px;
+    background-color: hsl(0 1% 10%);
+    color: white;
     /* background-color: black; */
 }
 
@@ -99,3 +100,25 @@
     justify-content: center;
     gap: 6px;
 }
+
+.walletInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.walletImage {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+}
+
+.walletName {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+

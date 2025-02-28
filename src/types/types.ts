@@ -113,3 +113,34 @@ export interface CurrentRaffle {
 export interface RaffleHistory {
   raffle: Raffle[];
 }
+
+
+export interface TonConnectWallet {
+  aboutUrl: string;
+  account: {
+    address: string;
+    chain: string;
+    walletStateInit: string;
+    publicKey: string;
+  };
+  appName: string;
+  bridgeUrl: string;
+  deepLink: string;
+  device: {
+    maxProtocolVersion: number;
+    appName: string;
+    features: string[];
+    appVersion: string;
+    platform: string;
+  };
+  embedded: boolean;
+  imageUrl: string;
+  injected: boolean;
+  jsBridgeKey: string;
+  name: string;
+  openMethod: string;
+  platforms: string[];
+  provider: string;
+  tondns: string;
+  universalLink: string;
+}
