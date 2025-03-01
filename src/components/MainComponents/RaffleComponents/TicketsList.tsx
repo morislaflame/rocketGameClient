@@ -48,7 +48,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading }) => {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className={styles.ticketCardContent}>
-                    <SendTx price={p.price} />
+                    <SendTx price={p.price} packageId={p.id} />
                     
                 </CardContent>
               </Card>

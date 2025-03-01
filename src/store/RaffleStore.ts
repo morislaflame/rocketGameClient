@@ -1,6 +1,6 @@
 import { CurrentRaffle, RaffleHistory, RafflePackage } from "@/types/types";
 import { makeAutoObservable } from "mobx";
-import { getCurrentRaffle, getRaffleHistory, getRaffleTicketPackages } from "@/http/raffleAPI";
+import { confirmTicketPurchase, getCurrentRaffle, getRaffleHistory, getRaffleTicketPackages } from "@/http/raffleAPI";
 
 export default class RaffleStore {
     _rafflePackages: RafflePackage[] = [];
@@ -57,6 +57,19 @@ export default class RaffleStore {
             this.setRaffleHistory(history);
         } catch (error) {
             console.error("Error fetching raffle history:", error);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async confirmRaffleTicketPurchase(userId: number, packageId: number, transactionHash: string) {
+        try {
+            this.setLoading(true);
+            const result = await confirmTicketPurchase(userId, packageId, transactionHash);
+            return result;
+        } catch (error) {
+            console.error("Error confirming ticket purchase:", error);
+            return null;
         } finally {
             this.setLoading(false);
         }
