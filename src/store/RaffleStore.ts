@@ -62,10 +62,20 @@ export default class RaffleStore {
         }
     }
 
-    async confirmRaffleTicketPurchase(userId: number, packageId: number, transactionHash: string) {
+    async confirmRaffleTicketPurchase(
+        userId: number, 
+        packageId: number, 
+        transactionBoc: string,
+        payloadData?: string // Изменили тип с BOC на простую строку
+    ) {
         try {
             this.setLoading(true);
-            const result = await confirmTicketPurchase(userId, packageId, transactionHash);
+            const result = await confirmTicketPurchase(
+                userId, 
+                packageId, 
+                transactionBoc,
+                payloadData
+            );
             return result;
         } catch (error) {
             console.error("Error confirming ticket purchase:", error);

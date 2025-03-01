@@ -43,10 +43,13 @@ const SendTx: React.FC<SendTxProps> = (props) => {
             // Создаем уникальный идентификатор (timestamp + случайное число)
             const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
             
-            // Создаем payload с маркером, ID пользователя, ID пакета и уникальным номером
+            // Создаем сырой payload текстовый формат
+            const rawPayload = `${user.user?.id || 0}:${props.packageId}:raffleTicket:${uniqueId}`;
+            
+            // Создаем BOC payload для транзакции
             const payload = beginCell()
                 .storeUint(0, 32)  // Маркер операции (0)
-                .storeStringTail(`${user.user?.id || 0}:${props.packageId}:raffleTicket:${uniqueId}`)  // Формат "userId:packageId:тип:уникальныйИД"
+                .storeStringTail(rawPayload)  // Формат "userId:packageId:тип:уникальныйИД"
                 .endCell()
                 .toBoc()
                 .toString("base64");
@@ -62,13 +65,15 @@ const SendTx: React.FC<SendTxProps> = (props) => {
             
             console.log("Transaction result:", result);
             console.log("Transaction boc:", result.boc);
+            console.log("Raw payload:", rawPayload);
             
             if (result && result.boc) {
-                // Отправляем транзакцию на бэкенд для проверки
+                // Передаем на бэкенд BOC транзакции и сырой payload
                 const confirmResult = await raffle.confirmRaffleTicketPurchase(
                     user.user?.id || 0, 
                     props.packageId, 
-                    result.boc
+                    result.boc,
+                    rawPayload // Отправляем сырой payload вместо BOC
                 );
                 
                 if (confirmResult) {
