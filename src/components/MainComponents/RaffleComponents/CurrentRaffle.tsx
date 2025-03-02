@@ -5,14 +5,19 @@ import styles from './RaffleComponents.module.css';
 import LoadingRaffle from './LoadingRaffle';
 import NoActiveRaffle from './NoActiveRaffle';
 import RaffleInfo from './RaffleInfo';
-import UserTicketsInfo from './UserTicketsInfo';
+import { Button } from '@/components/ui/button';
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+
 
 const CurrentRaffle: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
   const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>("current");
+  const [prevLoading, setPrevLoading] = useState<boolean>(true);
 
+  // Загрузка текущего розыгрыша
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCurrentData = async () => {
       setLoading(true);
       try {
         await raffle.fetchCurrentRaffle();
@@ -23,9 +28,31 @@ const CurrentRaffle: React.FC = observer(() => {
       }
     };
 
-    fetchData();
+    if (activeTab === "current") {
+      fetchCurrentData();
+      // Обновляем данные каждые 5 минут только для текущего розыгрыша
+      const intervalId = setInterval(fetchCurrentData, 5 * 60 * 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [raffle, activeTab]);
 
-  }, [raffle]);
+  // Загрузка предыдущего розыгрыша
+  useEffect(() => {
+    const fetchPreviousData = async () => {
+      setPrevLoading(true);
+      try {
+        await raffle.fetchPreviousRaffle();
+      } catch (error) {
+        console.error('Ошибка при загрузке предыдущего розыгрыша:', error);
+      } finally {
+        setPrevLoading(false);
+      }
+    };
+
+    if (activeTab === "previous") {
+      fetchPreviousData();
+    }
+  }, [raffle, activeTab]);
 
   // Форматирование даты
   const formatDate = (dateString: string) => {
@@ -39,24 +66,100 @@ const CurrentRaffle: React.FC = observer(() => {
     });
   };
 
-  if (loading) {
-    return <LoadingRaffle />;
-  }
+  // Обработчик изменения активного таба
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
 
-  if (!raffle.currentRaffle) {
-    return <NoActiveRaffle />;
-  }
+  // Отображение текущего розыгрыша
+  const renderCurrentRaffle = () => {
+    if (loading) {
+      return <LoadingRaffle />;
+    }
 
-  const { raffle: currentRaffle } = raffle.currentRaffle;
+    if (!raffle.currentRaffle) {
+      return <NoActiveRaffle />;
+    }
+
+    const { raffle: currentRaffle } = raffle.currentRaffle;
+
+    return (
+      <div className={styles.raffleContainer}>
+        <div className={styles.raffleHeader}>
+          <Button
+            variant={activeTab === "previous" ? "default" : "outline"}
+            onClick={() => handleTabChange("previous")}
+            className={styles.currentRaffleButton}
+          >
+            <FaArrowCircleLeft />
+          </Button>
+          <h2 className='text-3xl font-semibold leading-none tracking-tight relative'>
+            Raffle #{currentRaffle.id}
+          </h2>
+        </div>
+        <RaffleInfo 
+          id={currentRaffle.id} 
+          startTime={currentRaffle.startTime} 
+          formatDate={formatDate}
+          prize={currentRaffle.prize}
+          isActive={true}
+          timerActive={currentRaffle.timerActive}
+        />
+        
+      </div>
+    );
+  };
+
+  // Отображение предыдущего розыгрыша
+  const renderPreviousRaffle = () => {
+    if (prevLoading) {
+      return <LoadingRaffle />;
+    }
+
+    if (!raffle.previousRaffle) {
+      return (
+        <div className={styles.noRaffleContainer}>
+          <p className={styles.noRaffleText}>No data about previous raffles</p>
+        </div>
+      );
+    }
+
+    const { raffle: prevRaffle } = raffle.previousRaffle;
+    
+    return (
+      <div className={styles.raffleContainer}>
+        <div className={styles.raffleHeader}>
+          <h2 className='text-3xl font-semibold leading-none tracking-tight'>
+            Raffle #{prevRaffle.id}
+          </h2>
+          <Button
+            variant={activeTab === "current" ? "default" : "outline"}
+            onClick={() => handleTabChange("current")}
+            className={styles.previousRaffleButton}
+          >
+            <FaArrowCircleRight />
+          </Button>
+        </div>
+        <RaffleInfo 
+          id={prevRaffle.id} 
+          startTime={prevRaffle.startTime}
+          endTime={prevRaffle.endTime || undefined}
+          formatDate={formatDate}
+          prize={prevRaffle.prize}
+          isActive={false}
+          winner={prevRaffle.winner || undefined}
+          totalParticipants={raffle.previousRaffle.totalParticipants}
+        />
+      </div>
+    );
+  };
 
   return (
-    <div className={styles.raffleContainer}>
-      <RaffleInfo 
-        id={currentRaffle.id} 
-        startTime={currentRaffle.startTime} 
-        formatDate={formatDate} 
-      />
-      <UserTicketsInfo/>
+    <div className={styles.raffleTabs}>
+      <div className={styles.raffleContainer}>
+      
+        {activeTab === "current" ? renderCurrentRaffle() : renderPreviousRaffle()}
+      </div>
     </div>
   );
 });

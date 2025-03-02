@@ -103,7 +103,11 @@ export interface Raffle {
   totalTickets: number;
   createdAt: string;
   updatedAt: string;
-  winner: null;
+  winner: {
+    id: number;
+    username: string;
+    telegramId: string;
+  } | null;
 }
 
 export interface RecentParticipant {
@@ -121,7 +125,7 @@ export interface CurrentRaffle {
 }
 
 export interface PreviousRaffle {
-  raffle: Raffle[];
+  raffle: Raffle;
   totalTickets: number;
   totalParticipants: number;
   recentParticipants: RecentParticipant[];
