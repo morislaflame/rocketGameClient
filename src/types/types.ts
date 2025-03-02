@@ -100,20 +100,54 @@ export interface Raffle {
   endTime: string | null;
   prize: string;
   winnerUserId: number | null;
+  totalTickets: number;
   createdAt: string;
   updatedAt: string;
   winner: null;
 }
 
+export interface RecentParticipant {
+  userId: number;
+  username: string;
+  lastParticipation: string;
+}
+
 export interface CurrentRaffle {
   raffle: Raffle;
   totalTickets: number;
+  timerActive: boolean;
+  totalParticipants: number;
+  recentParticipants: RecentParticipant[];
+}
+
+export interface PreviousRaffle {
+  raffle: Raffle[];
+  totalTickets: number;
+  totalParticipants: number;
+  recentParticipants: RecentParticipant[];
+}
+
+export interface RaffleTicket {
+  id: number;
+  ticketNumber: number;
+  purchasedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserTickets {
+  raffle: Raffle;
+  tickets: RaffleTicket[];
+  userTicketsCount: number;
+  totalRaffleTickets: number;
+  totalUserTickets: number;
+  chance: string;
+  timerActive: boolean;
 }
 
 export interface RaffleHistory {
   raffle: Raffle[];
 }
-
 
 export interface TonConnectWallet {
   aboutUrl: string;

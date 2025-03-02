@@ -10,6 +10,16 @@ export const getCurrentRaffle = async () => {
     return data;
 };
 
+export const getPreviousRaffle = async () => {
+    const { data } = await $authHost.get('api/raffle/previous');
+    return data;
+};
+
+export const getUserTickets = async () => {
+    const { data } = await $authHost.get('api/raffle/my-tickets');
+    return data;
+};
+
 export const getRaffleHistory = async () => {
     const { data } = await $authHost.get('api/raffle/history');
     return data;

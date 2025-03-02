@@ -1,12 +1,21 @@
-import { CurrentRaffle, RaffleHistory, RafflePackage } from "@/types/types";
+import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets } from "@/types/types";
 import { makeAutoObservable } from "mobx";
-import { confirmTicketPurchase, getCurrentRaffle, getRaffleHistory, getRaffleTicketPackages } from "@/http/raffleAPI";
+import { 
+    confirmTicketPurchase, 
+    getCurrentRaffle, 
+    getRaffleHistory, 
+    getRaffleTicketPackages,
+    getPreviousRaffle,
+    getUserTickets
+} from "@/http/raffleAPI";
 
 export default class RaffleStore {
     _rafflePackages: RafflePackage[] = [];
     _loading = false;
     _currentRaffle: CurrentRaffle | null = null;
     _raffleHistory: RaffleHistory | null = null;
+    _previousRaffle: PreviousRaffle | null = null;
+    _userTickets: UserTickets | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -26,6 +35,14 @@ export default class RaffleStore {
 
     setRaffleHistory(history: RaffleHistory) {
         this._raffleHistory = history;
+    }
+
+    setPreviousRaffle(raffle: PreviousRaffle) {
+        this._previousRaffle = raffle;
+    }
+
+    setUserTickets(tickets: UserTickets) {
+        this._userTickets = tickets;
     }
 
     async fetchRafflePackages() {
@@ -57,6 +74,30 @@ export default class RaffleStore {
             this.setRaffleHistory(history);
         } catch (error) {
             console.error("Error fetching raffle history:", error);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async fetchPreviousRaffle() {
+        try {
+            this.setLoading(true);
+            const previousRaffle = await getPreviousRaffle();
+            this.setPreviousRaffle(previousRaffle);
+        } catch (error) {
+            console.error("Error fetching previous raffle:", error);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async fetchUserTickets() {
+        try {
+            this.setLoading(true);
+            const userTickets = await getUserTickets();
+            this.setUserTickets(userTickets);
+        } catch (error) {
+            console.error("Error fetching user tickets:", error);
         } finally {
             this.setLoading(false);
         }
@@ -96,6 +137,15 @@ export default class RaffleStore {
     get raffleHistory() {
         return this._raffleHistory;
     }
+
+    get previousRaffle() {
+        return this._previousRaffle;
+    }
+
+    get userTickets() {
+        return this._userTickets;
+    }
+
     get loading() {
         return this._loading;
     }

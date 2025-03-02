@@ -17,7 +17,7 @@ import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import ListSkeleton from '@/components/MainComponents/ListSkeleton';
 
 const UserAccount = lazy(() => import('@/components/MainComponents/UserAccount'));
-const Shop = lazy(() => import('@/components/MainComponents/Shop'));
+const Raffle = lazy(() => import('@/components/MainComponents/Raffle'));
 
 
 const MainPage: React.FC = observer(() => {
@@ -66,7 +66,7 @@ const MainPage: React.FC = observer(() => {
               </CarouselItem>
               <CarouselItem className={styles.carouselItem} id="1">
                 <Suspense fallback={<ListSkeleton />}>
-                  <Shop />
+                  <Raffle />
                 </Suspense>
               </CarouselItem>
               <CarouselItem className={styles.carouselItem} id="2">
