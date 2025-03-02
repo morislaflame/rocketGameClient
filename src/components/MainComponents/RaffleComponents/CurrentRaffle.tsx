@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import styles from './RaffleComponents.module.css';
-import LoadingRaffle from './LoadingRaffle';
 import NoActiveRaffle from './NoActiveRaffle';
 import RaffleInfo from './RaffleInfo';
 import { Button } from '@/components/ui/button';
@@ -43,7 +42,7 @@ const CurrentRaffle: React.FC = observer(() => {
       try {
         await raffle.fetchPreviousRaffle();
       } catch (error) {
-        console.error('Ошибка при загрузке предыдущего розыгрыша:', error);
+        console.error('Error fetching previous raffle:', error);
       } finally {
         setPrevLoading(false);
       }
@@ -73,15 +72,15 @@ const CurrentRaffle: React.FC = observer(() => {
 
   // Отображение текущего розыгрыша
   const renderCurrentRaffle = () => {
-    if (loading) {
-      return <LoadingRaffle />;
-    }
+    // if (loading) {
+    //   return <LoadingRaffle />;
+    // }
 
     if (!raffle.currentRaffle) {
       return <NoActiveRaffle />;
     }
 
-    const { raffle: currentRaffle } = raffle.currentRaffle;
+    const { raffle: currentRaffle, timerActive } = raffle.currentRaffle;
 
     return (
       <div className={styles.raffleContainer}>
@@ -103,7 +102,8 @@ const CurrentRaffle: React.FC = observer(() => {
           formatDate={formatDate}
           prize={currentRaffle.prize}
           isActive={true}
-          timerActive={currentRaffle.timerActive}
+          timerActive={timerActive}
+          loading={loading}
         />
         
       </div>
@@ -112,9 +112,9 @@ const CurrentRaffle: React.FC = observer(() => {
 
   // Отображение предыдущего розыгрыша
   const renderPreviousRaffle = () => {
-    if (prevLoading) {
-      return <LoadingRaffle />;
-    }
+    // if (prevLoading) {
+    //   return <LoadingRaffle />;
+    // }
 
     if (!raffle.previousRaffle) {
       return (
@@ -147,6 +147,8 @@ const CurrentRaffle: React.FC = observer(() => {
           formatDate={formatDate}
           prize={prevRaffle.prize}
           isActive={false}
+          timerActive={false}
+          loading={prevLoading}
           winner={prevRaffle.winner || undefined}
           totalParticipants={raffle.previousRaffle.totalParticipants}
         />

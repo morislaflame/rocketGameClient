@@ -18,6 +18,7 @@ interface RaffleInfoProps {
   };
   totalParticipants?: number;
   timerActive: boolean;
+  loading: boolean;
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
@@ -32,12 +33,16 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   return (
     <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
       
-      <div className="flex flex-col items-center gap-2 w-full">
+      
+        <div className="flex flex-col items-center gap-2 w-full">
         
         { isActive && timerActive && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <FaCalendarAlt />
-            <span>Start: {formatDate(startTime)}</span>
+            
+              <>
+                <FaCalendarAlt />
+                <span>Start: {formatDate(startTime)}</span>
+              </>
           </div>
         )}
 
@@ -54,6 +59,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
           </div>
         )}
       </div>
+      
         <>
           <img 
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/1st%20Place%20Medal.webp" 
