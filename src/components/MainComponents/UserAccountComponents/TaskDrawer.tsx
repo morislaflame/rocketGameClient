@@ -137,6 +137,7 @@ const TasksDrawer: React.FC = observer(() => {
               <p>No tasks available</p>
             )}
           </div>
+          
         </ScrollArea>
       </DrawerContent>
     </Drawer>

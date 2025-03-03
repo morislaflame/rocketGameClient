@@ -134,6 +134,8 @@
     justify-content: center;
     text-align: center;
     gap: 12px;
+    width: 80%;
+    align-self: center;
 }
 
 .emptyMessage img {

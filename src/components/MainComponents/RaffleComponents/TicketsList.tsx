@@ -7,9 +7,9 @@ import { RafflePackage } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./RaffleComponents.module.css";
 import ListSkeleton from "../ListSkeleton";
-import ticketImg from "@/assets/rocket.svg";
 import SendTx from "@/utils/sendTx";
 import TransactionAlert from "@/components/FunctionalComponents/TransactionAlert";
+import { FaTicketAlt } from "react-icons/fa";
 
 interface TicketsListProps {
   isLoading: boolean;
@@ -56,7 +56,6 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading, onTransac
     return <p>Билеты не найдены</p>;
   }
   
-  const ticketIconImg = <img src={ticketImg} alt="Tickets" style={{ width: '24px', height: '24px' }} />;
 
   return (
     <>
@@ -79,7 +78,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading, onTransac
                       {p.name}
                     </CardTitle>
                     <CardDescription className={styles.ticketCardDescription}>
-                      +{p.ticketCount} Tickets {ticketIconImg}
+                      +{p.ticketCount} <FaTicketAlt />
                     </CardDescription>
                   </CardHeader>
                   <CardContent className={styles.ticketCardContent}>

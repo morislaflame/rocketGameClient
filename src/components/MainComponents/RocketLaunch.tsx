@@ -376,6 +376,27 @@ const RocketLaunch = observer(() => {
         window.Telegram.WebApp.HapticFeedback.impactOccurred("soft");
       }
       
+      // Создаем GSAP анимацию для подъема и спуска ракеты
+      const canvasElement = canvasRef.current;
+      if (canvasElement) {
+        const tl = gsap.timeline();
+        
+        // Поднимаем ракету вверх
+        tl.to(canvasElement, {
+          y: -150, // Высота подъема в пикселях
+          duration: 1.2, // Длительность подъема
+          ease: "power2.out" // Кривая анимации подъема
+        });
+        
+        // Опускаем ракету вниз с небольшой задержкой
+        tl.to(canvasElement, {
+          y: 0,
+          duration: 0.8, // Длительность спуска
+          ease: "bounce.out", // Кривая анимации спуска с эффектом отскока
+          delay: 0.5 // Задержка перед спуском
+        });
+      }
+      
       // Запускаем анимацию ракеты и ждем ее завершения
       await animateRocket();
       
@@ -449,7 +470,9 @@ const RocketLaunch = observer(() => {
           style={{ 
             cursor: (isLaunching || showResult) ? 'default' : 'pointer',
             // opacity: (isLaunching || showResult) ? 0.7 : 1,
-            display: 'block'
+            display: 'block',
+            willChange: 'transform',
+            position: 'relative'
           }}
         />
 
