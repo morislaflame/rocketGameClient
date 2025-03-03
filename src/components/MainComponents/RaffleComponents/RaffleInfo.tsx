@@ -1,8 +1,9 @@
 import React from 'react';
 import InfiniteSlider from './InfiniteSlider';
 import styles from './RaffleComponents.module.css';
-import { FaCalendarAlt, FaUserAlt, FaUsers } from 'react-icons/fa';
+import { FaCalendarAlt, FaGift, FaUserAlt, FaUsers } from 'react-icons/fa';
 import UserTicketsInfo from './UserTicketsInfo';
+import { RafflePrize } from '@/types/types';
 
 interface RaffleInfoProps {
   id: number;
@@ -19,6 +20,7 @@ interface RaffleInfoProps {
   totalParticipants?: number;
   timerActive: boolean;
   loading: boolean;
+  rafflePrize: RafflePrize | null;
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
@@ -28,17 +30,15 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   winner, 
   totalParticipants,
   isActive,
-  timerActive
+  timerActive,
+  rafflePrize
 }) => {
   return (
     <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
-      
-      
         <div className="flex flex-col items-center gap-2 w-full">
-        
+
         { isActive && timerActive && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            
               <>
                 <FaCalendarAlt />
                 <span>Start: {formatDate(startTime)}</span>
@@ -59,13 +59,33 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
           </div>
         )}
       </div>
-      
         <>
-          <img 
-            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/1st%20Place%20Medal.webp" 
-            alt="1st Place Medal" 
-            className={styles.trophyIcon} 
-          />
+          {rafflePrize && (
+            <>
+              <img 
+                src={rafflePrize?.imageUrl || ''} 
+                alt={rafflePrize?.name || ''} 
+                className={styles.trophyIcon} 
+              />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <FaGift />
+                <span>{rafflePrize.name}</span>
+              </div>
+            </>
+          )}
+          {!rafflePrize && (
+            <>
+              <img 
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Question%20Mark.webp" 
+                alt="Question Mark" 
+                className={styles.trophyIcon} 
+              />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <FaGift />
+                <span>You'll soon recognize the gift!</span>
+              </div>
+            </>
+          )}
           <InfiniteSlider />
         </>
         { isActive && (

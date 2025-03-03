@@ -93,6 +93,14 @@ export interface RafflePackage {
   updatedAt: string;
 }
 
+export interface RafflePrize {
+  id: number;
+  name: string;
+  imageUrl: string;
+  value: number;
+  description: string | null;
+}
+
 export interface Raffle {
   id: number;
   status: string;
@@ -108,6 +116,7 @@ export interface Raffle {
     username: string;
     telegramId: string;
   } | null;
+  raffle_prize: RafflePrize | null;
 }
 
 export interface RecentParticipant {
