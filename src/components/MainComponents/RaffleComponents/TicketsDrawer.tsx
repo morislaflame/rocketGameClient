@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './RaffleComponents.module.css';
 import { FaTicketAlt } from "react-icons/fa";
@@ -14,13 +14,19 @@ import TicketsList from './TicketsList';
 import { Button } from '@/components/ui/button';
 
 const TicketsDrawer: React.FC = observer(() => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button 
           className={styles.ticketsButton}
           variant="secondary"
+          onClick={() => setIsOpen(true)}
         >
           <FaTicketAlt /> Buy Tickets
         </Button>
@@ -32,7 +38,7 @@ const TicketsDrawer: React.FC = observer(() => {
             Buy tickets for the raffle
           </DrawerDescription>
         </DrawerHeader>
-        <TicketsList isLoading={false} />
+        <TicketsList isLoading={false} onTransactionClose={handleClose} />
       </DrawerContent>
     </Drawer>
   );

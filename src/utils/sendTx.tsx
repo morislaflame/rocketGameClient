@@ -10,6 +10,9 @@ import { beginCell } from "ton-core";
 interface SendTxProps {
     price: string;
     packageId: number;
+    onTxStart?: () => void;
+    onTxComplete?: (error?: string) => void;
+    disabled?: boolean;
 }
 
 const SendTx: React.FC<SendTxProps> = (props) => {
@@ -26,16 +29,19 @@ const SendTx: React.FC<SendTxProps> = (props) => {
 
     const handleSendTx = async () => {
         setIsLoading(true);
+        if (props.onTxStart) props.onTxStart();
         
         if (!isConnected) {
             await tonConnectUI.openModal();
             setIsLoading(false);
+            if (props.onTxComplete) props.onTxComplete("Connection error");
             return;
         } 
         
         if (!isConnectionRestored) {
-            console.error("Подключение не восстановлено. Переподключите кошелек");
+            console.error("Connection not restored. Please reconnect your wallet");
             setIsLoading(false);
+            if (props.onTxComplete) props.onTxComplete("Connection not restored. Please reconnect your wallet");
             return;
         }
         
@@ -77,18 +83,26 @@ const SendTx: React.FC<SendTxProps> = (props) => {
                 );
                 
                 if (confirmResult) {
-                    console.log(`Билеты успешно куплены!`);
+                    console.log(`Tickets purchased successfully!`);
                     // Обновляем данные
                     await raffle.fetchCurrentRaffle();
+                    await raffle.fetchUserTickets();
                 }
             } else {
-                console.error("Не удалось получить данные транзакции");
+                console.error("Failed to get transaction data");
+                if (props.onTxComplete) props.onTxComplete("Failed to get transaction data");
+                return;
             }
         } catch (error) {
             console.error(error);
-            console.error("Ошибка при отправке транзакции");
+            console.error("Transaction not sent");
+            if (props.onTxComplete) props.onTxComplete("Transaction not sent");
+            return;
         } finally {
             setIsLoading(false);
+            if (props.onTxComplete && !props.onTxComplete.toString().includes("return")) {
+                props.onTxComplete();
+            }
         }
     }
 
@@ -96,14 +110,14 @@ const SendTx: React.FC<SendTxProps> = (props) => {
         <div>
             <Button 
                 onClick={handleSendTx}
-                disabled={isLoading}
+                disabled={isLoading || props.disabled}
                 variant="secondary"
                 style={{
                     minWidth: "90px",
                     border: "1px solid hsl(0deg 0.67% 27.27%)",
                 }}
                 >
-                    {isLoading ? "Загрузка..." : props.price}
+                    {isLoading ? "Loading..." : props.price}
                     {!isLoading && <img src={tonImg} alt="Ton" className={styles.ticketCardTon} />}
             </Button>
         </div>

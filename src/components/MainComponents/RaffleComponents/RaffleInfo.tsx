@@ -21,6 +21,8 @@ interface RaffleInfoProps {
   timerActive: boolean;
   loading: boolean;
   rafflePrize: RafflePrize | null;
+  totalTickets?: number;
+  winningTicket?: number;
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
@@ -31,7 +33,9 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   totalParticipants,
   isActive,
   timerActive,
-  rafflePrize
+  rafflePrize,
+  totalTickets,
+  winningTicket
 }) => {
   return (
     <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
@@ -86,7 +90,11 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
               </div>
             </>
           )}
-          <InfiniteSlider />
+          <InfiniteSlider 
+            totalTickets={totalTickets} 
+            winningTicket={winningTicket}
+            isCompleted={!isActive && winner !== undefined} 
+          />
         </>
         { isActive && (
           <UserTicketsInfo />

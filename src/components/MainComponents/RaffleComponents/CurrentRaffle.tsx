@@ -105,6 +105,7 @@ const CurrentRaffle: React.FC = observer(() => {
           timerActive={timerActive}
           loading={loading}
           rafflePrize={currentRaffle.raffle_prize}
+          totalTickets={currentRaffle.totalTickets}
         />
         
       </div>
@@ -153,6 +154,8 @@ const CurrentRaffle: React.FC = observer(() => {
           winner={prevRaffle.winner || undefined}
           totalParticipants={raffle.previousRaffle.totalParticipants}
           rafflePrize={prevRaffle.raffle_prize}
+          totalTickets={prevRaffle.totalTickets}
+          winningTicket={prevRaffle.winningTicketNumber || undefined}
         />
       </div>
     );

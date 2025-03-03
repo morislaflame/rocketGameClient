@@ -6,18 +6,21 @@ interface InfiniteSliderProps {
   items?: React.ReactNode[];
   speed?: number;
   direction?: 'left' | 'right';
+  totalTickets?: number;
 }
 
 const InfiniteSlider: React.FC<InfiniteSliderProps> = ({
   items,
   speed = 20,
   direction = 'left',
+  totalTickets,
 }) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderTrackRef = useRef<HTMLDivElement>(null);
   
-  // Если элементы не переданы, используем числа от 1 до 20
-  const defaultItems = Array.from({ length: 20 }, (_, i) => (
+  // Если элементы не переданы, используем числа от 1 до totalTickets (максимум 30)
+  const itemCount = totalTickets ? Math.min(totalTickets, 30) : 20;
+  const defaultItems = Array.from({ length: itemCount }, (_, i) => (
     <div key={`default-${i}`} className={styles.sliderItem}>
       {i + 1}
     </div>

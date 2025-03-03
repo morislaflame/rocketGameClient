@@ -111,6 +111,7 @@ export interface Raffle {
   totalTickets: number;
   createdAt: string;
   updatedAt: string;
+  winningTicketNumber: number | null;
   winner: {
     id: number;
     username: string;
