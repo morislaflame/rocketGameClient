@@ -4,10 +4,12 @@ import { FaTicketAlt } from 'react-icons/fa';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import TicketsDrawer from './TicketsDrawer';
 import styles from './RaffleComponents.module.css';
+import UserTicketsDialog from '@/components/FunctionalComponents/UserTicketsDialog';
 
 const UserTicketsInfo: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   useEffect(() => {
     const loadUserTickets = async () => {
@@ -38,12 +40,16 @@ const UserTicketsInfo: React.FC = observer(() => {
   // Проверяем наличие данных и билетов
   const haveTickets = raffle.userTickets?.tickets?.length ?? 0 > 0;
   
+  const handleTicketsClick = () => {
+    setDialogOpen(true);
+  };
+
   return (
     <div className={styles.ticketsContainer}>
       {haveTickets ? (
         <div className={styles.ticketsHeader}>
           <FaTicketAlt className={styles.ticketIcon} />
-          <strong className={styles.ticketsLabel}>
+          <strong className={styles.ticketsLabel} onClick={handleTicketsClick} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
             Your tickets: {raffle.userTickets?.tickets.length} of {raffle.userTickets?.raffle.totalTickets}
           </strong>
           <p className="text-sm text-muted-foreground">
@@ -60,6 +66,11 @@ const UserTicketsInfo: React.FC = observer(() => {
         </div>
       )}
       <TicketsDrawer />
+      
+      <UserTicketsDialog 
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 });
