@@ -9,6 +9,7 @@ interface RaffleInfoProps {
   id: number;
   startTime: string;
   endTime?: string;
+  thresholdReachedAt?: string | null;
   formatDate: (dateString: string) => string;
   prize: string;
   isActive: boolean;
@@ -26,8 +27,8 @@ interface RaffleInfoProps {
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
-  startTime, 
   endTime, 
+  thresholdReachedAt,
   formatDate,  
   winner, 
   totalParticipants,
@@ -41,11 +42,11 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
     <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
         <div className="flex flex-col items-center gap-2 w-full">
 
-        { isActive && timerActive && (
+        { isActive && timerActive && thresholdReachedAt && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <>
                 <FaCalendarAlt />
-                <span>Start: {formatDate(startTime)}</span>
+                <span>Start: {formatDate(thresholdReachedAt)}</span>
               </>
           </div>
         )}

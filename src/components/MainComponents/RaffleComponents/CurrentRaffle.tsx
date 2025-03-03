@@ -80,7 +80,7 @@ const CurrentRaffle: React.FC = observer(() => {
       return <NoActiveRaffle />;
     }
 
-    const { raffle: currentRaffle, timerActive } = raffle.currentRaffle;
+    const { raffle: currentRaffle } = raffle.currentRaffle;
 
     return (
       <div className={styles.raffleContainer}>
@@ -99,10 +99,11 @@ const CurrentRaffle: React.FC = observer(() => {
         <RaffleInfo 
           id={currentRaffle.id} 
           startTime={currentRaffle.startTime} 
+          thresholdReachedAt={currentRaffle.thresholdReachedAt}
           formatDate={formatDate}
           prize={currentRaffle.prize}
           isActive={true}
-          timerActive={timerActive}
+          timerActive={currentRaffle.timerActive}
           loading={loading}
           rafflePrize={currentRaffle.raffle_prize}
           totalTickets={currentRaffle.totalTickets}

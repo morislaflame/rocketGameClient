@@ -260,49 +260,68 @@ const RocketLaunch = observer(() => {
     // Очистка канваса
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // Сохраняем текущее состояние контекста
+    ctx.save();
+    
+    // Перемещаем точку отсчета в центр канваса
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    
+    // Поворачиваем на -20 градусов (преобразуем в радианы)
+    const angle = -45 * Math.PI / 180;
+    ctx.rotate(angle);
+    
     const frame = framesRef.current[frameIndex];
     
-    // Отрисовка кадра из спрайтшита
+    // Рисуем изображение с фиксированными размерами
+    // Уменьшаем размер изображения так, чтобы оно помещалось после поворота
+    const rocketWidth = 200;  // Подобрать экспериментально
+    const rocketHeight = 200; // Подобрать экспериментально
+    
     ctx.drawImage(
       spriteImage,
       frame.x, frame.y, frame.width, frame.height,
-      0, 0, canvas.width, canvas.height
+      -rocketWidth / 2, -rocketHeight / 2, rocketWidth, rocketHeight
     );
+    
+    // Восстанавливаем контекст
+    ctx.restore();
   };
 
   // Анимация ракеты
   const animateRocket = () => {
-    let currentFrame = 0;
-    const frameCount = framesRef.current.length;
-    const fps = 60; // Кадров в секунду
-    let lastFrameTime = 0;
-    
-    const animate = (timestamp: number) => {
-      if (!lastFrameTime) lastFrameTime = timestamp;
+    return new Promise<void>((resolve) => {
+      let currentFrame = 0;
+      const frameCount = framesRef.current.length;
+      const fps = 240; // Кадров в секунду
+      let lastFrameTime = 0;
       
-      const elapsed = timestamp - lastFrameTime;
-      
-      if (elapsed > 1000 / fps) {
-        lastFrameTime = timestamp;
+      const animate = (timestamp: number) => {
+        if (!lastFrameTime) lastFrameTime = timestamp;
         
-        // Отрисовка текущего кадра
-        drawFrame(currentFrame);
+        const elapsed = timestamp - lastFrameTime;
         
-        // Переход к следующему кадру
-        currentFrame++;
-        
-        // Если анимация закончилась
-        if (currentFrame >= frameCount) {
-          // Анимация завершена, показываем результат
-          setIsLaunching(false);
-          return;
+        if (elapsed > 1000 / fps) {
+          lastFrameTime = timestamp;
+          
+          // Отрисовка текущего кадра
+          drawFrame(currentFrame);
+          
+          // Переход к следующему кадру
+          currentFrame++;
+          
+          // Если анимация закончилась
+          if (currentFrame >= frameCount) {
+            // Анимация завершена
+            resolve();
+            return;
+          }
         }
-      }
+        
+        animationFrameRef.current = requestAnimationFrame(animate);
+      };
       
       animationFrameRef.current = requestAnimationFrame(animate);
-    };
-    
-    animationFrameRef.current = requestAnimationFrame(animate);
+    });
   };
 
   // При изменении результата запуска устанавливаем showResult в true
@@ -341,7 +360,7 @@ const RocketLaunch = observer(() => {
         opacity: 0,
         y: -20,
         duration: 0.3,
-        delay: 1.5,
+        delay: 0.8,
         onComplete: () => setShowResult(false),
       });
     }
@@ -357,9 +376,10 @@ const RocketLaunch = observer(() => {
         window.Telegram.WebApp.HapticFeedback.impactOccurred("soft");
       }
       
-      // Запускаем анимацию ракеты
-      animateRocket();
+      // Запускаем анимацию ракеты и ждем ее завершения
+      await animateRocket();
       
+      // После завершения анимации запускаем ракету на сервере
       await game.launchRocket();
       if (user.user) {
         user.setUser({
@@ -368,7 +388,9 @@ const RocketLaunch = observer(() => {
           attempts: game.attemptsLeft ?? 0,
         });
       }
-      console.log(user);
+      
+      // Важно: сбрасываем флаг isLaunching, чтобы ракета стала снова доступной
+      setIsLaunching(false);
     } catch (err) {
       console.error("Error launching rocket:", err);
       setIsLaunching(false);
@@ -419,14 +441,14 @@ const RocketLaunch = observer(() => {
         {/* Канвас для отрисовки ракеты */}
         <canvas 
           ref={canvasRef}
-          width={240} 
-          height={240}
+          width={260} 
+          height={260}
           onClick={handleLaunchClick}
           onContextMenu={(e) => e.preventDefault()}
           className={`${(isLaunching || showResult) ? styles.disabledRocket : ''}`}
           style={{ 
             cursor: (isLaunching || showResult) ? 'default' : 'pointer',
-            opacity: (isLaunching || showResult) ? 0.7 : 1,
+            // opacity: (isLaunching || showResult) ? 0.7 : 1,
             display: 'block'
           }}
         />
