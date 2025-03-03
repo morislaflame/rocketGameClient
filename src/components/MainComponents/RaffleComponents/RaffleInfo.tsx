@@ -4,6 +4,7 @@ import styles from './RaffleComponents.module.css';
 import { FaCalendarAlt, FaGift, FaUserAlt, FaUsers } from 'react-icons/fa';
 import UserTicketsInfo from './UserTicketsInfo';
 import { RafflePrize } from '@/types/types';
+import { GlowEffect } from '@/components/ui/glow-effect';
 
 interface RaffleInfoProps {
   id: number;
@@ -43,7 +44,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
         <div className="flex flex-col items-center gap-2 w-full">
 
         { isActive && timerActive && thresholdReachedAt && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
               <>
                 <FaCalendarAlt />
                 <span>Start: {formatDate(thresholdReachedAt)}</span>
@@ -67,15 +68,27 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
         <>
           {rafflePrize && (
             <>
+          <div className='relative'>
+            <GlowEffect
+                colors={['#4f9ee6', '#ebf0d1', '#dd6e42', '#2d3047']}
+                mode='colorShift'
+                blur='medium'
+                duration={3}
+                scale={0.9}
+                className='rounded-[20px]'
+              />
+              <div className={styles.trophyContainer}>
               <img 
                 src={rafflePrize?.imageUrl || ''} 
                 alt={rafflePrize?.name || ''} 
                 className={styles.trophyIcon} 
               />
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <FaGift />
-                <span>{rafflePrize.name}</span>
               </div>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
+              <FaGift />
+              <span>{rafflePrize.name}</span>
+            </div>
             </>
           )}
           {!rafflePrize && (
@@ -84,6 +97,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Question%20Mark.webp" 
                 alt="Question Mark" 
                 className={styles.trophyIcon} 
+
               />
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <FaGift />

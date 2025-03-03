@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import styles from './RaffleComponents.module.css';
 import { Button } from '@/components/ui/button';
+import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 
 interface InfiniteSliderProps {
   items?: React.ReactNode[];
@@ -117,6 +118,7 @@ const InfiniteSlider: React.FC<InfiniteSliderProps> = ({
   
   return (
     <div className={styles.sliderWrapper}>
+      {/* <div className={styles.sliderTrackLine}></div> */}
       <div className={styles.sliderContainer} ref={sliderRef}>
         <div className={styles.sliderTrack} ref={sliderTrackRef}>
           {duplicatedItems.map((item, index) => {
@@ -146,6 +148,16 @@ const InfiniteSlider: React.FC<InfiniteSliderProps> = ({
           See the result
         </Button>
       )}
+      <ProgressiveBlur
+        className='pointer-events-none absolute top-0 left-0 h-full w-[50px]'
+        direction='left'
+        blurIntensity={1}
+      />
+      <ProgressiveBlur
+        className='pointer-events-none absolute top-0 right-0 h-full w-[50px]'
+        direction='right'
+        blurIntensity={1}
+      />
     </div>
   );
 };
