@@ -7,6 +7,7 @@ import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHe
 import LeaderboardDrawer from '@/components/MainComponents/UserAccountComponents/LeaderBoardDrawer';
 import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskDrawer';
 import { getUserName } from '@/utils/getUserName';
+import UserPrizeDrawer from '@/components/MainComponents/UserAccountComponents/UserPrizeDrawer';
 
 const UserAccount: React.FC = observer(() => {
   const { user } = React.useContext(Context) as IStoreContext;
@@ -17,6 +18,7 @@ const UserAccount: React.FC = observer(() => {
       <div className={styles.cardContainer}>
         <LeaderboardDrawer />
         <TasksDrawer />
+        <UserPrizeDrawer />
       </div>
     </div>
   );

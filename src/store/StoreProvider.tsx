@@ -6,6 +6,7 @@ import TaskStore from "./TaskStore";
 import DailyRewardStore from "./DailyRewardStore";
 import ProductStore from "./ProductStore";
 import RaffleStore from "./RaffleStore";
+import UserPrizeStore from "./UserPrizeStore";
 
 // Определяем интерфейс для нашего контекста
 export interface IStoreContext {
@@ -15,6 +16,7 @@ export interface IStoreContext {
   dailyReward: DailyRewardStore;
   product: ProductStore;
   raffle: RaffleStore;
+  userPrize: UserPrizeStore;
 }
 
 // Создаем контекст с начальным значением null, но указываем правильный тип
@@ -33,6 +35,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
     dailyReward: DailyRewardStore;
     product: ProductStore;
     raffle: RaffleStore;
+    userPrize: UserPrizeStore;
   } | null>(null);
 
   useEffect(() => {
@@ -44,6 +47,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
         { default: DailyRewardStore },
         { default: ProductStore },
         { default: RaffleStore },
+        { default: UserPrizeStore },
       ] = await Promise.all([
         import("./UserStore"),
         import("./GameStore"),
@@ -51,6 +55,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
         import("./DailyRewardStore"),
         import("./ProductStore"),
         import("./RaffleStore"),
+        import("./UserPrizeStore"),
       ]);
 
       setStores({
@@ -60,6 +65,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
         dailyReward: new DailyRewardStore(),
         product: new ProductStore(),
         raffle: new RaffleStore(),
+        userPrize: new UserPrizeStore(),
       });
     };
 

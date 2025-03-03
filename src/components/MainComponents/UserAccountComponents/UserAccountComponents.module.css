@@ -120,5 +120,25 @@
     font-weight: 600;
 }
 
+.prizesList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.emptyMessage {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.emptyMessage img {
+    width: 112px;
+    height: 112px;
+}
 
 

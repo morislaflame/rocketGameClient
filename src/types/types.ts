@@ -93,12 +93,36 @@ export interface RafflePackage {
   updatedAt: string;
 }
 
+// Возможные статусы приза
+export type PrizeStatus = 'pending' | 'sold' | 'received';
+
+// Интерфейс для приза из розыгрыша
 export interface RafflePrize {
   id: number;
   name: string;
   imageUrl: string;
   value: number;
   description: string | null;
+}
+
+// Интерфейс для пользовательского приза
+export interface UserPrize {
+  id: number;
+  status: PrizeStatus;
+  winDate: string;
+  deliveryDetails?: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: number;
+  rafflePrizeId: number;
+  raffleId: number;
+  raffle_prize: RafflePrize;
+  raffle: {
+    id: number;
+    startTime: string;
+    endTime: string;
+    totalTickets: number;
+  };
 }
 
 export interface Raffle {
