@@ -108,22 +108,21 @@ export interface RafflePrize {
 // Интерфейс для пользовательского приза
 export interface UserPrize {
   id: number;
-  status: PrizeStatus;
+  raffleId: number;
+  status: string;
   winDate: string;
-  deliveryDetails?: string;
   createdAt: string;
   updatedAt: string;
   userId: number;
   rafflePrizeId: number;
-  raffleId: number;
-  raffle_prize: RafflePrize;
   raffle: {
     id: number;
     startTime: string;
     endTime: string;
     totalTickets: number;
-  };
-}
+    raffle_prize: RafflePrize;
+    };
+};
 
 export interface Raffle {
   id: number;
@@ -140,15 +139,15 @@ export interface Raffle {
   winningTicketNumber: number | null;
   winner: {
     id: number;
-    username: string;
-    telegramId: string;
+    username: string | null;
+    telegramId: number | null;
   } | null;
   raffle_prize: RafflePrize | null;
 }
 
 export interface RecentParticipant {
   userId: number;
-  username: string;
+  username: string | null;
   lastParticipation: string;
 }
 

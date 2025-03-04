@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
-import { FaTrophy, FaMoneyBillWave, FaShippingFast } from "react-icons/fa";
+import { FaTrophy } from "react-icons/fa";
 import UserAccCard from "@/components/ui/UserAccCard";
 import {
   Drawer,
@@ -11,13 +11,14 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import styles from "./UserAccountComponents.module.css";
 import { UserPrize } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import ListSkeleton from "../ListSkeleton";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { getPlanetImg } from "@/utils/getPlanetImg";
+import ReceivePrizeDialog from "@/components/FunctionalComponents/ReceivePrizeDialog";
+import SellPrizeDialog from "@/components/FunctionalComponents/SellPrizeDialog";
 
 const UserPrizesDrawer: React.FC = observer(() => {
   const { userPrize, user } = useContext(Context) as IStoreContext;
@@ -25,7 +26,6 @@ const UserPrizesDrawer: React.FC = observer(() => {
   
   // Состояние для диалога получения приза
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
-  const [deliveryDetails, setDeliveryDetails] = useState("");
   const [selectedPrizeId, setSelectedPrizeId] = useState<number | null>(null);
   
   // Состояние для диалога продажи приза
@@ -81,10 +81,9 @@ const UserPrizesDrawer: React.FC = observer(() => {
     
     try {
       setIsLoading(true);
-      const result = await userPrize.receiveUserPrize(selectedPrizeId, deliveryDetails);
+      const result = await userPrize.receiveUserPrize(selectedPrizeId);
       if (result) {
         setReceiveDialogOpen(false);
-        setDeliveryDetails("");
       }
     } catch (error) {
       console.error("Error receiving prize:", error);
@@ -92,6 +91,8 @@ const UserPrizesDrawer: React.FC = observer(() => {
       setIsLoading(false);
     }
   };
+  
+  const tokenImg = getPlanetImg();
 
   return (
     <>
@@ -118,57 +119,47 @@ const UserPrizesDrawer: React.FC = observer(() => {
                 <ListSkeleton count={3}/>
               ) : userPrize.userPrizes && userPrize.userPrizes.length > 0 ? (
                 userPrize.userPrizes.map((prize: UserPrize) => (
-                  <Card key={prize.id} className={styles.prizeCard}>
-                    <CardHeader className={styles.prizeCardHeader}>
+                  <div key={prize.id} className={styles.prizeCard}>
+                        
                       <div className={styles.prizeImageContainer}>
                         <img 
-                          src={prize.raffle_prize.imageUrl || '/placeholder-prize.png'} 
-                          alt={prize.raffle_prize.name}
+                          src={prize.raffle.raffle_prize.imageUrl || tokenImg} 
+                          alt={prize.raffle.raffle_prize.name}
                           className={styles.prizeImage}
                         />
                       </div>
-                      <div className={styles.prizeInfo}>
-                        <CardTitle className={styles.prizeCardTitle}>
-                          {prize.raffle_prize.name}
-                        </CardTitle>
-                        <CardDescription>
-                          Выигран: {prize.winDate}
-                        </CardDescription>
-                        <div className={styles.prizeValue}>
-                          Стоимость: {prize.raffle_prize.value} токенов
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          {prize.raffle.raffle_prize.name}
                         </div>
+                      <div className="flex items-center gap-2 text-m text-white">
+                         {prize.raffle.raffle_prize.value} <img src={tokenImg} alt="Planet" className={styles.prizeImage} />
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className={styles.prizeDescription}>
-                        {prize.raffle_prize.description}
-                      </p>
+                    <div>
                       <div className={styles.prizeStatus}>
-                        {prize.status === 'pending' && "In anticipation"}
+                        {prize.status === 'pending' && ""}
                         {prize.status === 'sold' && "Sold for tokens"}
                         {prize.status === 'received' && "Received physically"}
                       </div>
-                    </CardContent>
+                    </div>
                     {prize.status === 'pending' && (
-                      <CardFooter className={styles.prizeCardFooter}>
+                      <div className={styles.prizeCardFooter}>
                         <Button 
-                          variant="outline" 
+                          variant="secondary" 
                           className={styles.sellButton}
                           onClick={() => handleOpenSellDialog(prize)}
                         >
-                          <FaMoneyBillWave className={styles.buttonIcon} />
                           Sell for tokens
                         </Button>
                         <Button 
+                          variant="secondary"
                           className={styles.receiveButton}
                           onClick={() => handleOpenReceiveDialog(prize.id)}
                         >
-                          <FaShippingFast className={styles.buttonIcon} />
-                          Get prize
+                          Get gift
                         </Button>
-                      </CardFooter>
+                      </div>
                     )}
-                  </Card>
+                  </div>
                 ))
               ) : (
                 <div className={styles.emptyMessage}>
@@ -188,57 +179,21 @@ const UserPrizesDrawer: React.FC = observer(() => {
       </Drawer>
 
       {/* Диалог для запроса физического получения приза */}
-      <Dialog open={receiveDialogOpen} onOpenChange={setReceiveDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Получение приза</DialogTitle>
-            <DialogDescription>
-              Укажите данные для доставки или связи с вами
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setReceiveDialogOpen(false)}>
-              Отмена
-            </Button>
-            <Button 
-              onClick={handleReceivePrize} 
-              disabled={!deliveryDetails.trim() || isLoading}
-            >
-              Отправить запрос
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReceivePrizeDialog 
+        open={receiveDialogOpen}
+        onOpenChange={setReceiveDialogOpen}
+        onReceive={handleReceivePrize}
+        isLoading={isLoading}
+      />
 
       {/* Диалог для продажи приза */}
-      <Dialog open={sellDialogOpen} onOpenChange={setSellDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Продажа приза</DialogTitle>
-            <DialogDescription>
-              Вы собираетесь продать приз и получить токены
-            </DialogDescription>
-          </DialogHeader>
-          {prizeToSell && (
-            <div className={styles.sellConfirmation}>
-              <p>Приз: <strong>{prizeToSell.raffle_prize.name}</strong></p>
-              <p>Вы получите: <strong>{prizeToSell.raffle_prize.value} токенов</strong></p>
-              <p className={styles.warningText}>Внимание! Это действие нельзя отменить.</p>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSellDialogOpen(false)}>
-              Отмена
-            </Button>
-            <Button 
-              onClick={handleSellPrize} 
-              disabled={isLoading}
-            >
-              Продать приз
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <SellPrizeDialog 
+        open={sellDialogOpen}
+        onOpenChange={setSellDialogOpen}
+        prize={prizeToSell}
+        onSell={handleSellPrize}
+        isLoading={isLoading}
+      />
     </>
   );
 });

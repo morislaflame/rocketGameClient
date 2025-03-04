@@ -39,7 +39,7 @@
 }
 
 .dailyRewardModal {
-    background-color: #2C2C2C;
+    background-color: hsl(0 1% 10%);
     border: 1px solid #2C2C2C;
     border-radius: 8px;
     padding: 12px;

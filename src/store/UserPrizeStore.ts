@@ -66,11 +66,11 @@ export default class UserPrizeStore {
     }
   }
 
-  async receiveUserPrize(prizeId: number, deliveryDetails: string) {
+  async receiveUserPrize(prizeId: number) {
     this.setLoading(true);
     this.setError(null);
     try {
-      const result = await receivePrize(prizeId, deliveryDetails);
+      const result = await receivePrize(prizeId);
       // Обновляем список призов после запроса
       await this.fetchUserPrizes();
       return result;

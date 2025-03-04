@@ -1,10 +1,12 @@
-import React from 'react';
-import InfiniteSlider from './InfiniteSlider';
+import React, { useState } from 'react';
 import styles from './RaffleComponents.module.css';
-import { FaCalendarAlt, FaGift, FaUserAlt, FaUsers } from 'react-icons/fa';
+import { FaCalendarAlt, FaGift, FaUsers } from 'react-icons/fa';
 import UserTicketsInfo from './UserTicketsInfo';
-import { RafflePrize } from '@/types/types';
+import { RafflePrize, UserInfo } from '@/types/types';
 import { GlowEffect } from '@/components/ui/glow-effect';
+import TicketsSlider from './TicketsSlider';
+import { getUserName } from '@/utils/getUserName';
+import { Button } from '@/components/ui/button';
 
 interface RaffleInfoProps {
   id: number;
@@ -16,8 +18,8 @@ interface RaffleInfoProps {
   isActive: boolean;
   winner?: {
     id: number;
-    username: string;
-    telegramId: string;
+    username: string | null;
+    telegramId: number | null;
   };
   totalParticipants?: number;
   timerActive: boolean;
@@ -39,32 +41,54 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   totalTickets,
   winningTicket
 }) => {
+
+  const [showResult, setShowResult] = useState(false);
+  const winnerName = winner ? getUserName(winner as UserInfo) : 'Astronaut #1';
+
+  const handleShowResult = () => {
+    if (!winningTicket) return;
+    setShowResult(true);
+  };
+
+  // Компонент с выигрышным билетом
+  const WinningTicketDisplay = () => (
+        <div className='m-4'>
+          <div 
+            className={`${styles.sliderItem} ${styles.winningTicket} ${styles.pulseAnimation}`}
+            data-ticket={winningTicket}
+          >
+            {winningTicket}
+          </div>
+        </div>
+  );
+
   return (
-    <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between'>
+    <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between relative'>
+
         <div className="flex flex-col items-center gap-2 w-full">
+          { isActive && timerActive && thresholdReachedAt && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
+                <>
+                  <FaCalendarAlt />
+                  <span>Start: {formatDate(thresholdReachedAt)}</span>
+                </>
+            </div>
+          )}
 
-        { isActive && timerActive && thresholdReachedAt && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-              <>
-                <FaCalendarAlt />
-                <span>Start: {formatDate(thresholdReachedAt)}</span>
-              </>
-          </div>
-        )}
+          { isActive && !timerActive && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
+              <span>Raffle has not yet started, minimum number of tickets to start: 50</span>
+            </div>
+          )}
+          
+          {endTime && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
+              <FaCalendarAlt />
+              <span>End: {formatDate(endTime)}</span>
+            </div>
+          )}
+        </div>
 
-        { isActive && !timerActive && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-            <span>Raffle has not yet started, minimum number of tickets to start: 50</span>
-          </div>
-        )}
-        
-        {endTime && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-            <FaCalendarAlt />
-            <span>End: {formatDate(endTime)}</span>
-          </div>
-        )}
-      </div>
         <>
           {rafflePrize && (
             <>
@@ -108,22 +132,33 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
               </div>
             </>
           )}
-          <InfiniteSlider 
-            totalTickets={totalTickets} 
-            winningTicket={winningTicket}
-            isCompleted={!isActive && winner !== undefined} 
-          />
+          {/* Conditional rendering: either TicketsSlider or WinningTicket */}
+          {showResult && winningTicket ? (
+            <WinningTicketDisplay />
+          ) : (
+            <TicketsSlider totalTickets={totalTickets} />
+          )}
         </>
         { isActive && (
           <UserTicketsInfo />
         )}
-        {winner && (
+        
+        {!isActive && winner && winningTicket && !showResult && (
+          <Button 
+            onClick={handleShowResult} 
+            className={styles.showResultButton}
+            variant='secondary'
+          >
+            See the result
+          </Button>
+        )}
+        
+        {winner && showResult && (
           <div className={styles.ticketsContainer}>
             <div className={styles.ticketsHeader}>
               <strong className={styles.ticketsLabel}>Winner</strong>
               <div className="flex items-center gap-2">
-                <FaUserAlt />
-                <span>{winner.username}</span>
+                <span>{winnerName}</span>
               </div>
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <FaUsers />

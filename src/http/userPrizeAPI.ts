@@ -13,7 +13,7 @@ export const sellPrize = async (prizeId: number) => {
 };
 
 // Запрос на физическое получение приза
-export const receivePrize = async (prizeId: number, deliveryDetails: string) => {
-  const { data } = await $authHost.post(`api/user-prize/receive/${prizeId}`, { deliveryDetails });
+export const receivePrize = async (prizeId: number) => {
+  const { data } = await $authHost.post(`api/user-prize/receive/${prizeId}`);
   return data;
 };
