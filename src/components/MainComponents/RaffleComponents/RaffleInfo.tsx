@@ -53,13 +53,13 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
         )}
 
         { isActive && !timerActive && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
             <span>Raffle has not yet started, minimum number of tickets to start: 50</span>
           </div>
         )}
         
         {endTime && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
             <FaCalendarAlt />
             <span>End: {formatDate(endTime)}</span>
           </div>
@@ -93,15 +93,18 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
           )}
           {!rafflePrize && (
             <>
-              <img 
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Question%20Mark.webp" 
-                alt="Question Mark" 
-                className={styles.trophyIcon} 
-
-              />
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className='relative flex items-center justify-center flex-col'>
+              <div className={styles.trophyContainer}>
+                <img 
+                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Question%20Mark.webp" 
+                  alt="Question Mark" 
+                  className={styles.trophyIcon} 
+                />
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
                 <FaGift />
                 <span>You'll soon recognize the gift!</span>
+              </div>
               </div>
             </>
           )}
