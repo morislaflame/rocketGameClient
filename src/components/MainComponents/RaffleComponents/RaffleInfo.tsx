@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './RaffleComponents.module.css';
-import { FaCalendarAlt, FaGift, FaUsers } from 'react-icons/fa';
+import { FaGift, FaUsers } from 'react-icons/fa';
 import UserTicketsInfo from './UserTicketsInfo';
 import { RafflePrize, UserInfo } from '@/types/types';
 import { GlowEffect } from '@/components/ui/glow-effect';
@@ -9,12 +9,9 @@ import { getUserName } from '@/utils/getUserName';
 import { Button } from '@/components/ui/button';
 
 interface RaffleInfoProps {
-  id: number;
-  startTime: string;
-  endTime?: string;
-  thresholdReachedAt?: string | null;
-  formatDate: (dateString: string) => string;
-  prize: string;
+  // id: number;
+  // startTime: string;
+  // prize: string;
   isActive: boolean;
   winner?: {
     id: number;
@@ -22,21 +19,16 @@ interface RaffleInfoProps {
     telegramId: number | null;
   };
   totalParticipants?: number;
-  timerActive: boolean;
-  loading: boolean;
+  // loading: boolean;
   rafflePrize: RafflePrize | null;
   totalTickets?: number;
   winningTicket?: number;
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
-  endTime, 
-  thresholdReachedAt,
-  formatDate,  
   winner, 
   totalParticipants,
   isActive,
-  timerActive,
   rafflePrize,
   totalTickets,
   winningTicket
@@ -63,31 +55,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   );
 
   return (
-    <div className='gap-1 p-4 text-center sm:text-left flex flex-col items-center justify-between relative'>
-
-        <div className="flex flex-col items-center gap-2 w-full">
-          { isActive && timerActive && thresholdReachedAt && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-                <>
-                  <FaCalendarAlt />
-                  <span>Start: {formatDate(thresholdReachedAt)}</span>
-                </>
-            </div>
-          )}
-
-          { isActive && !timerActive && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-              <span>Raffle has not yet started, minimum number of tickets to start: 50</span>
-            </div>
-          )}
-          
-          {endTime && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-3">
-              <FaCalendarAlt />
-              <span>End: {formatDate(endTime)}</span>
-            </div>
-          )}
-        </div>
+    <div className='gap-2 p-4 text-center sm:text-left flex flex-col items-center justify-between relative'>
 
         <>
           {rafflePrize && (

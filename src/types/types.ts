@@ -191,9 +191,30 @@ export interface UserTickets {
   timerActive: boolean;
 }
 
-export interface RaffleHistory {
-  raffle: Raffle[];
+export interface RaffleHistoryItem {
+  id: number;
+  status: string;
+  startTime: string;
+  endTime: string;
+  prize: string;
+  winnerUserId: number | null;
+  totalTickets: number;
+  winningTicketNumber: number | null;
+  thresholdReachedAt: string | null;
+  timerActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  prizeId: number | null;
+  rafflePrizeId: number | null;
+  winner: {
+      id: number;
+      username: string | null;
+      telegramId: string | null;
+  } | null;
+  raffle_prize: RafflePrize | null;
 }
+
+export type RaffleHistory = RaffleHistoryItem[];
 
 export interface TonConnectWallet {
   aboutUrl: string;
