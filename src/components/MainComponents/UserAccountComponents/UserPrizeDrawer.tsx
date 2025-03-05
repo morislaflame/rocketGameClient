@@ -163,7 +163,7 @@ const UserPrizesDrawer: React.FC = observer(() => {
                 ))
               ) : (
                 <div className={styles.emptyMessage}>
-                  You don't have any winning gifts yet. Participate in the drawings to win!
+                  <p style={{width: "80%"}}>You don't have any winning gifts yet. Participate in the drawings to win!</p>
                   <img 
                   src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Money%20Bag.webp" 
                   alt="Money Bag" 

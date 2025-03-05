@@ -40,3 +40,17 @@ export const confirmTicketPurchase = async (
     return data;
 };
 
+export const initTicketPurchase = async ( 
+    userId: number, 
+    packageId: number, 
+    rawPayload: string,
+    uniqueId: string
+) => {  
+    const { data } = await $authHost.post('api/raffle/purchase/init', {
+        userId,
+        packageId,
+        rawPayload,
+        uniqueId
+    });
+    return data;
+};

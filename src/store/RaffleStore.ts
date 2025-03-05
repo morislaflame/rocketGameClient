@@ -6,7 +6,8 @@ import {
     getRaffleHistory, 
     getRaffleTicketPackages,
     getPreviousRaffle,
-    getUserTickets
+    getUserTickets,
+    initTicketPurchase
 } from "@/http/raffleAPI";
 
 export default class RaffleStore {
@@ -120,6 +121,29 @@ export default class RaffleStore {
             return result;
         } catch (error) {
             console.error("Error confirming ticket purchase:", error);
+            return null;
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async initRaffleTicketPurchase(
+        userId: number,
+        packageId: number,
+        rawPayload: string,
+        uniqueId: string
+    ) {
+        try {
+            this.setLoading(true);
+            const result = await initTicketPurchase(
+                userId,
+                packageId,
+                rawPayload,
+                uniqueId
+            );
+            return result;
+        } catch (error) {
+            console.error("Error initiating ticket purchase:", error);
             return null;
         } finally {
             this.setLoading(false);

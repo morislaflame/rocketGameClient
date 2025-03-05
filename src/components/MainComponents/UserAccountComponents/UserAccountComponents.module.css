@@ -163,10 +163,9 @@
     height: 60vh;
     align-items: center;
     justify-content: center;
-    text-align: center;
     gap: 12px;
-    width: 80%;
-    align-self: center;
+    width: 100%;
+    text-align: center;
 }
 
 .emptyMessage img {
