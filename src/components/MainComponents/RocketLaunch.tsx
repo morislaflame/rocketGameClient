@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { observer } from "mobx-react-lite";
 import gsap from "gsap";
@@ -14,6 +14,9 @@ import planetImg from '../../assets/planet.svg';
 // Импортируем Lottie и JSON с анимацией ракеты
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import rocketAnimation from '../../assets/Rocket.json';
+import HeaderSkeleton from "./RocketComponents/HeaderSkeleton";
+const Header = lazy(() => import("./RocketComponents/Header"));
+
 
 const RocketLaunch = observer(() => {
   const { user, game } = useContext(Context) as IStoreContext;
@@ -134,10 +137,15 @@ const RocketLaunch = observer(() => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className={styles.shopButtonContainer}>
-        <ShopDrawer />
-      </div>
+    <div className={styles.Container}>
+      <Suspense
+          fallback={
+            <HeaderSkeleton />
+          }
+      >
+        <Header />
+      </Suspense>
+      
 
       {!showResult && !isLaunching && (
         <div
@@ -159,11 +167,11 @@ const RocketLaunch = observer(() => {
         </div>
       )}
 
-      {/* Вся «ракета» (Lottie + blurred элементы) */}
       <div
         style={{
           cursor: isLaunching || showResult ? "default" : "pointer",
           display: "flex",
+          flex: 1,
           alignItems: "center",
           justifyContent: "center",
           position: "relative",
@@ -178,7 +186,6 @@ const RocketLaunch = observer(() => {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Контейнер, который будет «подпрыгивать» */}
         <div
           ref={rocketContainerRef}
           onClick={handleLaunchClick}
@@ -208,15 +215,17 @@ const RocketLaunch = observer(() => {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Бэйдж с результатом (появляется при game.rocketResult) */}
         {showResult && (
           <div ref={resultRef} className={styles.resultBadge}>
             <img src={planetImg} alt="Planet" className={styles.resultIcon} />
             <span className={styles.resultText}>+{game.rocketResult}</span>
           </div>
         )}
+        <div className={styles.shopButtonContainer}>
+          <ShopDrawer />
+        </div>
       </div>
-
+      
       {game.error && <p style={{ color: "red" }}>Failed to launch rocket</p>}
 
       <SoonAlert showAlert={showAlert} onClose={() => setShowAlert(false)} />

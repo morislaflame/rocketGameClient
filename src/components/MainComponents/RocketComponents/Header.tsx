@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { useContext, useEffect } from "react";
-import MainBadge from "../ui/MainBadge";
-import styles from './mainComponents.module.css';
+import MainBadge from "../../ui/MainBadge";
+import styles from './RocketComponents.module.css';
 import { getPlanetImg } from "@/utils/getPlanetImg";
 import { getTriesImg } from "@/utils/getPlanetImg";
 

@@ -13,7 +13,7 @@ const UserAccount: React.FC = observer(() => {
   const { user } = React.useContext(Context) as IStoreContext;
 
   return (
-    <div className={styles.pageContent}>
+    <div className={styles.Container}>
       <UserHeader username={getUserName(user?.user)} />
       <div className={styles.cardContainer}>
         <LeaderboardDrawer />

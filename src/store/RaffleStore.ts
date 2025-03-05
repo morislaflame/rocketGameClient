@@ -1,4 +1,4 @@
-import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets } from "@/types/types";
+import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets, SelectedRaffle } from "@/types/types";
 import { makeAutoObservable } from "mobx";
 import { 
     getCurrentRaffle, 
@@ -7,7 +7,8 @@ import {
     getPreviousRaffle,
     getUserTickets,
     initTicketPurchase,
-    getTransactionStatus
+    getTransactionStatus,
+    getRaffleById
 } from "@/http/raffleAPI";
 
 export default class RaffleStore {
@@ -17,6 +18,7 @@ export default class RaffleStore {
     _raffleHistory: RaffleHistory | null = null;
     _previousRaffle: PreviousRaffle | null = null;
     _userTickets: UserTickets | null = null;
+    _selectedRaffle: SelectedRaffle | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -44,6 +46,10 @@ export default class RaffleStore {
 
     setUserTickets(tickets: UserTickets) {
         this._userTickets = tickets;
+    }
+
+    setSelectedRaffle(raffle: SelectedRaffle) {
+        this._selectedRaffle = raffle;
     }
 
     async fetchRafflePackages() {
@@ -138,6 +144,20 @@ export default class RaffleStore {
         }
     }
 
+    async fetchRaffleById(id: string | number) {
+        try {
+            this.setLoading(true);
+            const raffle = await getRaffleById(id);
+            this.setSelectedRaffle(raffle);
+            return raffle;
+        } catch (error) {
+            console.error("Error fetching raffle by id:", error);
+            return null;
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
     get rafflePackages() {
         return this._rafflePackages;
     }
@@ -160,5 +180,9 @@ export default class RaffleStore {
 
     get loading() {
         return this._loading;
+    }
+
+    get selectedRaffle() {
+        return this._selectedRaffle;
     }
 }

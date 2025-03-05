@@ -42,13 +42,12 @@
 
 .shopButtonContainer {
     position: absolute;
-    bottom: 15%;
+    bottom: 0;
 }
 
 
 .rocketBluredLeft,
 .rocketBluredRight {
-  /* Ваши существующие стили для заблюренных ракет */
   cursor: pointer;
 }
 
@@ -86,23 +85,15 @@
     font-weight: bold;
   }
 
-  .productsContainer {
+  .Container {
     width: 100%;
     height: 100%;
-    padding: 24px 12px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .pageContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
 
 .cardContainer {
     margin-top: 5%;

@@ -164,10 +164,7 @@ const CurrentRaffle: React.FC = observer(() => {
 
   return (
     <div className={styles.raffleTabs}>
-      <div className={styles.raffleContainer}>
-      
         {activeTab === "current" ? renderCurrentRaffle() : renderPreviousRaffle()}
-      </div>
     </div>
   );
 });

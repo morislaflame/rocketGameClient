@@ -46,3 +46,8 @@ export const getTransactionStatus = async (userId: number, uniqueId: string) => 
     });
     return data;
 };
+
+export const getRaffleById = async (id: string | number) => {
+    const { data } = await $authHost.get(`api/raffle/${id}`);
+    return data;
+};

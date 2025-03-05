@@ -154,6 +154,13 @@ export interface RecentParticipant {
 export interface CurrentRaffle {
   raffle: Raffle;
   totalTickets: number;
+  totalParticipants: number;
+  recentParticipants: RecentParticipant[];
+}
+
+export interface SelectedRaffle {
+  raffle: Raffle;
+  totalTickets: number;
   timerActive: boolean;
   totalParticipants: number;
   recentParticipants: RecentParticipant[];

@@ -1,5 +1,5 @@
-import styles from './mainComponents.module.css';
-import BadgeSkeleton from "../ui/BadgeSkeleton";
+import styles from './RocketComponents.module.css';
+import BadgeSkeleton from "../../ui/BadgeSkeleton";
 
 const HeaderSkeleton: React.FC = () => {
 
