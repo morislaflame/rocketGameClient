@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './RaffleComponents.module.css';
-import { FaGift, FaUsers } from 'react-icons/fa';
+import { FaGift, FaPercentage, FaUsers } from 'react-icons/fa';
 import UserTicketsInfo from './UserTicketsInfo';
 import { RafflePrize, UserInfo } from '@/types/types';
 import { GlowEffect } from '@/components/ui/glow-effect';
@@ -23,6 +23,7 @@ interface RaffleInfoProps {
   rafflePrize: RafflePrize | null;
   totalTickets?: number;
   winningTicket?: number;
+  winnerChance?: number;
 }
 
 const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
@@ -31,7 +32,8 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   isActive,
   rafflePrize,
   totalTickets,
-  winningTicket
+  winningTicket,
+  winnerChance
 }) => {
 
   const [showResult, setShowResult] = useState(false);
@@ -128,9 +130,15 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
               <div className="flex items-center gap-2">
                 <span>{winnerName}</span>
               </div>
-              <p className="text-sm text-muted-foreground flex items-center gap-2">
-                <FaUsers />
-                <span>Total participants: {totalParticipants}</span>
+              <p className="text-sm text-muted-foreground flex items-center gap-2 flex-col">
+                <div className="flex items-center gap-2">
+                  <FaUsers />
+                  <span>Total participants: {totalParticipants}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaPercentage />
+                  <span>Winner chance: {winnerChance}%</span>
+                </div>
               </p>
             </div>
           </div>

@@ -12,19 +12,31 @@ import TransactionAlert from "@/components/FunctionalComponents/TransactionAlert
 import { FaTicketAlt } from "react-icons/fa";
 
 interface TicketsListProps {
-  isLoading: boolean;
   onTransactionClose?: () => void;
 }
 
-const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading, onTransactionClose }) => {
+const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }) => {
   const { raffle } = useContext(Context) as IStoreContext;
   const [alertVisible, setAlertVisible] = useState(false);
   const [txLoading, setTxLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [txError, setTxError] = useState<string | null>(null);
 
   useEffect(() => {
-      raffle.fetchRafflePackages();
+      loadRafflePackages();
   }, [raffle]);
+
+  const loadRafflePackages = async () => {
+    setIsLoading(true);
+    try {
+      await raffle.fetchRafflePackages();
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading raffle packages:', error);
+      setIsLoading(false);
+    }
+  }
 
   const handleTxStart = () => {
       setTxLoading(true);
@@ -49,7 +61,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading, onTransac
   };
 
   if (raffle.rafflePackages.length === 0) {
-      return <p>Билеты не найдены</p>;
+      return <p>No tickets found</p>;
   }
 
   return (
@@ -64,7 +76,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ isLoading, onTransac
               <div className={styles.ticketsList}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px", width: "100%" }}>
                       {isLoading ? (
-                          <ListSkeleton count={5} />
+                          <ListSkeleton count={10} />
                       ) : raffle.rafflePackages.length ? (
                           raffle.rafflePackages.map((p: RafflePackage) => (
                               <Card key={p.id} className={styles.ticketCard}>

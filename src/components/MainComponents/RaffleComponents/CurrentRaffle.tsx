@@ -168,6 +168,7 @@ const CurrentRaffle: React.FC = observer(() => {
           rafflePrize={prevRaffle.raffle_prize}
           totalTickets={prevRaffle.totalTickets}
           winningTicket={prevRaffle.winningTicketNumber || undefined}
+          winnerChance={prevRaffle.winnerChance || 0}
         />
         <div>
           <Button variant="outline" onClick={() => setHistoryDialogOpen(true)}>Raffle History</Button>

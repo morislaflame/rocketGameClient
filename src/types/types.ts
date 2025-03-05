@@ -135,6 +135,7 @@ export interface Raffle {
   createdAt: string;
   updatedAt: string;
   thresholdReachedAt: string | null;
+  winnerChance: number | null;
   timerActive: boolean;
   winningTicketNumber: number | null;
   winner: {
@@ -212,6 +213,7 @@ export interface RaffleHistoryItem {
       telegramId: string | null;
   } | null;
   raffle_prize: RafflePrize | null;
+  winnerChance?: number;
 }
 
 export type RaffleHistory = RaffleHistoryItem[];

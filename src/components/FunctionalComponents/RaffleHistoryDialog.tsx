@@ -87,8 +87,12 @@ const RaffleHistoryDialog: React.FC<RaffleHistoryDialogProps> = ({
                     <div className={styles.raffleHistoryItemDetails}>
                         <h4 className="text-xl font-semibold leading-none tracking-tight pb-2">Raffle #{item.id}</h4>
                       <p className="font-semibold leading-none tracking-tight pb-2">Winner: {getUserName(item.winner as unknown as UserInfo)}</p>
-                      <p className="text-sm text-muted-foreground">Winning ticket: #{item.winningTicketNumber || 'N/A'}</p>
-                      <p className="text-sm text-muted-foreground">Total tickets: {item.totalTickets || 0}</p>
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm text-muted-foreground">Winning ticket: #{item.winningTicketNumber || 'N/A'}</p>
+                        <p className="text-sm text-muted-foreground">Total tickets: {item.totalTickets || 0}</p>
+                        <p className="text-sm text-muted-foreground">Winner chance: {item.winnerChance || 0}%</p>
+                      </div>
+                      
                     </div>
                 </div>
               ))}

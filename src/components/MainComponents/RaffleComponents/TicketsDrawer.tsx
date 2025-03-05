@@ -38,7 +38,7 @@ const TicketsDrawer: React.FC = observer(() => {
             Buy tickets for the raffle
           </DrawerDescription>
         </DrawerHeader>
-        <TicketsList isLoading={false} onTransactionClose={handleClose} />
+        <TicketsList onTransactionClose={handleClose} />
       </DrawerContent>
     </Drawer>
   );
