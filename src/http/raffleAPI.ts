@@ -25,21 +25,6 @@ export const getRaffleHistory = async () => {
     return data;
 };
 
-export const confirmTicketPurchase = async (
-    userId: number, 
-    packageId: number, 
-    transactionBoc: string,
-    payloadData?: string // Изменили тип с BOC на простую строку
-) => {
-    const { data } = await $authHost.post('api/raffle/purchase', {
-        userId,
-        packageId, 
-        transactionBoc,
-        payloadData // Изменили название параметра для ясности
-    });
-    return data;
-};
-
 export const initTicketPurchase = async ( 
     userId: number, 
     packageId: number, 
