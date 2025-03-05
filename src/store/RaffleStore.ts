@@ -7,7 +7,8 @@ import {
     getRaffleTicketPackages,
     getPreviousRaffle,
     getUserTickets,
-    initTicketPurchase
+    initTicketPurchase,
+    getTransactionStatus
 } from "@/http/raffleAPI";
 
 export default class RaffleStore {
@@ -147,6 +148,16 @@ export default class RaffleStore {
             return null;
         } finally {
             this.setLoading(false);
+        }
+    }
+
+    async checkTransactionStatus(userId: number, uniqueId: string) {
+        try {
+            const status = await getTransactionStatus(userId, uniqueId);
+            return status;
+        } catch (error) {
+            console.error("Error checking transaction status:", error);
+            return null;
         }
     }
 

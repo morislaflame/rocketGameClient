@@ -54,3 +54,10 @@ export const initTicketPurchase = async (
     });
     return data;
 };
+
+export const getTransactionStatus = async (userId: number, uniqueId: string) => {
+    const { data } = await $authHost.get('api/raffle/purchase/status', {
+        params: { userId, uniqueId }
+    });
+    return data;
+};
