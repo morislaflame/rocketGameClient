@@ -1,5 +1,4 @@
 .pageTitle {
-    margin-top: 15%;
     font-size: 20px;
     font-weight: 600;
     display: flex;
@@ -8,9 +7,34 @@
     gap: 10px;
 }
 
+.balanceContainer {
+    /* background-color: #2C2C2C; */
+    padding: 4px 12px;
+    border-radius: 30px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+  }
+
+  .balanceImg {
+    width: 24px;
+    height: 24px;
+  }
+
+
+  .balanceBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+
 .avatar {
-    width: 112px;
-    height: 112px;
+    width: 150px;
+    height: 150px;
     border-radius: 36px;
 }
 
@@ -122,12 +146,13 @@
 
 .prizesList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    width: 100%;
 }
 
 .prizeCard {
-    width: 50%;
+    width: auto;
     display: flex;
     flex-direction: column;
     align-items: center;

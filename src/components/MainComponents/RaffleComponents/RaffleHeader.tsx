@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { FaCalendarAlt, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
 import styles from './RaffleComponents.module.css';
+import RaffleCountdown from './RaffleCountdown';
 
 interface RaffleHeaderProps {
   raffleId: number;
@@ -24,6 +25,9 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
   formatDate,
   onTabChange,
 }) => {
+  // Константа с продолжительностью розыгрыша - 4 часа в миллисекундах
+  const RAFFLE_DURATION = 4 * 60 * 60 * 1000;
+  
   return (
     <div className="flex flex-col w-full gap-2 ">
       {/* Верхняя строка: кнопка переключения и заголовок */}
@@ -48,14 +52,17 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
         
       </div>
 
-      {/* Блок с датами (тот самый, который вы просили вынести) */}
+      {/* Блок с датами и таймером */}
       <div className="flex flex-col items-center gap-2 text-center w-[70%] mx-auto">
-            {isActive && timerActive && thresholdReachedAt && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <FaCalendarAlt />
-                <span>Start: {formatDate(thresholdReachedAt)}</span>
-            </div>
-            )}
+        {isActive && timerActive && thresholdReachedAt && (
+          <>
+            {/* Отображаем обратный отсчет, если таймер активен */}
+            <RaffleCountdown 
+              startTime={thresholdReachedAt} 
+              duration={RAFFLE_DURATION} 
+            />
+          </>
+        )}
 
             {isActive && !timerActive && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">

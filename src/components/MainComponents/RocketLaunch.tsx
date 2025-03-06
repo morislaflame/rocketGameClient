@@ -138,6 +138,7 @@ const RocketLaunch = observer(() => {
 
   return (
     <div className={styles.Container}>
+      
       <Suspense
           fallback={
             <HeaderSkeleton />

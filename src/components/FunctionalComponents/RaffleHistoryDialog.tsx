@@ -56,7 +56,7 @@ const RaffleHistoryDialog: React.FC<RaffleHistoryDialogProps> = ({
   const tokenImg = getPlanetImg();
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} >
       <DialogContent className={styles.raffleHistoryModal}>
         <DialogHeader>
           <DialogTitle>Raffle History</DialogTitle>

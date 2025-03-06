@@ -11,9 +11,6 @@ const LoadingIndicator: React.FC = memo(() => {
             <Skeleton className="w-full h-full" style={{ backgroundColor: 'color-mix(in oklab, hsl(0deg 10.85% 89.22%) 10%, transparent)', borderRadius: '30px', position: 'absolute', top: 0, left: 0 }}/>
             <Lottie animationData={animationData} loop={true} />
         </div>
-        {/* <div style={{ width: 150, height: 48, backgroundColor: '#111111', borderRadius: '30px', position: 'absolute', bottom: 20 }}>
-            <Skeleton className="w-full h-full " style={{ backgroundColor: 'color-mix(in oklab, hsl(0deg 10.85% 89.22%) 10%, transparent)', borderRadius: '30px' }}/>
-        </div> */}
     </div>
   );
 });

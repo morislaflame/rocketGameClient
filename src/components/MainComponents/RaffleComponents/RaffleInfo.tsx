@@ -79,7 +79,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
               />
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-3">
               <FaGift />
               <span>{rafflePrize.name}</span>
             </div>
@@ -95,7 +95,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
                   className={styles.trophyIcon} 
                 />
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground pt-3">
                 <FaGift />
                 <span>You'll soon recognize the gift!</span>
               </div>
