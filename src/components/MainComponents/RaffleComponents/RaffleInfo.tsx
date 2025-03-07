@@ -57,27 +57,27 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   );
 
   return (
-    <div className='gap-2 p-4 text-center sm:text-left flex flex-col items-center justify-between relative'>
+    <div className='gap-2 text-center p-2 sm:text-left flex flex-col items-center justify-between relative w-full'>
 
         <>
           {rafflePrize && (
             <>
-          <div className='relative'>
-            <GlowEffect
-                colors={['#4f9ee6', '#ebf0d1', '#dd6e42', '#2d3047']}
-                mode='colorShift'
-                blur='medium'
-                duration={3}
-                scale={0.9}
-                className='rounded-[20px]'
-              />
-              <div className={styles.trophyContainer}>
-              <img 
-                src={rafflePrize?.imageUrl || ''} 
-                alt={rafflePrize?.name || ''} 
-                className={styles.trophyIcon} 
-              />
-              </div>
+              <div className='relative'>
+                <GlowEffect
+                    colors={['#4f9ee6', '#ebf0d1', '#dd6e42', '#2d3047']}
+                    mode='colorShift'
+                    blur='medium'
+                    duration={3}
+                    scale={0.9}
+                    className='rounded-[20px]'
+                  />
+                  <div className={styles.trophyContainer}>
+                  <img 
+                    src={rafflePrize?.imageUrl || ''} 
+                    alt={rafflePrize?.name || ''} 
+                    className={styles.trophyIcon} 
+                  />
+                </div>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground pt-3">
               <FaGift />

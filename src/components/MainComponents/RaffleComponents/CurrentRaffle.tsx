@@ -6,9 +6,9 @@ import styles from './RaffleComponents.module.css';
 import NoActiveRaffle from './NoActiveRaffle';
 import RaffleInfo from './RaffleInfo';
 import RaffleHeader from './RaffleHeader';    // <-- Импортируем наш новый компонент
-import { Button } from '@/components/ui/button';
 import LoadingRaffle from './LoadingRaffle';
-import RaffleHistoryDialog from '@/components/FunctionalComponents/RaffleHistoryDialog';
+import RaffleHistoryMorphingDialog from '@/components/FunctionalComponents/RaffleHistoryMorphingDialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const CurrentRaffle: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
@@ -17,7 +17,6 @@ const CurrentRaffle: React.FC = observer(() => {
   const [activeTab, setActiveTab] = useState<string>("current");
   const [prevLoading, setPrevLoading] = useState<boolean>(true);
   const [showPrevLoader, setShowPrevLoader] = useState<boolean>(false);
-  const [historyDialogOpen, setHistoryDialogOpen] = useState<boolean>(false);
 
   // Загрузка текущего розыгрыша
   useEffect(() => {
@@ -102,8 +101,10 @@ const CurrentRaffle: React.FC = observer(() => {
     const { raffle: currentRaffle } = raffle.currentRaffle;
 
     return (
+      
       <div className={styles.raffleContainer}>
         {/* Вот здесь используем RaffleHeader */}
+        
         <RaffleHeader
           raffleId={currentRaffle.id}
           isCurrent={true}
@@ -116,18 +117,19 @@ const CurrentRaffle: React.FC = observer(() => {
         />
 
         {/* Тот же RaffleInfo */}
-        <RaffleInfo
-          isActive={true}
-          rafflePrize={currentRaffle.raffle_prize}
-          totalTickets={currentRaffle.totalTickets}
-        />
-        <div>
-          <Button variant="outline" onClick={() => setHistoryDialogOpen(true)}>Raffle History</Button>
-          <RaffleHistoryDialog 
-            open={historyDialogOpen}
-            onOpenChange={setHistoryDialogOpen}
-          />
-        </div>
+        <ScrollArea className="flex-1 w-full">
+          <div className='flex flex-col gap-2 items-center justify-center'>
+            <RaffleInfo
+              isActive={true}
+              rafflePrize={currentRaffle.raffle_prize}
+              totalTickets={currentRaffle.totalTickets}
+            />
+            <div>
+              {/* Заменяем кнопку + диалог на MorphingDialog */}
+              <RaffleHistoryMorphingDialog />
+            </div>
+          </div>
+        </ScrollArea>
       </div>
     );
   };
@@ -160,23 +162,23 @@ const CurrentRaffle: React.FC = observer(() => {
           formatDate={formatDate}
           onTabChange={handleTabChange}
         />
-        
-        <RaffleInfo
-          isActive={false}
-          winner={prevRaffle.winner || undefined}
-          totalParticipants={raffle.previousRaffle.totalParticipants}
-          rafflePrize={prevRaffle.raffle_prize}
-          totalTickets={prevRaffle.totalTickets}
-          winningTicket={prevRaffle.winningTicketNumber || undefined}
-          winnerChance={prevRaffle.winnerChance || 0}
-        />
-        <div>
-          <Button variant="outline" onClick={() => setHistoryDialogOpen(true)}>Raffle History</Button>
-          <RaffleHistoryDialog 
-            open={historyDialogOpen}
-            onOpenChange={setHistoryDialogOpen}
-          />
-        </div>
+        <ScrollArea className={styles.scrollArea}>
+          <div className='flex flex-col gap-2 items-center justify-center'>
+            <RaffleInfo
+              isActive={false}
+              winner={prevRaffle.winner || undefined}
+              totalParticipants={raffle.previousRaffle.totalParticipants}
+              rafflePrize={prevRaffle.raffle_prize}
+              totalTickets={prevRaffle.totalTickets}
+              winningTicket={prevRaffle.winningTicketNumber || undefined}
+              winnerChance={prevRaffle.winnerChance || 0}
+            />
+            <div>
+              {/* Заменяем кнопку + диалог на MorphingDialog */}
+              <RaffleHistoryMorphingDialog />
+            </div>
+          </div> 
+        </ScrollArea>
       </div>
     );
   };
