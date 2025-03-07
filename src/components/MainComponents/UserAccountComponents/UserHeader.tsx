@@ -9,13 +9,9 @@ import { Context } from '@/store/StoreProvider';
 import { IStoreContext } from '@/store/StoreProvider';
 import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from "@/utils/getPlanetImg";
-import { Link } from 'react-router-dom';
-import { PARTNERS_ROUTE } from '@/utils/consts';
-
 
 const UserHeader: React.FC = () => {
   const { user } = React.useContext(Context) as IStoreContext;
-
 
   const balance = user?.user?.balance ?? 0;
   const planetImg = getPlanetImg();
@@ -41,9 +37,7 @@ const UserHeader: React.FC = () => {
       />
       </Avatar>
         <TonConnectButton />
-        <div className={styles.partnersContainer}>
-          <Link to={PARTNERS_ROUTE} className={styles.partnersLink}>Партнеры</Link>
-        </div>
+        
     </div>
   );
 };

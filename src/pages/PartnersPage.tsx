@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import styles from './PartnersPage.module.css';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import { observer } from 'mobx-react-lite';
 import { ReferralSpendingChart } from '@/components/ReferralComponents/ReferralSpendingChart';

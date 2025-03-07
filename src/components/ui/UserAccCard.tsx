@@ -7,9 +7,10 @@ interface UserAccCardProps {
   title: string;
   icon: React.ReactNode;
   description: string;
+  onClick?: () => void;
 }
 
-const UserAccCard: React.FC<UserAccCardProps> = memo(({ title, icon, description }) => {
+const UserAccCard: React.FC<UserAccCardProps> = memo(({ title, icon, description, onClick }) => {
   const cardContainerRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
@@ -22,6 +23,9 @@ const UserAccCard: React.FC<UserAccCardProps> = memo(({ title, icon, description
         ease: "power1.inOut",
         yoyo: true,
         repeat: 1,
+        onComplete: () => {
+          onClick?.();
+        }
       });
     }
   };

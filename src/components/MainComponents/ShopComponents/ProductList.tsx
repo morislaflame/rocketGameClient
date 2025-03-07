@@ -57,16 +57,16 @@ const buyProduct = async (productId: number) => {
             <ListSkeleton count={5}/>
           ) : product.products.length ? (
             product.products.map((p: Product) => (
-              <Card key={p.id} className={styles.productCard}>
-                <CardHeader className={styles.productCardHeader}>
-                    <CardTitle className={styles.productCardTitle}>
+              <Card key={p.id} className="flex flex-row justify-between p-4">
+                <CardHeader className="flex flex-col gap-1 p-0">
+                    <CardTitle className="text-m font-bold">
                         {p.name}
                     </CardTitle>
-                    <CardDescription className={styles.productCardDescription}>
+                    <CardDescription className="text-sm text-muted-foreground flex flex-row gap-2 items-center">
                       +{p.attempts} Launches {rewardImg}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className={styles.productCardContent}>
+                <CardContent className="flex flex-row gap-2 items-center p-0">
                     
                     <Button 
                     onClick={() => buyProduct(p.id)} 

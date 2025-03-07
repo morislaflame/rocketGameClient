@@ -160,7 +160,7 @@ const CurrentRaffle: React.FC = observer(() => {
           formatDate={formatDate}
           onTabChange={handleTabChange}
         />
-
+        
         <RaffleInfo
           isActive={false}
           winner={prevRaffle.winner || undefined}

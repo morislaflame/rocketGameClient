@@ -2,10 +2,7 @@ import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { observer } from "mobx-react-lite";
 import gsap from "gsap";
-
 import styles from './mainComponents.module.css';
-
-import ShopDrawer from "./ShopComponents/ShopDrawer";
 import SoonAlert from "../FunctionalComponents/SoonAlert";
 
 import rocketBlured from '../../assets/rocketblured.svg';
@@ -15,6 +12,7 @@ import planetImg from '../../assets/planet.svg';
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import rocketAnimation from '../../assets/Rocket.json';
 import HeaderSkeleton from "./RocketComponents/HeaderSkeleton";
+import LeaderboardDrawer from "./UserAccountComponents/LeaderBoardDrawer";
 const Header = lazy(() => import("./RocketComponents/Header"));
 
 
@@ -169,13 +167,9 @@ const RocketLaunch = observer(() => {
       )}
 
       <div
+        className="flex flex-col flex-1 items-center justify-end relative"
         style={{
           cursor: isLaunching || showResult ? "default" : "pointer",
-          display: "flex",
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
           willChange: 'transform',
         }}
       >
@@ -191,7 +185,7 @@ const RocketLaunch = observer(() => {
           ref={rocketContainerRef}
           onClick={handleLaunchClick}
           onContextMenu={(e) => e.preventDefault()}
-          style={{ position: 'relative' }}
+          style={{ position: 'absolute', bottom: '30%' }}
         >
           <Lottie
             lottieRef={lottieRef}
@@ -222,13 +216,11 @@ const RocketLaunch = observer(() => {
             <span className={styles.resultText}>+{game.rocketResult}</span>
           </div>
         )}
-        <div className={styles.shopButtonContainer}>
-          <ShopDrawer />
-        </div>
+        <LeaderboardDrawer />
       </div>
       
       {game.error && <p style={{ color: "red" }}>Failed to launch rocket</p>}
-
+      
       <SoonAlert showAlert={showAlert} onClose={() => setShowAlert(false)} />
     </div>
   );

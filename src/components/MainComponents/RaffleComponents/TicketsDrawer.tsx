@@ -25,7 +25,7 @@ const TicketsDrawer: React.FC = observer(() => {
       <DrawerTrigger asChild>
         <Button 
           className={styles.ticketsButton}
-          variant="secondary"
+          // variant="secondary"
           onClick={() => setIsOpen(true)}
         >
           <FaTicketAlt /> Buy Tickets

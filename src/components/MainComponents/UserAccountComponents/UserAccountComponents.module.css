@@ -38,11 +38,18 @@
     border-radius: 36px;
 }
 
+.partnersLink {
+    color: white;
+    text-decoration: underline;
+    font-size: 16px;
+    font-weight: 600;
+}
 
 .drawerContent {
     padding: 12px;
     height: 90vh;
     will-change: transform;
+    background: black;
 }
 
 .topUsersList {

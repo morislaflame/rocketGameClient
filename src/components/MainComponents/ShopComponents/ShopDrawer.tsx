@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import styles from './ShopComponents.module.css';
-import { FaShoppingCart } from "react-icons/fa";
 import {
   Drawer,
   DrawerContent,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import ProductList from './ProductList';
 import { Button } from '@/components/ui/button';
+import { FaPlusCircle } from "react-icons/fa";
 
 const ShopDrawer: React.FC = observer(() => {
   const { product } = React.useContext(Context) as IStoreContext;
@@ -34,11 +34,11 @@ const ShopDrawer: React.FC = observer(() => {
     <Drawer>
       <DrawerTrigger asChild>
         <Button 
-          className={styles.shopButton}
+          className='p-1 flex gap-1 h-fit items-center'
           onClick={handleShopOpen}
-          variant="secondary"
+          variant="outline"
         >
-          <FaShoppingCart /> Buy Rockets
+          <FaPlusCircle /> More
         </Button>
       </DrawerTrigger>
       <DrawerContent className={styles.drawerContent}>

@@ -131,13 +131,13 @@ export const ReferralSpendingChart = observer(() => {
         <div className="flex flex-col w-full gap-2 text-sm">
           <div className="flex items-center gap-2 font-medium leading-none">
             {/* Пример “TrendingUp” и ваша динамика */}
-            {`Показано ${chartData.length} дней`}{" "}
+            {`Shown ${chartData.length} days`}{" "}
             <TrendingUp className="h-4 w-4" />
           </div>
           <div className="text-muted-foreground">
-            Всего потрачено: <b>{referral.totalSpent.toFixed(2)}</b> TON
+            Total spent: <b>{referral.totalSpent.toFixed(2)}</b> TON
             <br />
-            Ваш заработок (30%):{" "}
+            Your earnings (30%):{" "}
             <b>{referral.totalEarned.toFixed(2)}</b> TON
           </div>
 
@@ -151,7 +151,7 @@ export const ReferralSpendingChart = observer(() => {
               Prev
             </button>
             <span>
-              Страница {referral.page}
+              Page {referral.page}
             </span>
             <button
               className="border px-2 py-1 rounded"

@@ -99,16 +99,16 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
                           <ListSkeleton count={10} />
                       ) : raffle.rafflePackages.length ? (
                           raffle.rafflePackages.map((p: RafflePackage) => (
-                              <Card key={p.id} className={styles.ticketCard}>
-                                  <CardHeader className={styles.ticketCardHeader}>
-                                      <CardTitle className={styles.ticketCardTitle}>
+                              <Card key={p.id} className="flex flex-row justify-between p-4">
+                                  <CardHeader className="flex flex-col gap-1 p-0">
+                                      <CardTitle className="text-m font-bold">
                                           {p.name}
                                       </CardTitle>
-                                      <CardDescription className={styles.ticketCardDescription}>
-                                          +{p.ticketCount} <FaTicketAlt />
+                                      <CardDescription className="text-sm text-muted-foreground flex flex-row gap-2 items-center">
+                                          +{p.ticketCount} <FaTicketAlt/>
                                       </CardDescription>
                                   </CardHeader>
-                                  <CardContent className={styles.ticketCardContent}>
+                                  <CardContent className="flex flex-row gap-2 items-center p-0">
                                     {hasAvailableBonus && (
                                         <div className={styles.bonusSection}>
                                             <span className={styles.bonusIcon}>x2</span>
