@@ -115,7 +115,8 @@ export default class RaffleStore {
         userId: number,
         packageId: number,
         rawPayload: string,
-        uniqueId: string
+        uniqueId: string,
+        bonusId?: number
     ) {
         try {
             this.setLoading(true);
@@ -123,7 +124,8 @@ export default class RaffleStore {
                 userId,
                 packageId,
                 rawPayload,
-                uniqueId
+                uniqueId,
+                bonusId
             );
             return result;
         } catch (error) {

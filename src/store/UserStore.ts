@@ -1,12 +1,13 @@
 import {makeAutoObservable, runInAction } from "mobx";
-import { fetchMyInfo, fetchTopUsers, telegramAuth, check } from "../http/userAPI";
-import { UserInfo } from "../types/types";
+import { fetchMyInfo, fetchTopUsers, telegramAuth, check, getAvailableBonuses, generateReferralCode } from "../http/userAPI";
+import { UserInfo, UserBonus } from "../types/types";
 export default class UserStore {
     _user: UserInfo | null = null;
     _isAuth = false;
     _users: UserInfo[] = [];
     _loading = false;
     isTooManyRequests = false;
+    _availableBonuses: UserBonus[] = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -30,6 +31,16 @@ export default class UserStore {
 
     setTooManyRequests(flag: boolean) {
         this.isTooManyRequests = flag;
+      }
+
+      setAvailableBonuses(bonuses: UserBonus[]) {
+        this._availableBonuses = bonuses;
+      }
+
+      setReferralCode(code: string) {
+        if (this._user) {
+            this._user.referralCode = code;
+        }
       }
 
 
@@ -92,6 +103,34 @@ export default class UserStore {
             console.error("Error during fetching top users:", error);
         }
     }
+
+    async fetchAvailableBonuses() {
+        try {
+            const data = await getAvailableBonuses();
+            runInAction(() => {
+                this.setAvailableBonuses(data as UserBonus[]);
+            });
+        } catch (error) {
+            console.error("Error during fetching available bonuses:", error);
+        }
+    }
+
+    async generateReferralCode() {
+        try {
+            const data = await generateReferralCode();
+            runInAction(() => {
+                this.setReferralCode(data.referralCode as string);
+            });
+        } catch (error) {
+            console.error("Error during generating referral code:", error);
+        }
+    }
+    
+
+
+    get availableBonuses() {
+        return this._availableBonuses;
+    }
     
     get users() {
         return this._users;
@@ -107,5 +146,9 @@ export default class UserStore {
 
     get loading() {
         return this._loading;
+    }
+
+    get referralCode() {
+        return this._user?.referralCode;
     }
 }

@@ -10,22 +10,25 @@ import ListSkeleton from "../ListSkeleton";
 import SendTx from "@/utils/sendTx";
 import TransactionAlert from "@/components/FunctionalComponents/TransactionAlert";
 import { FaTicketAlt } from "react-icons/fa";
+import { Switch } from "@/components/ui/switch";
 
 interface TicketsListProps {
   onTransactionClose?: () => void;
 }
 
 const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }) => {
-  const { raffle } = useContext(Context) as IStoreContext;
+  const { raffle, user } = useContext(Context) as IStoreContext;
   const [alertVisible, setAlertVisible] = useState(false);
   const [txLoading, setTxLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const [txError, setTxError] = useState<string | null>(null);
+  const [selectedBonuses, setSelectedBonuses] = useState<{ [key: number]: number | null }>({});
 
   useEffect(() => {
       loadRafflePackages();
-  }, [raffle]);
+      loadAvailableBonuses();
+  }, [raffle, user]);
 
   const loadRafflePackages = async () => {
     setIsLoading(true);
@@ -37,6 +40,14 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
       setIsLoading(false);
     }
   }
+
+  const loadAvailableBonuses = async () => {
+    try {
+      await user.fetchAvailableBonuses();
+    } catch (error) {
+      console.error('Error loading available bonuses:', error);
+    }
+  };
 
   const handleTxStart = () => {
       setTxLoading(true);
@@ -59,6 +70,15 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
           if (onTransactionClose) onTransactionClose();
       }
   };
+
+  const handleBonusToggle = (packageId: number, bonusId: number | null) => {
+    setSelectedBonuses((prev) => ({
+      ...prev,
+      [packageId]: prev[packageId] === bonusId ? null : bonusId,
+    }));
+  };
+
+  const hasAvailableBonus = user.availableBonuses.length > 0;
 
   if (raffle.rafflePackages.length === 0) {
       return <p>No tickets found</p>;
@@ -89,12 +109,25 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
                                       </CardDescription>
                                   </CardHeader>
                                   <CardContent className={styles.ticketCardContent}>
+                                    {hasAvailableBonus && (
+                                        <div className={styles.bonusSection}>
+                                            <span className={styles.bonusIcon}>x2</span>
+                                            <Switch
+                                            checked={!!selectedBonuses[p.id]}
+                                            onCheckedChange={() =>
+                                                handleBonusToggle(p.id, user.availableBonuses[0]?.id)
+                                            }
+                                            disabled={user.availableBonuses.length === 0}
+                                            />
+                                        </div>
+                                    )}
                                       <SendTx 
                                           price={p.price} 
                                           packageId={p.id} 
                                           onTxStart={handleTxStart}
                                           onTxComplete={handleTxComplete}
                                           disabled={txLoading}
+                                          bonusId={selectedBonuses[p.id] || undefined}
                                       />
                                   </CardContent>
                               </Card>

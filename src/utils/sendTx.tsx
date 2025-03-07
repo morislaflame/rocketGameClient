@@ -12,6 +12,7 @@ interface SendTxProps {
     onTxStart?: () => void;
     onTxComplete?: (error?: string) => void;
     disabled?: boolean;
+    bonusId?: number;
 }
 
 const SendTx: React.FC<SendTxProps> = (props) => {
@@ -86,7 +87,7 @@ const SendTx: React.FC<SendTxProps> = (props) => {
             const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
             const rawPayload = `${user.user.id}:${props.packageId}:raffleTicket:${uniqueId}`;
 
-            await raffle.initRaffleTicketPurchase(user.user.id, props.packageId, rawPayload, uniqueId);
+            await raffle.initRaffleTicketPurchase(user.user.id, props.packageId, rawPayload, uniqueId, props.bonusId);
 
             const payload = beginCell()
                 .storeUint(0, 32)

@@ -24,6 +24,8 @@ export interface UserInfo {
   premium: boolean;
   attempts: number;
   tickets: number;
+  referralCode: string | null;
+  referrerId: number | null;
   // Если нужно, можно добавить другие поля
 }
 
@@ -246,4 +248,30 @@ export interface TonConnectWallet {
   provider: string;
   tondns: string;
   universalLink: string;
+}
+
+
+export interface UserBonus {
+  id: number;
+  bonusType: string;
+  isUsed: boolean;
+  createdAt: string;
+  usedAt: string | null;
+}
+
+export type UserBonuses = UserBonus[];
+
+
+export interface RefferalSpent {
+  date: string;
+  totalSpent: string;
+}
+
+export interface Referral {
+  data: RefferalSpent[];
+  totalSpent: number;
+  totalEarned: number;
+  page: number;
+  limit: number;
+  totalItems: number;
 }
