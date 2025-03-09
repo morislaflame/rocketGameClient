@@ -101,26 +101,27 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
                           raffle.rafflePackages.map((p: RafflePackage) => (
                               <Card key={p.id} className="flex flex-row justify-between p-4">
                                   <CardHeader className="flex flex-col gap-1 p-0">
-                                      <CardTitle className="text-m font-bold">
+                                      <CardTitle className="text-m font-bold flex flex-row gap-4 items-center">
                                           {p.name}
+                                          {hasAvailableBonus && p.id <= 6 && (
+                                            <div className="flex flex-row gap-1 items-center">
+                                                <span className={styles.bonusIcon}>x2</span>
+                                                <Switch
+                                                checked={!!selectedBonuses[p.id]}
+                                                onCheckedChange={() =>
+                                                    handleBonusToggle(p.id, user.availableBonuses[0]?.id)
+                                                }
+                                                disabled={user.availableBonuses.length === 0}
+                                                />
+                                            </div>
+                                            )}
                                       </CardTitle>
                                       <CardDescription className="text-sm text-muted-foreground flex flex-row gap-2 items-center">
                                           +{p.ticketCount} <FaTicketAlt/>
                                       </CardDescription>
                                   </CardHeader>
                                   <CardContent className="flex flex-row gap-2 items-center p-0">
-                                    {hasAvailableBonus && (
-                                        <div className={styles.bonusSection}>
-                                            <span className={styles.bonusIcon}>x2</span>
-                                            <Switch
-                                            checked={!!selectedBonuses[p.id]}
-                                            onCheckedChange={() =>
-                                                handleBonusToggle(p.id, user.availableBonuses[0]?.id)
-                                            }
-                                            disabled={user.availableBonuses.length === 0}
-                                            />
-                                        </div>
-                                    )}
+                                    
                                       <SendTx 
                                           price={p.price} 
                                           packageId={p.id} 
