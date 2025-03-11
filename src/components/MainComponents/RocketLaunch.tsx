@@ -4,6 +4,9 @@ import { observer } from "mobx-react-lite";
 import gsap from "gsap";
 import styles from './mainComponents.module.css';
 import SoonAlert from "../FunctionalComponents/SoonAlert";
+import { useLayoutEffect } from "react";
+
+
 
 import rocketBlured from '../../assets/rocketblured.svg';
 import planetImg from '../../assets/planet.svg';
@@ -30,6 +33,14 @@ const RocketLaunch = observer(() => {
 
   // Реф, к которому привяжем анимацию подъёма/спуска ракеты через GSAP:
   const rocketContainerRef = useRef<HTMLDivElement>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      gsap.fromTo(containerRef.current, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' });
+    }
+  }, []);
 
   // Следим за изменением результата. При появлении game.rocketResult – показываем бэйдж:
   useEffect(() => {
@@ -135,7 +146,7 @@ const RocketLaunch = observer(() => {
   };
 
   return (
-    <div className={styles.Container}>
+    <div className={styles.Container} ref={containerRef}>
       
       <Suspense
           fallback={

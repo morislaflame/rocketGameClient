@@ -104,7 +104,7 @@ const UserPrizesDrawer: React.FC = observer(() => {
             <UserAccCard
               title="Winning gifts"
               icon={<FaTrophy />}
-              description="All the gifts you have won in the drawings"
+              description="All the gifts you have won in the raffle"
             />
           </div>
         </DrawerTrigger>

@@ -6,6 +6,7 @@ import "./App.css";
 import LoadingIndicator from "./components/ui/LoadingIndicator";
 import DailyRewardModal from "./components/FunctionalComponents/DailyRewardModal";
 import { postEvent } from "@telegram-apps/sdk";
+import Navigation from "./components/MainComponents/Navigation";
 
 // Lazy-loaded Components
 
@@ -99,6 +100,7 @@ const App = observer(() => {
       >
         <AppRouter />
       </Suspense>
+      <Navigation />
         <DailyRewardModal />
     </BrowserRouter>
     // </TonConnectUIProvider>

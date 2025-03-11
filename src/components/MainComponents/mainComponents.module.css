@@ -86,8 +86,8 @@
   }
 
   .Container {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 88vh;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -108,4 +108,40 @@
     align-items: center;
     gap: 10px;
     padding: 0 12px;
+}
+
+
+
+.navigation {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  height: 12vh;
+  
+}
+
+.navButtons {
+  position: relative; /* Для абсолютного позиционирования индикатора */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: fit-content;
+  gap: 12px;
+  padding: 4px 12px;
+  border-radius: 30px;
+  background-color: #141414;
+  height: fit-content;
+}
+
+/* Индикатор активного таба */
+.activeIndicator {
+  position: absolute;
+  width: 72px;
+  height: 100%;
+  background-color: #2C2C2C;
+  border-radius: 30px;
+  transition: left 0.3s ease;
+  z-index: 0;
 }

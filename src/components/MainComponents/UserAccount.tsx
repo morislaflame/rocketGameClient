@@ -1,9 +1,7 @@
-// src/components/UserAccount/UserAccount.tsx
-import React from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './mainComponents.module.css';
 import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHeader';
-import LeaderboardDrawer from '@/components/MainComponents/UserAccountComponents/LeaderBoardDrawer';
 import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskDrawer';
 import UserPrizeDrawer from '@/components/MainComponents/UserAccountComponents/UserPrizeDrawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,16 +9,27 @@ import UserAccCard from '../ui/UserAccCard';
 import { FaUserFriends } from 'react-icons/fa';
 import { PARTNERS_ROUTE } from '@/utils/consts';
 import { useNavigate } from 'react-router-dom';
+import { gsap } from 'gsap';
 
 const UserAccount: React.FC = observer(() => {
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      gsap.fromTo(
+        containerRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
+      );
+    }
+  }, []);
 
   return (
-    <div className={styles.Container}>
+    <div className={styles.Container} ref={containerRef}>
       <ScrollArea className={styles.scrollArea}>
-      <UserHeader />
+        <UserHeader />
         <div className={styles.cardContainer}>
-          <LeaderboardDrawer />
           <TasksDrawer />
           <UserPrizeDrawer />
           <UserAccCard
