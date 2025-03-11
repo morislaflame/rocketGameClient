@@ -9,12 +9,16 @@ import {
 import RocketLaunch from '@/components/MainComponents/RocketLaunch';
 import { type CarouselApi } from "@/components/ui/carousel";
 import { AiFillHome } from 'react-icons/ai';
-import { AiFillDollarCircle } from 'react-icons/ai';
 import NavButton from '@/components/ui/NavButton';
-import { AiOutlineUser } from 'react-icons/ai';
 import styles from './Main.module.css';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import ListSkeleton from '@/components/MainComponents/ListSkeleton';
+import { FaUserAstronaut } from "react-icons/fa6";
+import { FaTicket } from "react-icons/fa6";
+
+import homeIcon from '@/assets/HOME_V2.svg';
+import astronautIcon from '@/assets/ACC_V2.svg';
+import ticketIcon from '@/assets/TICKET.svg';
 
 const UserAccount = lazy(() => import('@/components/MainComponents/UserAccount'));
 const Raffle = lazy(() => import('@/components/MainComponents/Raffle'));
@@ -84,15 +88,15 @@ const MainPage: React.FC = observer(() => {
                 style={{ left: `${indicatorLeft}px` }}
               />
               <NavButton 
-                img={<AiFillHome />} 
+                img={<FaUserAstronaut />} 
                 onClick={() => handleNavClick(0)}
               />
               <NavButton 
-                img={<AiFillDollarCircle />} 
+                img={<FaTicket />} 
                 onClick={() => handleNavClick(1)}
               />
               <NavButton 
-                img={<AiOutlineUser />} 
+                img={<AiFillHome />} 
                 onClick={() => handleNavClick(2)}
               />
             </div>

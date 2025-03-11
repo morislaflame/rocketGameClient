@@ -75,16 +75,25 @@ export default class RaffleStore {
         }
     }
 
-    async fetchRaffleHistory() {
-        try {
-            const history = await getRaffleHistory();
-            this.setRaffleHistory(history);
-        } catch (error) {
-            console.error("Error fetching raffle history:", error);
-        } finally {
-            this.setLoading(false);
-        }
+    // В RaffleStore.ts
+async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
+    try {
+      this.setLoading(true)
+      const history = await getRaffleHistory(limit, offset)
+      if (append && this._raffleHistory) {
+        this.setRaffleHistory([...this._raffleHistory, ...history])
+      } else {
+        this.setRaffleHistory(history)
+      }
+      return history
+    } catch (error) {
+      console.error("Error fetching raffle history:", error)
+      return []
+    } finally {
+      this.setLoading(false)
     }
+  }
+  
 
     async fetchPreviousRaffle() {
         try {

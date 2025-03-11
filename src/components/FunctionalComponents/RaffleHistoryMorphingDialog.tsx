@@ -19,25 +19,45 @@ import { getPlanetImg } from "@/utils/getPlanetImg"
 import { getUserName } from "@/utils/getUserName"
 import { UserInfo } from "@/types/types"
 import styles from "./FunctionalComponents.module.css"
+import { Button } from "../ui/button"
 
 const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext
 
   const [isLoading, setIsLoading] = useState(false)
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const pageSize = 10
 
-  // Функция, вызывающаяся при клике внутри триггера, но до открытия диалога
-  const handleOpenHistory = async () => {
+  // Функция для загрузки данных с учетом offset
+  const loadHistory = async (currentOffset: number, append: boolean = false) => {
     setIsLoading(true)
-    // Если загрузка > 1с, показываем скелетон
-    
-
     try {
-      await raffle.fetchRaffleHistory()
+      const data = await raffle.fetchRaffleHistory(pageSize, currentOffset, append)
+      setOffset(currentOffset + data.length)
+      // Если полученная порция меньше, чем pageSize – данные закончились
+      if (data.length < pageSize) {
+        setHasMore(false)
+      } else {
+        setHasMore(true)
+      }
     } catch (error) {
       console.error("Ошибка при загрузке истории розыгрышей:", error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // При открытии диалога загружаем первую порцию данных
+  const handleOpenHistory = async () => {
+    setOffset(0)
+    setHasMore(true)
+    await loadHistory(0, false)
+  }
+
+  // Обработчик для кнопки "Загрузить ещё"
+  const handleLoadMore = async () => {
+    await loadHistory(offset, true)
   }
 
   const tokenImg = getPlanetImg()
@@ -50,20 +70,15 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
         damping: 24,
       }}
     >
-      {/*
-        === TRIGGER ===
-        Кнопка/обёртка, при клике на которую:
-         1) handleOpenHistory() загружает данные
-         2) Событие всплывает -> MorphingDialogTrigger открывает диалог
-      */}
       <MorphingDialogTrigger
-        style={{ borderRadius: "calc(var(--radius) - 2px)", border: "1px solid hsl(0 0% 14.9%)" }}
+        style={{
+          borderRadius: "calc(var(--radius) - 2px)",
+          border: "1px solid hsl(0 0% 14.9%)",
+        }}
         className="border border-gray-200/60 bg-black rounded-md w-fit"
+        
       >
-        <div
-          className="flex items-center space-x-3 p-3"
-          onClick={handleOpenHistory}
-        >
+        <div className="flex items-center space-x-3 p-3" onClick={handleOpenHistory}>
           <MorphingDialogImage
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/Trophy.webp"
             alt="Trophy"
@@ -75,43 +90,37 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
               Raffle History
             </MorphingDialogTitle>
             <MorphingDialogSubtitle className="text-[10px] text-gray-600 text-m">
-                See all past raffles and winners
+              See all past raffles and winners
             </MorphingDialogSubtitle>
           </div>
         </div>
       </MorphingDialogTrigger>
 
-      {/*
-        === CONTAINER + CONTENT ===
-        Портал + бэкдроп, затем внутренняя часть диалога
-      */}
       <MorphingDialogContainer>
         <MorphingDialogContent
           style={{ borderRadius: "12px", border: "1px solid hsl(0 0% 14.9%)" }}
-          className="relative h-auto w-[90%] border  bg-black"
+          className="relative h-auto w-[90%] border bg-black"
         >
-        <div className="flex justify-center items-center p-4 text-center relative">
+          <div className="flex justify-center items-center p-4 text-center relative">
             <div className="absolute top-2 left-2">
-                <MorphingDialogImage
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/Trophy.webp" 
+              <MorphingDialogImage
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/Trophy.webp"
                 alt="Trophy"
                 className="h-16 w-16 object-cover object-center rounded"
-                />
+              />
             </div>
             <div className="px-6">
-            <MorphingDialogTitle className="text-lg font-bold">
+              <MorphingDialogTitle className="text-lg font-bold">
                 Raffle History
-            </MorphingDialogTitle>
-            <MorphingDialogSubtitle className="text-sm text-gray-500">
-              See all past raffles and winners
-            </MorphingDialogSubtitle>
-          </div>
+              </MorphingDialogTitle>
+              <MorphingDialogSubtitle className="text-sm text-gray-500">
+                See all past raffles and winners
+              </MorphingDialogSubtitle>
+            </div>
           </div>
 
-          
           <ScrollArea className="h-[60vh] w-full rounded-md p-3">
-            {/* Логика отображения данных/скелетона */}
-            {isLoading ? (
+            {isLoading && offset === 0 ? (
               <ListSkeleton count={3} />
             ) : raffle.raffleHistory && raffle.raffleHistory.length > 0 ? (
               <div className={styles.raffleHistoryList}>
@@ -133,11 +142,11 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
                       <h4 className="text-xl font-semibold leading-none tracking-tight pb-1">
                         Raffle #{item.id}
                       </h4>
-                      <p className="text-sm  leading-none tracking-tight pb-2">
+                      <p className="text-sm leading-none tracking-tight pb-2">
                         Winner:{" "}
                         {getUserName(item.winner as unknown as UserInfo)}
                       </p>
-                      <div className="flex flex-col ">
+                      <div className="flex flex-col">
                         <p className="text-sm text-muted-foreground">
                           Winning ticket: #{item.winningTicketNumber || "N/A"}
                         </p>
@@ -157,15 +166,21 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
                 <p>Raffle history is empty</p>
               </div>
             )}
+            {hasMore && (
+            <div className="flex justify-center items-center mt-4">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Load more"}
+              </Button>
+            </div>
+          )}
           </ScrollArea>
 
-          {/*
-            === Можем сверху/ниже добавить TITLE, SUBTITLE
-            Например, ещё одна картинка и тайтл внутри диалога
-          */}
           
 
-          {/* Кнопка «крестик» для закрытия */}
           <MorphingDialogClose className="text-zinc-500 rounded-md" />
         </MorphingDialogContent>
       </MorphingDialogContainer>

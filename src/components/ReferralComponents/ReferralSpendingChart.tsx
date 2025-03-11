@@ -135,11 +135,12 @@ export const ReferralSpendingChart = observer(() => {
             <TrendingUp className="h-4 w-4" />
           </div>
           <div className="text-muted-foreground">
-            Total spent: <b>{referral.totalSpent.toFixed(2)}</b> TON
+            Total spent: <b>{(referral.totalSpent ?? 0).toFixed(2)}</b> TON
             <br />
             Your earnings (30%):{" "}
-            <b>{referral.totalEarned.toFixed(2)}</b> TON
+            <b>{(referral.totalEarned ?? 0).toFixed(2)}</b> TON
           </div>
+
 
           {/* Блок пагинации */}
           <div className="mt-2 flex items-center gap-2">

@@ -20,10 +20,12 @@ export const getUserTickets = async () => {
     return data;
 };
 
-export const getRaffleHistory = async () => {
-    const { data } = await $authHost.get('api/raffle/history');
+export const getRaffleHistory = async (limit: number, offset: number) => {
+    const { data } = await $authHost.get('api/raffle/history', {
+      params: { limit, offset },
+    });
     return data;
-};
+  };
 
 export const initTicketPurchase = async ( 
     userId: number, 

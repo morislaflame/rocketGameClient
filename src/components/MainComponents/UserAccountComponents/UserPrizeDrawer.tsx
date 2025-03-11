@@ -94,6 +94,8 @@ const UserPrizesDrawer: React.FC = observer(() => {
   
   const tokenImg = getPlanetImg();
 
+  const isEmpty = userPrize.userPrizes && userPrize.userPrizes.length === 0;
+
   return (
     <>
       <Drawer>
@@ -114,10 +116,22 @@ const UserPrizesDrawer: React.FC = observer(() => {
             </DrawerDescription>
           </DrawerHeader>
           <ScrollArea className="h-[70vh] w-[100%] rounded-md">
+            {isEmpty && (
+              <div className={styles.emptyMessage}>
+                <p style={{width: "80%"}}>You don't have any winning gifts yet. Participate in the drawings to win!</p>
+                <img 
+                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Money%20Bag.webp" 
+                  alt="Money Bag" 
+                  width="25" 
+                  height="25" 
+                  className="inline-block mr-2"
+                  />
+              </div>
+            )}
             <div className={styles.prizesList}>
               {isLoading ? (
                 <ListSkeleton count={3}/>
-              ) : userPrize.userPrizes && userPrize.userPrizes.length > 0 ? (
+              ) : (
                 userPrize.userPrizes.map((prize: UserPrize) => (
                   <div key={prize.id} className={styles.prizeCard}>
                         
@@ -161,17 +175,6 @@ const UserPrizesDrawer: React.FC = observer(() => {
                     )}
                   </div>
                 ))
-              ) : (
-                <div className={styles.emptyMessage}>
-                  <p style={{width: "80%"}}>You don't have any winning gifts yet. Participate in the drawings to win!</p>
-                  <img 
-                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Money%20Bag.webp" 
-                  alt="Money Bag" 
-                  width="25" 
-                  height="25" 
-                  className="inline-block mr-2"
-                  />
-                </div>
               )}
             </div>
           </ScrollArea>
