@@ -102,7 +102,7 @@ const LeaderboardDrawer: React.FC = observer(() => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className={styles.topUserCardContent}>
-                    {u.balance} <img src={getPlanetImg()} alt="Planet" />
+                    {u.balance} <img src={getPlanetImg()} alt="Planet" width={"18px"} height={"18px"}/>
                   </CardContent>
                 </Card>
               ))

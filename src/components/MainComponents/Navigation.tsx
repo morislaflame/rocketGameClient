@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import NavButton from '@/components/ui/NavButton';
 import styles from './mainComponents.module.css';
 
-import homeSolidIcon from "@/assets/HOME_SOLID.svg";
-import astronautSolidIcon from "@/assets/ACC_SOLID.svg";
-import ticketSolidIcon from "@/assets/TICKET_SOLID.svg";
+import homeSolidIcon from "@/assets/HOME_SOLID2.png";
+import astronautSolidIcon from "@/assets/ACC_SOLID.png";
+import ticketSolidIcon from "@/assets/TICKET_SOLID.png";
 
-import homeIcon from "@/assets/HOME_V2.svg";
-import astronautIcon from "@/assets/ACC_V3 1.svg";
-import ticketIcon from "@/assets/TICKET.svg";
+import homeIcon from "@/assets/HOME_LINE.png";
+import astronautIcon from "@/assets/ACC_LINE.png";
+import ticketIcon from "@/assets/TICKET 1.png";
 
 const navigationItems = [
   { 
