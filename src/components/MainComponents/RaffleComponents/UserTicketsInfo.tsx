@@ -109,7 +109,7 @@ const UserTicketsInfo: React.FC = observer(() => {
       </div>
 
       <Button className={styles.ticketsButton} onClick={toggleTicketsList}>
-        <FaTicketAlt /> {isTicketsListOpen ? 'Close Tickets' : 'Buy Tickets'}
+        <FaTicketAlt /> {isTicketsListOpen ? 'Close' : 'Buy Tickets'}
       </Button>
 
       <UserTicketsDialog open={dialogOpen} onOpenChange={setDialogOpen} />

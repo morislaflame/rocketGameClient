@@ -12,16 +12,23 @@ const LoadingRaffle: React.FC = memo(() => {
         width: '100%', 
         height: '100%', 
         display: 'flex', 
-        justifyContent: 'center', 
+        // justifyContent: 'center', 
         alignItems: 'center',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        gap: '10px'
       }}
     >
+      <div className="flex flex-col items-center justify-center rounded-lg w-full h-[80px] relative">
+        <Skeleton className="w-full h-full absolute" />
+          <p style={{ color: '#aaa' }}>
+            Loading raffle data...
+          </p>
+      </div>
       {/* Контейнер с анимацией и скелетоном поверх */}
       <div 
         style={{ 
-          width: '100%', 
-          height: '100%', 
+          width: '150px', 
+          height: '150px', 
           position: 'relative', 
           borderRadius: '30px',
         }}
@@ -43,10 +50,15 @@ const LoadingRaffle: React.FC = memo(() => {
           style={{ borderRadius: '30px' }}
         />
       </div>
-
-      <p style={{ marginTop: 16, color: '#aaa' }}>
-        Loading raffle data...
-      </p>
+      <div className='flex flex-col items-center gap-2 w-[100px] h-[20px]'>
+        <Skeleton className='w-full h-full' />
+      </div>
+      <div className="flex flex-col items-center justify-center gap-2 w-full h-[100px] mt-2 relative">
+        <Skeleton className="w-full h-full absolute" />
+      </div>
+      <div className='flex flex-col items-center gap-2 w-full h-[200px]'>
+        <Skeleton className='w-full h-full' />
+      </div>
     </div>
   );
 });

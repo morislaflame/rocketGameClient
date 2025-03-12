@@ -1,5 +1,3 @@
-import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets, SelectedRaffle } from "@/types/types";
-import { makeAutoObservable } from "mobx";
 import { 
     getCurrentRaffle, 
     getRaffleHistory, 
@@ -10,26 +8,32 @@ import {
     getTransactionStatus,
     getRaffleById
 } from "@/http/raffleAPI";
+import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets, SelectedRaffle } from "@/types/types";
+import { makeAutoObservable } from "mobx";
 
 export default class RaffleStore {
     _rafflePackages: RafflePackage[] = [];
-    _loading = false;
     _currentRaffle: CurrentRaffle | null = null;
     _raffleHistory: RaffleHistory | null = null;
     _previousRaffle: PreviousRaffle | null = null;
     _userTickets: UserTickets | null = null;
     _selectedRaffle: SelectedRaffle | null = null;
 
+    _loadingRafflePackages: boolean = false;
+    _loadingCurrentRaffle: boolean = false;
+    _loadingPreviousRaffle: boolean = false;
+    _loadingRaffleHistory: boolean = false;
+    _loadingUserTickets: boolean = false;
+    _loadingTicketPurchase: boolean = false;
+    _loadingSelectedRaffle: boolean = false;
+
     constructor() {
         makeAutoObservable(this);
     }
 
+    // Setters для данных
     setRafflePackages(packages: RafflePackage[]) {
         this._rafflePackages = packages;
-    }
-
-    setLoading(loading: boolean) {
-        this._loading = loading;
     }
 
     setCurrentRaffle(raffle: CurrentRaffle) {
@@ -52,73 +56,102 @@ export default class RaffleStore {
         this._selectedRaffle = raffle;
     }
 
+    // Setters для состояний загрузки
+    setLoadingRafflePackages(loading: boolean) {
+        this._loadingRafflePackages = loading;
+    }
+
+    setLoadingCurrentRaffle(loading: boolean) {
+        this._loadingCurrentRaffle = loading;
+    }
+
+    setLoadingPreviousRaffle(loading: boolean) {
+        this._loadingPreviousRaffle = loading;
+    }
+
+    setLoadingRaffleHistory(loading: boolean) {
+        this._loadingRaffleHistory = loading;
+    }
+
+    setLoadingUserTickets(loading: boolean) {
+        this._loadingUserTickets = loading;
+    }
+
+    setLoadingTicketPurchase(loading: boolean) {
+        this._loadingTicketPurchase = loading;
+    }
+
+    setLoadingSelectedRaffle(loading: boolean) {
+        this._loadingSelectedRaffle = loading;
+    }
+
+    // Методы для загрузки данных
+
     async fetchRafflePackages() {
         try {
-            this.setLoading(true);
+            this.setLoadingRafflePackages(true);
             const packages = await getRaffleTicketPackages();
             this.setRafflePackages(packages);
         } catch (error) {
             console.error("Error fetching raffle packages:", error);
         } finally {
-            this.setLoading(false);
+            this.setLoadingRafflePackages(false);
         }
     }
 
     async fetchCurrentRaffle() {
         try {
+            this.setLoadingCurrentRaffle(true);
             const currentRaffle = await getCurrentRaffle();
             this.setCurrentRaffle(currentRaffle);
         } catch (error) {
             console.error("Error fetching current raffle:", error);
         } finally {
-            this.setLoading(false);
+            this.setLoadingCurrentRaffle(false);
         }
     }
-
-    // В RaffleStore.ts
-async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
-    try {
-      this.setLoading(true)
-      const history = await getRaffleHistory(limit, offset)
-      if (append && this._raffleHistory) {
-        this.setRaffleHistory([...this._raffleHistory, ...history])
-      } else {
-        this.setRaffleHistory(history)
-      }
-      return history
-    } catch (error) {
-      console.error("Error fetching raffle history:", error)
-      return []
-    } finally {
-      this.setLoading(false)
-    }
-  }
-  
-
+      
     async fetchPreviousRaffle() {
         try {
-            this.setLoading(true);
+            this.setLoadingPreviousRaffle(true);
             const previousRaffle = await getPreviousRaffle();
             this.setPreviousRaffle(previousRaffle);
         } catch (error) {
             console.error("Error fetching previous raffle:", error);
         } finally {
-            this.setLoading(false);
+            this.setLoadingPreviousRaffle(false);
+        }
+    }
+
+    async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
+        try {
+            this.setLoadingRaffleHistory(true);
+            const history = await getRaffleHistory(limit, offset);
+            if (append && this._raffleHistory) {
+                this.setRaffleHistory([...this._raffleHistory, ...history]);
+            } else {
+                this.setRaffleHistory(history);
+            }
+            return history;
+        } catch (error) {
+            console.error("Error fetching raffle history:", error);
+            return [];
+        } finally {
+            this.setLoadingRaffleHistory(false);
         }
     }
 
     async fetchUserTickets() {
         try {
-            this.setLoading(true);
+            this.setLoadingUserTickets(true);
             const userTickets = await getUserTickets();
             this.setUserTickets(userTickets);
         } catch (error) {
             console.error("Error fetching user tickets:", error);
         } finally {
-            this.setLoading(false);
+            this.setLoadingUserTickets(false);
         }
     }
-
 
     async initRaffleTicketPurchase(
         userId: number,
@@ -128,7 +161,7 @@ async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
         bonusId?: number
     ) {
         try {
-            this.setLoading(true);
+            this.setLoadingTicketPurchase(true);
             const result = await initTicketPurchase(
                 userId,
                 packageId,
@@ -141,7 +174,7 @@ async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
             console.error("Error initiating ticket purchase:", error);
             return null;
         } finally {
-            this.setLoading(false);
+            this.setLoadingTicketPurchase(false);
         }
     }
 
@@ -157,7 +190,7 @@ async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
 
     async fetchRaffleById(id: string | number) {
         try {
-            this.setLoading(true);
+            this.setLoadingSelectedRaffle(true);
             const raffle = await getRaffleById(id);
             this.setSelectedRaffle(raffle);
             return raffle;
@@ -165,10 +198,11 @@ async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
             console.error("Error fetching raffle by id:", error);
             return null;
         } finally {
-            this.setLoading(false);
+            this.setLoadingSelectedRaffle(false);
         }
     }
 
+    // Геттеры для данных
     get rafflePackages() {
         return this._rafflePackages;
     }
@@ -189,11 +223,36 @@ async fetchRaffleHistory(limit = 10, offset = 0, append = false) {
         return this._userTickets;
     }
 
-    get loading() {
-        return this._loading;
-    }
-
     get selectedRaffle() {
         return this._selectedRaffle;
+    }
+
+    // Геттеры для состояний загрузки
+    get loadingRafflePackages() {
+        return this._loadingRafflePackages;
+    }
+
+    get loadingCurrentRaffle() {
+        return this._loadingCurrentRaffle;
+    }
+
+    get loadingPreviousRaffle() {
+        return this._loadingPreviousRaffle;
+    }
+
+    get loadingRaffleHistory() {
+        return this._loadingRaffleHistory;
+    }
+
+    get loadingUserTickets() {
+        return this._loadingUserTickets;
+    }
+
+    get loadingTicketPurchase() {
+        return this._loadingTicketPurchase;
+    }
+
+    get loadingSelectedRaffle() {
+        return this._loadingSelectedRaffle;
     }
 }
