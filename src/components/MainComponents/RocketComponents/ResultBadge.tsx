@@ -1,5 +1,5 @@
 // src/components/RocketComponents/ResultBadge.tsx
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import styles from "../mainComponents.module.css";
 
 type ResultBadgeProps = {
