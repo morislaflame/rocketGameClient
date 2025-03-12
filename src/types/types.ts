@@ -275,3 +275,13 @@ export interface Referral {
   limit: number;
   totalItems: number;
 }
+
+
+export interface TelegramWebApp {
+  BackButton: {
+    show: () => void;
+    hide: () => void;
+    onClick: (callback: () => void) => void;
+    offClick: (callback: () => void) => void;
+  };
+}

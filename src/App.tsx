@@ -17,6 +17,8 @@ const App = observer(() => {
   const { user, dailyReward } = useContext(Context) as IStoreContext;
   const [loading, setLoading] = useState(true);
 
+  const tg = window.Telegram?.WebApp;
+  console.log(tg);
 
   useEffect(() => {
     try {
@@ -33,7 +35,7 @@ const App = observer(() => {
 
   useEffect(() => {
     const authenticate = async () => {
-      const initData = window.Telegram?.WebApp?.initData;
+      const initData = tg?.initData;
       console.log("Init Data:", initData); // Для отладки
 
       if (initData) {

@@ -1,5 +1,5 @@
-import planetImg from '@/assets/planet.svg';
-import triesImg from '@/assets/tries.svg';
+import planetImg from '@/assets/EARTH_SOLID_V1.svg';
+import triesImg from '@/assets/ROCKET_SOLID.svg';
 
 export const getPlanetImg = () => {
     return planetImg;

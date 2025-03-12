@@ -5,6 +5,8 @@ import { ReferralSpendingChart } from '@/components/ReferralComponents/ReferralS
 import { Card, CardDescription, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import useBackButton from '../utils/useBackButton';
+import { useNavigate } from 'react-router-dom';
 
 const BOT_USERNAME = import.meta.env.VITE_BOT_USERNAME;
 const APP_NAME = import.meta.env.VITE_APP_NAME;
@@ -16,6 +18,11 @@ const PartnersPage: React.FC = observer(() => {
 
   // Новый локальный стейт для отображения «Copied!»
   const [copied, setCopied] = useState(false);
+
+   const navigate = useNavigate();
+  
+  // Показать кнопку и назначить обработчик для возврата назад
+  useBackButton(true, () => navigate(-1));
 
   useEffect(() => {
     loadUserInfo();

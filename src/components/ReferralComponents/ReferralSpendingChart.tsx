@@ -20,12 +20,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-// Настраиваем ключи для чарта
+// Настраиваем ключи для чарта, используя явный цвет вместо CSS-переменной
 const chartConfig = {
   spent: {
-    label: "Spent",
-    // Ключ, под который подцепится CSS-переменная "var(--color-spent)"
-    color: "hsl(var(--chart-1))",
+    label: "Затраты",
+    color: "hsl(220, 70%, 50%)", // Явный цвет вместо --chart-1
   },
 } satisfies ChartConfig
 
@@ -33,17 +32,59 @@ const chartConfig = {
 export const ReferralSpendingChart = observer(() => {
   const { referral } = useContext(Context) as IStoreContext
 
-  // При первом рендере грузим первую страницу данных (по умолчанию — без month/year, но вы можете передавать сюда year/ month)
+  // При первом рендере грузим первую страницу данных
   useEffect(() => {
     referral.fetchReferralsSpentByDay()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Приводим данные store к формату для чарта
-  const chartData = referral.referrals.map((item) => ({
+  // Функция для заполнения пропущенных дней нулевыми значениями
+  const fillMissingDates = (data: { date: string; totalSpent: number }[]) => {
+    if (data.length <= 1) return data;
+    
+    // Сортируем даты от самой ранней к самой поздней
+    const sortedData = [...data].sort((a, b) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+    
+    const result = [];
+    const firstDate = new Date(sortedData[0].date);
+    const lastDate = new Date(sortedData[sortedData.length - 1].date);
+    
+    // Создаем Map для быстрого поиска существующих дат
+    const dateMap = new Map();
+    sortedData.forEach(item => {
+      dateMap.set(item.date, item.totalSpent);
+    });
+    
+    // Заполняем все даты между первой и последней
+    const currentDate = new Date(firstDate);
+    while (currentDate <= lastDate) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      result.push({
+        date: dateStr,
+        spent: dateMap.has(dateStr) ? Number(dateMap.get(dateStr)) : 0
+      });
+      
+      // Увеличиваем дату на 1 день
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    // Возвращаем результат в обратном порядке (от последней к первой)
+    return result.reverse();
+  };
+
+  // Получаем исходные данные из store
+  const rawData = referral.referrals?.map(item => ({
     date: item.date,
-    spent: item.totalSpent,
-  }))
+    totalSpent: Number(item.totalSpent)
+  })) || [];
+  
+  // Заполняем пропущенные даты нулевыми значениями
+  const chartData = fillMissingDates(rawData);
+  
+  console.log("Original data:", rawData);
+  console.log("Filled data:", chartData);
 
   // Хендлеры для пагинации
   const handlePrev = () => {
@@ -64,7 +105,7 @@ export const ReferralSpendingChart = observer(() => {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Daily Spending by Referrals</CardTitle>
-        <CardDescription>Click “Next” to see more days</CardDescription>
+        <CardDescription>Click "Next" to see more days</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -87,41 +128,44 @@ export const ReferralSpendingChart = observer(() => {
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value: string) => {
-                // value = "2025-03-07" и т.п.
-                // При желании используйте toLocaleDateString, Moment.js или dayjs
                 return value.slice(5) // обрежем "2025-"
               }}
             />
 
-            {/* Ось Y, если нужно */}
-            <YAxis />
+            {/* Ось Y с настройками для малых значений */}
+            <YAxis 
+              tickCount={5}
+              allowDecimals={true}
+              domain={[0, 'auto']} 
+            />
 
             {/* Тултип из shadcn */}
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-            {/* Градиент для Area */}
+            {/* Градиент для Area с явными цветами */}
             <defs>
               <linearGradient id="fillSpent" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-spent)"
+                  stopColor="hsl(220, 70%, 50%)" 
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-spent)"
+                  stopColor="hsl(220, 70%, 50%)" 
                   stopOpacity={0.1}
                 />
               </linearGradient>
             </defs>
 
-            {/* Собственно Area */}
+            {/* Компонент Area с явным цветом */}
             <Area
               dataKey="spent"
-              type="natural"
+              type="monotone"
               fill="url(#fillSpent)"
-              fillOpacity={0.4}
-              stroke="var(--color-spent)"
+              fillOpacity={0.6} // Увеличиваем прозрачность
+              stroke="hsl(220, 70%, 50%)"
+              strokeWidth={2}
             />
           </AreaChart>
         </ChartContainer>
@@ -130,7 +174,7 @@ export const ReferralSpendingChart = observer(() => {
       <CardFooter>
         <div className="flex flex-col w-full gap-2 text-sm">
           <div className="flex items-center gap-2 font-medium leading-none">
-            {/* Пример “TrendingUp” и ваша динамика */}
+            {/* Пример "TrendingUp" и ваша динамика */}
             {`Shown ${chartData.length} days`}{" "}
             <TrendingUp className="h-4 w-4" />
           </div>
@@ -140,7 +184,6 @@ export const ReferralSpendingChart = observer(() => {
             Your earnings (30%):{" "}
             <b>{(referral.totalEarned ?? 0).toFixed(2)}</b> TON
           </div>
-
 
           {/* Блок пагинации */}
           <div className="mt-2 flex items-center gap-2">

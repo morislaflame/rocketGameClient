@@ -1,15 +1,35 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AiFillHome } from 'react-icons/ai';
-import { FaUserAstronaut } from 'react-icons/fa6';
-import { FaTicket } from 'react-icons/fa6';
 import NavButton from '@/components/ui/NavButton';
 import styles from './mainComponents.module.css';
 
+import homeSolidIcon from "@/assets/HOME_SOLID.svg";
+import astronautSolidIcon from "@/assets/ACC_SOLID.svg";
+import ticketSolidIcon from "@/assets/TICKET_SOLID.svg";
+
+import homeIcon from "@/assets/HOME_V2.svg";
+import astronautIcon from "@/assets/ACC_V3 1.svg";
+import ticketIcon from "@/assets/TICKET.svg";
+
 const navigationItems = [
-    { label: 'Home', route: '/rocket', icon: <FaUserAstronaut size={32} /> },
-  { label: 'Raffle', route: '/', icon: <FaTicket size={32} /> },
-  { label: 'User', route: '/user-account', icon: <AiFillHome size={32} /> },
+  { 
+    label: 'Home', 
+    route: '/rocket', 
+    icon: astronautIcon,
+    solidIcon: astronautSolidIcon 
+  },
+  { 
+    label: 'Raffle', 
+    route: '/', 
+    icon: ticketIcon,
+    solidIcon: ticketSolidIcon 
+  },
+  { 
+    label: 'User', 
+    route: '/user-account', 
+    icon: homeIcon,
+    solidIcon: homeSolidIcon
+  },
 ];
 
 const Navigation: React.FC = () => {
@@ -38,10 +58,17 @@ const Navigation: React.FC = () => {
           className={styles.activeIndicator}
           style={{ left: `${indicatorLeft}px` }}
         />
-        {navigationItems.map((item) => (
+        {navigationItems.map((item, index) => (
           <NavButton
             key={item.route}
-            img={item.icon}
+            img={
+              <img 
+                src={index === current ? item.solidIcon : item.icon} 
+                alt={item.label}
+                width={32}
+                height={32}
+              />
+            }
             onClick={() => navigate(item.route)}
           />
         ))}

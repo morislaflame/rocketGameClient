@@ -15,11 +15,11 @@ import { Context, IStoreContext } from "@/store/StoreProvider";
 import styles from "./UserAccountComponents.module.css";
 import { UserPrize } from "@/types/types";
 import { Button } from "@/components/ui/button";
-import ListSkeleton from "../ListSkeleton";
 import { getPlanetImg } from "@/utils/getPlanetImg";
 import ReceivePrizeDialog from "@/components/FunctionalComponents/ReceivePrizeDialog";
 import SellPrizeDialog from "@/components/FunctionalComponents/SellPrizeDialog";
 
+import { Skeleton } from "@/components/ui/skeleton";
 const UserPrizesDrawer: React.FC = observer(() => {
   const { userPrize, user } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -130,7 +130,9 @@ const UserPrizesDrawer: React.FC = observer(() => {
             )}
             <div className={styles.prizesList}>
               {isLoading ? (
-                <ListSkeleton count={3}/>
+                <div className="flex flex-col gap-2 flex-1">
+                <Skeleton  className="w-full h-[250px] rounded-md" />
+               </div>
               ) : (
                 userPrize.userPrizes.map((prize: UserPrize) => (
                   <div key={prize.id} className={styles.prizeCard}>
@@ -146,7 +148,7 @@ const UserPrizesDrawer: React.FC = observer(() => {
                           {prize.raffle.raffle_prize.name}
                         </div>
                       <div className="flex items-center gap-2 text-m text-white">
-                         {prize.raffle.raffle_prize.value} <img src={tokenImg} alt="Planet" className={styles.prizeImage} />
+                         {prize.raffle.raffle_prize.value} <img src={tokenImg} alt="Planet" width="18" height="18" />
                       </div>
                     <div>
                       <div className={styles.prizeStatus}>

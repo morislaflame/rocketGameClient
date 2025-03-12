@@ -101,7 +101,7 @@ const TasksDrawer: React.FC = observer(() => {
                 const completed = userTaskData ? userTaskData.completed : false;
                 const rewardImg =
                   t.rewardType === "attempts" ? (
-                    <img src={getTriesImg()} alt="Tries" />
+                    <img src={getTriesImg()} alt="Tries" width="18" height="18" />
                   ) : null;
                 return (
                   <Card key={t.id} className={styles.topUserCard}>

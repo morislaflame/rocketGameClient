@@ -1,12 +1,9 @@
-import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { observer } from "mobx-react-lite";
 import gsap from "gsap";
 import styles from './mainComponents.module.css';
 import SoonAlert from "../FunctionalComponents/SoonAlert";
-import { useLayoutEffect } from "react";
-
-
 
 import rocketBlured from '../../assets/rocketblured.svg';
 import planetImg from '../../assets/planet.svg';
@@ -18,7 +15,6 @@ import HeaderSkeleton from "./RocketComponents/HeaderSkeleton";
 import LeaderboardDrawer from "./UserAccountComponents/LeaderBoardDrawer";
 const Header = lazy(() => import("./RocketComponents/Header"));
 
-
 const RocketLaunch = observer(() => {
   const { user, game } = useContext(Context) as IStoreContext;
   const [showAlert, setShowAlert] = useState(false);
@@ -28,28 +24,33 @@ const RocketLaunch = observer(() => {
   const tapToLaunchRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // Реф, чтобы контролировать проигрывание Lottie-анимации:
+  // Реф для управления Lottie-анимацией
   const lottieRef = useRef<LottieRefCurrentProps>(null);
-
-  // Реф, к которому привяжем анимацию подъёма/спуска ракеты через GSAP:
+  // Реф для GSAP-анимации контейнера ракеты
   const rocketContainerRef = useRef<HTMLDivElement>(null);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  // Реф для сохранения промиса запроса на запуск ракеты
+  const launchPromiseRef = useRef<ReturnType<typeof game.launchRocket> | null>(null);
+
 
   useLayoutEffect(() => {
     if (containerRef.current) {
-      gsap.fromTo(containerRef.current, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' });
+      gsap.fromTo(
+        containerRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
+      );
     }
   }, []);
 
-  // Следим за изменением результата. При появлении game.rocketResult – показываем бэйдж:
+  // Отслеживаем появление результата для показа бейджа
   useEffect(() => {
     if (game.rocketResult) {
       setShowResult(true);
     }
   }, [game.rocketResult]);
 
-  // Анимация появления/исчезновения надписи «Tap to launch»
+  // Анимация пульсации текста «Tap to launch»
   useEffect(() => {
     if (tapToLaunchRef.current && !showResult && !isLaunching) {
       const tl = gsap.timeline({ repeat: -1, yoyo: true });
@@ -59,14 +60,13 @@ const RocketLaunch = observer(() => {
         duration: 1.2,
         ease: "power1.inOut",
       });
-
       return () => {
         tl.kill();
       };
     }
   }, [showResult, isLaunching]);
 
-  // Плавное появление и исчезновение результата (бэйджа):
+  // Анимация появления и исчезновения результата (бейджа)
   useEffect(() => {
     if (showResult && resultRef.current) {
       gsap.fromTo(
@@ -84,7 +84,7 @@ const RocketLaunch = observer(() => {
     }
   }, [showResult]);
 
-  // Нажатие на основную «ракету» (зону запуска)
+  // Нажатие на ракету: одновременно запускаем анимацию и отправляем запрос на сервер
   const handleLaunchClick = async () => {
     if (isLaunching || showResult) return;
 
@@ -96,16 +96,17 @@ const RocketLaunch = observer(() => {
         window.Telegram.WebApp.HapticFeedback.impactOccurred("soft");
       }
 
-      // GSAP-анимация «подъёма и спуска» блока, в котором расположена Lottie
+      // Отправляем запрос на запуск ракеты сразу при клике
+      launchPromiseRef.current = game.launchRocket();
+
+      // GSAP-анимация подъёма и спуска ракеты
       if (rocketContainerRef.current) {
         const tl = gsap.timeline();
-        // Поднимаем «ракету»
         tl.to(rocketContainerRef.current, {
           y: -150,
           duration: 1.2,
           ease: "power2.out",
         });
-        // Небольшая задержка и возвращаем «ракету» обратно
         tl.to(rocketContainerRef.current, {
           y: 0,
           duration: 0.8,
@@ -116,7 +117,7 @@ const RocketLaunch = observer(() => {
 
       // Запускаем Lottie-анимацию
       if (lottieRef.current) {
-        lottieRef.current.goToAndStop(0, true); // На всякий случай сбросим в начало
+        lottieRef.current.goToAndStop(0, true); // Сброс анимации в начало
         lottieRef.current.play();
       }
     } catch (err) {
@@ -125,37 +126,33 @@ const RocketLaunch = observer(() => {
     }
   };
 
-  // Срабатывает по завершении Lottie-анимации:
+  // Обработчик завершения Lottie-анимации
+  // Ждём завершения запроса, полученного ранее, и обновляем данные пользователя
   const handleLottieComplete = async () => {
-    // Запускаем ракету на сервере
-    try {
-      await game.launchRocket();
-
-      if (user.user) {
-        user.setUser({
-          ...user.user,
-          balance: game.newBalance ?? 0,
-          attempts: game.attemptsLeft ?? 0,
-        });
+    if (launchPromiseRef.current) {
+      try {
+        await launchPromiseRef.current;
+        if (user.user) {
+          user.setUser({
+            ...user.user,
+            balance: game.newBalance ?? 0,
+            attempts: game.attemptsLeft ?? 0,
+          });
+        }
+      } catch (err) {
+        console.error("Error launching rocket onComplete:", err);
+      } finally {
+        setIsLaunching(false);
+        launchPromiseRef.current = null;
       }
-    } catch (err) {
-      console.error("Error launching rocket onComplete:", err);
-    } finally {
-      setIsLaunching(false);
     }
   };
 
   return (
     <div className={styles.Container} ref={containerRef}>
-      
-      <Suspense
-          fallback={
-            <HeaderSkeleton />
-          }
-      >
+      <Suspense fallback={<HeaderSkeleton />}>
         <Header />
       </Suspense>
-      
 
       {!showResult && !isLaunching && (
         <div
@@ -208,7 +205,7 @@ const RocketLaunch = observer(() => {
               width: 240,
               height: 240,
               transform: "rotate(-45deg)",
-              pointerEvents: "none", // чтобы клики шли на контейнер, а не на Lottie
+              pointerEvents: "none", // клики идут на контейнер, а не на Lottie
             }}
           />
         </div>
@@ -229,9 +226,8 @@ const RocketLaunch = observer(() => {
         )}
         <LeaderboardDrawer />
       </div>
-      
+
       {game.error && <p style={{ color: "red" }}>Failed to launch rocket</p>}
-      
       <SoonAlert showAlert={showAlert} onClose={() => setShowAlert(false)} />
     </div>
   );
