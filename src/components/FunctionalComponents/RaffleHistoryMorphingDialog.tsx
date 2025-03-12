@@ -74,6 +74,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
         style={{
           borderRadius: "calc(var(--radius) - 2px)",
           border: "1px solid hsl(0 0% 14.9%)",
+          alignSelf: "center",
         }}
         className="border border-gray-200/60 bg-black rounded-md w-fit"
         

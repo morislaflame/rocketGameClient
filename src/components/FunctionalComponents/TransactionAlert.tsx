@@ -48,8 +48,8 @@ const TransactionAlert: React.FC<TransactionAlertProps> = ({ showAlert, onClose,
     };
 
     return (
-        <Dialog open={showAlert} onOpenChange={(open) => !loading && !open && onClose()}>
-            <DialogContent className={styles.dailyRewardModal}>
+        <Dialog open={showAlert} onOpenChange={(open) => !loading && !open && onClose()} >
+            <DialogContent onPointerDownOutside={(event) => event.preventDefault()} className={styles.dailyRewardModal} style={{ zIndex: 900 }}> 
                 <DialogHeader className={styles.dailyRewardModalHeader}>
                     {loading ? (
                         <AiOutlineLoading3Quarters size={48} className={styles.spinningIcon} />
@@ -65,7 +65,7 @@ const TransactionAlert: React.FC<TransactionAlertProps> = ({ showAlert, onClose,
                          hasError ? "Transaction error" : 
                          "Transaction completed"}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground text-center">
                         {loading 
                             ? "Please wait. Your transaction is being processed..." 
                             : hasError    

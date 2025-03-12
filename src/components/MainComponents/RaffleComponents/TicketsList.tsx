@@ -92,7 +92,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
               loading={txLoading} 
               error={txError}
           />
-          <ScrollArea className="h-[70vh] w-[100%] rounded-md" scrollHideDelay={1000}>
+          <ScrollArea className="h-[40vh] w-[100%] rounded-md" scrollHideDelay={1000}>
               <div className={styles.ticketsList}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px", width: "100%" }}>
                       {isLoading ? (

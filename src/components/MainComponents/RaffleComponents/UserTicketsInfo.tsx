@@ -1,16 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FaTicketAlt } from 'react-icons/fa';
 import { Context, IStoreContext } from '@/store/StoreProvider';
-import TicketsDrawer from './TicketsDrawer';
+import TicketsList from './TicketsList';
 import styles from './RaffleComponents.module.css';
 import UserTicketsDialog from '@/components/FunctionalComponents/UserTicketsDialog';
+import { Button } from '@/components/ui/button';
+import { gsap } from 'gsap';
 
 const UserTicketsInfo: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  
+  const [isTicketsListOpen, setIsTicketsListOpen] = useState(false);
+  const ticketsListRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const loadUserTickets = async () => {
       setIsLoading(true);
@@ -22,9 +26,35 @@ const UserTicketsInfo: React.FC = observer(() => {
         setIsLoading(false);
       }
     };
-    
     loadUserTickets();
   }, [raffle]);
+
+  useEffect(() => {
+    if (ticketsListRef.current) {
+      if (isTicketsListOpen) {
+        // Устанавливаем начальные стили перед анимацией открытия
+        gsap.set(ticketsListRef.current, { height: 0, opacity: 0, display: 'block' });
+        // Запускаем анимацию открытия
+        gsap.to(ticketsListRef.current, {
+          height: 'auto',
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+      } else {
+        // Анимация закрытия
+        gsap.to(ticketsListRef.current, {
+          height: 0,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            ticketsListRef.current!.style.display = 'none';
+          },
+        });
+      }
+    }
+  }, [isTicketsListOpen]);
 
   if (isLoading) {
     return (
@@ -37,11 +67,14 @@ const UserTicketsInfo: React.FC = observer(() => {
     );
   }
 
-  // Проверяем наличие данных и билетов
   const haveTickets = raffle.userTickets?.tickets?.length ?? 0 > 0;
-  
+
   const handleTicketsClick = () => {
     setDialogOpen(true);
+  };
+
+  const toggleTicketsList = () => {
+    setIsTicketsListOpen(!isTicketsListOpen);
   };
 
   return (
@@ -49,7 +82,11 @@ const UserTicketsInfo: React.FC = observer(() => {
       {haveTickets ? (
         <div className={styles.ticketsHeader}>
           <FaTicketAlt className={styles.ticketIcon} />
-          <strong className={styles.ticketsLabel} onClick={handleTicketsClick} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+          <strong
+            className={styles.ticketsLabel}
+            onClick={handleTicketsClick}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
             Your tickets: {raffle.userTickets?.tickets.length} of {raffle.userTickets?.raffle.totalTickets}
           </strong>
           <p className="text-sm text-muted-foreground">
@@ -65,12 +102,17 @@ const UserTicketsInfo: React.FC = observer(() => {
           </p>
         </div>
       )}
-      <TicketsDrawer />
-      
-      <UserTicketsDialog 
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-      />
+
+      {/* Рендеринг TicketsList с анимацией */}
+      <div ref={ticketsListRef} className={styles.ticketsListWrapper} style={{ display: 'none' }}>
+        <TicketsList />
+      </div>
+
+      <Button className={styles.ticketsButton} onClick={toggleTicketsList}>
+        <FaTicketAlt /> {isTicketsListOpen ? 'Close Tickets' : 'Buy Tickets'}
+      </Button>
+
+      <UserTicketsDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 });
