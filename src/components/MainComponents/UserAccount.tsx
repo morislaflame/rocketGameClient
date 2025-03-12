@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './mainComponents.module.css';
 import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHeader';
@@ -10,10 +10,18 @@ import { FaUserFriends } from 'react-icons/fa';
 import { PARTNERS_ROUTE } from '@/utils/consts';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
+import { Context, IStoreContext } from '@/store/StoreProvider';
 
 const UserAccount: React.FC = observer(() => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
+  const { user } = useContext(Context) as IStoreContext;
+
+  useEffect(() => {
+    if (user.user) {
+      user.fetchMyInfo();
+    }
+  }, [user.user]);
 
   useLayoutEffect(() => {
     if (containerRef.current) {

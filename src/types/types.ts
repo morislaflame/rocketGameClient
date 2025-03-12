@@ -26,6 +26,7 @@ export interface UserInfo {
   tickets: number;
   referralCode: string | null;
   referrerId: number | null;
+  imageUrl: string | null;
   // Если нужно, можно добавить другие поля
 }
 
