@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import styles from "../mainComponents.module.css";
 
-const TapToLaunchOverlay = forwardRef<HTMLDivElement>((props, ref) => {
+const TapToLaunchOverlay = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div
       ref={ref}
