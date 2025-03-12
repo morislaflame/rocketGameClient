@@ -18,9 +18,7 @@ const UserAccount: React.FC = observer(() => {
   const { user } = useContext(Context) as IStoreContext;
 
   useEffect(() => {
-    if (user.user) {
       user.fetchMyInfo();
-    }
   }, [user.user]);
 
   useLayoutEffect(() => {
