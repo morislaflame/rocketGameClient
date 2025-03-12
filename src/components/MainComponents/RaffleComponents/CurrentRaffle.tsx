@@ -18,6 +18,8 @@ const CurrentRaffle: React.FC = observer(() => {
   const [prevLoading, setPrevLoading] = useState<boolean>(true);
   const [showPrevLoader, setShowPrevLoader] = useState<boolean>(false);
 
+  
+
   // Загрузка текущего розыгрыша
   useEffect(() => {
     const fetchCurrentData = async () => {
