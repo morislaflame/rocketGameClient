@@ -285,4 +285,14 @@ export interface TelegramWebApp {
     onClick: (callback: () => void) => void;
     offClick: (callback: () => void) => void;
   };
+  initData: {
+    user: {
+      id: number;
+      first_name: string;
+      last_name: string;
+      username: string;
+      photo_url: string;
+    };
+  };
+  openInvoice: (url?: string, callback?: () => void) => void;
 }

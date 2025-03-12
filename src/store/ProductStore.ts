@@ -2,10 +2,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Product } from "@/types/types";
 import { getProducts, generateInvoice } from "@/http/productAPI";
-// Используем @telegram-apps/sdk для открытия счёта
-import { openInvoice } from "@telegram-apps/sdk";
+import { TelegramWebApp } from "@/types/types";
 
-const tg = window.Telegram?.WebApp;
+const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 console.log("tg =>", tg);
 
 

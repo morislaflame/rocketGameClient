@@ -23,7 +23,7 @@ const UserTicketsDialog: React.FC<UserTicketsDialogProps> = observer(({
 }) => {
   const { raffle } = useContext(Context) as IStoreContext;
   const tickets = raffle.userTickets?.tickets || [];
-  const loading = raffle.loading;
+  const loading = raffle.loadingUserTickets;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

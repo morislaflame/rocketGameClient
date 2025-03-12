@@ -1,5 +1,5 @@
 // src/components/RocketComponents/TapToLaunchOverlay.tsx
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import styles from "../mainComponents.module.css";
 
 const TapToLaunchOverlay = forwardRef<HTMLDivElement>((props, ref) => {
