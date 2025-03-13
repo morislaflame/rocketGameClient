@@ -71,7 +71,7 @@ export const ReferralSpendingChart = observer(() => {
     }
     
     // Возвращаем результат в обратном порядке (от последней к первой)
-    return result.reverse();
+    return result;
   };
 
   // Получаем исходные данные из store
