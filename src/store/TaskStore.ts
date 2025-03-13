@@ -169,17 +169,17 @@ export default class TaskStore {
       // Проверяем наличие метода shareToStory в объекте Telegram
       if (!tg || typeof tg.shareToStory !== 'function') {
         console.error("Telegram shareToStory method is not available");
-        return { success: false, message: "Функция поделиться историей недоступна" };
+        return { success: false, message: "The shareToStory function is not available" };
       }
       
       // Получаем параметры шаринга из metadata задания, если они есть
       const mediaUrl = task.metadata?.mediaUrl || 'https://example.com/placeholder.jpg';
-      const shareText = task.metadata?.shareText || 'Посмотрите на мои достижения!';
-      const widgetName = task.metadata?.widgetName || 'Открыть приложение';
+      const shareText = task.metadata?.shareText || 'Check out my achievements!';
+      const widgetName = task.metadata?.widgetName || 'Open app';
       const widgetUrl = task.metadata?.widgetUrl || '';
       
       // Логируем вызов функции для отладки
-      console.log("Вызов shareToStory с параметрами:", {
+      console.log("Calling shareToStory with parameters:", {
         mediaUrl,
         shareText,
         widgetName,
@@ -195,17 +195,16 @@ export default class TaskStore {
         }
       });
       
-      // Логируем успешный вызов
-      console.log("Функция shareToStory успешно вызвана");
+      // Логируем успешный вызо
       
       // Отмечаем задание как выполненное на сервере
       await this.completeTask(task.id);
       
-      return { success: true, message: "История успешно опубликована" };
+      return { success: true, message: "Story published successfully" };
       
     } catch (error) {
       console.error("Error during story sharing:", error);
-      return { success: false, message: "Ошибка при публикации истории" };
+      return { success: false, message: "Error during story sharing" };
     }
   }
 
