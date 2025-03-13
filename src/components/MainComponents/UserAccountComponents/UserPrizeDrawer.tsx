@@ -129,7 +129,7 @@ const UserPrizesDrawer: React.FC = observer(() => {
               </div>
             )}
             <div className={styles.prizesList}>
-              {isLoading ? (
+              {isLoading ? ( 
                 <div className="flex flex-col gap-2 flex-1">
                 <Skeleton  className="w-full h-[250px] rounded-md" />
                </div>

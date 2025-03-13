@@ -44,6 +44,8 @@ export interface Task {
   rewardType: RewardType;
   description: string;
   targetCount: number;
+  code: string;
+  metadata: Record<string, string>;
   // Если задачи получены с join-данными, то сюда попадёт массив пользователей с информацией о выполнении задания
   users?: TaskUser[];
 }

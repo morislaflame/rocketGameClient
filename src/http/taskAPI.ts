@@ -40,3 +40,9 @@ export const getMyTasks = async () => {
   const { data } = await $authHost.get('api/task/my');
   return data;
 };
+
+// Проверка подписки на канал - передаем taskId вместо кода
+export const checkChannelSubscription = async (taskId: number) => {
+  const { data } = await $authHost.post('api/task/check-subscription', { taskId });
+  return data;
+};

@@ -16,10 +16,14 @@ const UserAccount: React.FC = observer(() => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const { user } = useContext(Context) as IStoreContext;
+  const dataFetchedRef = useRef(false);
 
   useEffect(() => {
+    if (!dataFetchedRef.current) {
       user.fetchMyInfo();
-  }, [user.user]);
+      dataFetchedRef.current = true;
+    }
+  }, []);
 
   useLayoutEffect(() => {
     if (containerRef.current) {

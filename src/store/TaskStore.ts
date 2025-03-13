@@ -4,10 +4,11 @@ import {
   updateTask,
   deleteTask,
   getTasks,
-  completeTask,
   getMyTasks,
+  checkChannelSubscription,
 } from "../http/taskAPI";
 import { Task } from "@/types/types";
+import { getTaskHandler } from "@/utils/taskHandlers";
 
 
 export default class TaskStore {
@@ -106,15 +107,32 @@ export default class TaskStore {
     }
   }
 
-  // Отметить задание выполненным (увеличить прогресс, а при достижении targetCount — завершить)
-  async completeTask(taskId: number) {
+  // Обновленный метод для выполнения задания с учетом типа
+  async handleTaskAction(task: Task) {
     try {
       this.setLoading(true);
-      await completeTask(taskId);
-      // После успешного выполнения обновляем список заданий с прогрессом
-      await this.fetchMyTasks();
+      const taskHandler = getTaskHandler(task);
+      const result = await taskHandler(task);
+      
+      // Возвращаем результат обработки, включая возможное перенаправление
+      return result;
     } catch (error) {
-      console.error("Error completing task:", error);
+      console.error("Error handling task:", error);
+      return { success: false };
+    } finally {
+      runInAction(() => this.setLoading(false));
+    }
+  }
+
+  // Проверка подписки на Telegram канал
+  async checkChannelSubscription(taskId: number) {
+    try {
+      this.setLoading(true);
+      const result = await checkChannelSubscription(taskId);
+      return result;
+    } catch (error) {
+      console.error("Error checking channel subscription:", error);
+      throw error;
     } finally {
       runInAction(() => this.setLoading(false));
     }

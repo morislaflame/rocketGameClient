@@ -20,11 +20,28 @@ import { getTriesImg } from "@/utils/getPlanetImg";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowForward } from "react-icons/io";
 import ListSkeleton from "../ListSkeleton";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+// Добавляем новую утилитарную функцию
+const formatTaskDescription = (description: string) => {
+  // Регулярное выражение для поиска @username в тексте
+  // \S+ означает "один или более символов, не являющихся пробелами"
+  const regex = /(@\S+)/g;
+  
+  // Заменяем найденные совпадения на ссылки
+  return description.replace(regex, (match) => {
+    // Удаляем @ для создания правильной ссылки
+    const username = match.substring(1);
+    return `<a href="https://t.me/${username}" target="_blank" rel="noopener noreferrer" style="color:rgb(255, 255, 255); text-decoration: underline;">${match}</a>`;
+  }); 
+};
 
 const TasksDrawer: React.FC = observer(() => {
   const { task, user } = useContext(Context) as IStoreContext;
   const [selectedType, setSelectedType] = useState<TaskType>("DAILY");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // При открытии Drawer загружаем задания и отображаем скелетоны до окончания загрузки
   const handleTasksOpen = useCallback(async () => {
@@ -38,14 +55,26 @@ const TasksDrawer: React.FC = observer(() => {
     }
   }, [task]);
 
-  const handleComplete = async (taskId: number) => {
+  const handleComplete = async (taskItem: Task) => {
     try {
-      await task.completeTask(taskId);
-      // После успешного выполнения задания обновляем данные пользователя,
-      // чтобы в Header сразу отобразилось новое количество попыток.
-      await user.fetchMyInfo();
+      // Вызываем обработчик задания
+      const result = await task.handleTaskAction(taskItem);
+      
+      // Если в результате есть redirect, перенаправляем пользователя
+      if (result.success && result.redirect) {
+        navigate(result.redirect);
+        return; // Прерываем выполнение, так как перенаправляем
+      }
+      
+      // Если задание было успешно выполнено, обновляем данные пользователя
+      if (result.success) {
+        await user.fetchMyInfo();
+        // Обновляем список заданий для отображения статуса выполнения
+        await task.fetchMyTasks();
+      }
     } catch (error) {
-      console.error("Ошибка при выполнении задания:", error);
+      console.error("Error completing task:", error);
+      toast.error("Error completing task");
     }
   };
 
@@ -107,7 +136,12 @@ const TasksDrawer: React.FC = observer(() => {
                   <Card key={t.id} className={styles.topUserCard}>
                     <CardHeader className={styles.taskCardHeader}>
                       <CardTitle className={styles.taskCardTitle}>
-                        {t.description}
+                        {/* Используем dangerouslySetInnerHTML для отображения HTML с ссылками */}
+                        <div 
+                          dangerouslySetInnerHTML={{ 
+                            __html: formatTaskDescription(t.description) 
+                          }}
+                        />
                       </CardTitle>
                       <div className={styles.taskCardReward}>
                         + {t.reward} {rewardImg}
@@ -123,7 +157,7 @@ const TasksDrawer: React.FC = observer(() => {
                         ) : (
                           <Button
                             className={styles.completeTaskBtn}
-                            onClick={() => handleComplete(t.id)}
+                            onClick={() => handleComplete(t)}
                           >
                             <IoIosArrowForward />
                           </Button>
