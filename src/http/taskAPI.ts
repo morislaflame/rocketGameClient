@@ -46,3 +46,9 @@ export const checkChannelSubscription = async (taskId: number) => {
   const { data } = await $authHost.post('api/task/check-subscription', { taskId });
   return data;
 };
+
+// Проверка участия в розыгрыше - новый метод
+export const checkRaffleParticipation = async (taskId: number) => {
+  const { data } = await $authHost.post('api/task/check-raffle-participation', { taskId });
+  return data;
+};

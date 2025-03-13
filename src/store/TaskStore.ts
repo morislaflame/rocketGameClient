@@ -6,6 +6,8 @@ import {
   getTasks,
   getMyTasks,
   checkChannelSubscription,
+  checkRaffleParticipation,
+  completeTask,
 } from "../http/taskAPI";
 import { Task } from "@/types/types";
 import { getTaskHandler } from "@/utils/taskHandlers";
@@ -112,7 +114,7 @@ export default class TaskStore {
     try {
       this.setLoading(true);
       const taskHandler = getTaskHandler(task);
-      const result = await taskHandler(task);
+      const result = await taskHandler(task, this);
       
       // Возвращаем результат обработки, включая возможное перенаправление
       return result;
@@ -124,6 +126,12 @@ export default class TaskStore {
     }
   }
 
+  // Метод для выполнения задания
+  async completeTask(taskId: number) {
+    const result = await completeTask(taskId);
+    return result;
+  }
+
   // Проверка подписки на Telegram канал
   async checkChannelSubscription(taskId: number) {
     try {
@@ -132,6 +140,20 @@ export default class TaskStore {
       return result;
     } catch (error) {
       console.error("Error checking channel subscription:", error);
+      throw error;
+    } finally {
+      runInAction(() => this.setLoading(false));
+    }
+  }
+
+  // Проверка участия в розыгрыше
+  async checkRaffleParticipation(taskId: number) {
+    try {
+      this.setLoading(true);
+      const result = await checkRaffleParticipation(taskId);
+      return result;
+    } catch (error) {
+      console.error("Error checking raffle participation:", error);
       throw error;
     } finally {
       runInAction(() => this.setLoading(false));

@@ -50,6 +50,15 @@ export interface Task {
   users?: TaskUser[];
 }
 
+export interface TasksResponse {
+  success: boolean;
+  message: string;
+  completed: boolean;
+  reward?: {
+    amount: number;
+    type: RewardType;
+  };
+}
 
 export interface DailyRewardCheckResponse {
   available: boolean;
@@ -297,4 +306,11 @@ export interface TelegramWebApp {
     };
   };
   openInvoice: (url?: string, callback?: () => void) => void;
+  shareToStory: (media_url: string, params: {
+     text: string;
+     widget_link: {
+      url: string;
+      name: string;
+     }
+  }) => void;
 }

@@ -60,8 +60,8 @@ const TasksDrawer: React.FC = observer(() => {
       // Вызываем обработчик задания
       const result = await task.handleTaskAction(taskItem);
       
-      // Если в результате есть redirect, перенаправляем пользователя
-      if (result.success && result.redirect) {
+      // Если в результате есть redirect, перенаправляем пользователя независимо от успеха
+      if (result.redirect) {
         navigate(result.redirect);
         return; // Прерываем выполнение, так как перенаправляем
       }

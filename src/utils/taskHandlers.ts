@@ -1,7 +1,7 @@
 import { Task } from "@/types/types";
-import { checkChannelSubscription, completeTask } from "@/http/taskAPI";
 import { toast } from "sonner";
-import { PARTNERS_ROUTE } from "./consts";
+import { PARTNERS_ROUTE, MAIN_ROUTE } from "./consts";
+import TaskStore from "@/store/TaskStore";
 
 // Тип для результата обработчика задания
 export interface TaskHandlerResult {
@@ -11,27 +11,56 @@ export interface TaskHandlerResult {
 }
 
 // Тип для функции-обработчика задания
-export type TaskHandler = (task: Task) => Promise<TaskHandlerResult>;
+export type TaskHandler = (task: Task, store: TaskStore) => Promise<TaskHandlerResult>;
 
 // Обработчик для обычных заданий (стандартное выполнение)
-const defaultTaskHandler: TaskHandler = async (task: Task) => {
+const defaultTaskHandler: TaskHandler = async (task: Task, store) => {
   try {
-    await completeTask(task.id);
-    toast.success("Task completed successfully"); // Добавляем уведомление по умолчанию
+    await store.completeTask(task.id);
+    toast.success("Task completed successfully");
     return { success: true, message: "Task completed successfully" };
   } catch (error) {
     console.error("Error completing task:", error);
-    toast.error("Error completing task"); // Добавляем уведомление об ошибке
+    toast.error("Error completing task");
     return { success: false, message: "Error completing task" };
   }
 };
 
-// Обработчик для проверки подписки на Telegram канал
-const telegramSubscriptionHandler: TaskHandler = async (task: Task) => {
+// Обработчик для проверки участия в розыгрыше
+const raffleParticipationHandler: TaskHandler = async (task: Task, store) => {
   try {
-    // Передаем taskId вместо кода, чтобы на бэкенде можно было 
-    // получить конкретное задание и его метаданные
-    const result = await checkChannelSubscription(task.id);
+    const result = await store.checkRaffleParticipation(task.id);
+    
+    // Логируем ответ для диагностики
+    console.log("Raffle participation check response:", result);
+    
+    const message = result.message || (result.success 
+        ? "Вы получили награду за участие в розыгрыше"
+        : "Вам необходимо купить хотя бы один билет розыгрыша");
+    
+    if (result.success) {
+      toast.success(message);
+      return { success: true, message };
+    } else {
+      toast.error(message);
+      // Добавляем редирект на MAIN_ROUTE при неуспешной проверке участия
+      return { 
+        success: false, 
+        message,
+        redirect: MAIN_ROUTE 
+      };
+    }
+  } catch (error) {
+    console.error("Error checking raffle participation:", error);
+    toast.error("Ошибка проверки участия в розыгрыше");
+    return { success: false, message: "Ошибка проверки участия в розыгрыше" };
+  }
+};
+
+// Обработчик для проверки подписки на Telegram канал
+const telegramSubscriptionHandler: TaskHandler = async (task: Task, store) => {
+  try {
+    const result = await store.checkChannelSubscription(task.id);
     
     // Логируем ответ для диагностики
     console.log("Telegram subscription check response:", result);
@@ -79,6 +108,8 @@ export const getTaskHandler = (task: Task): TaskHandler => {
         return telegramSubscriptionHandler;
       case "REFERRAL_BONUS":
         return referralBonusHandler;
+      case "RAFFLE_PART":
+        return raffleParticipationHandler;
       // Здесь можно добавить другие типы заданий
       default:
         return defaultTaskHandler;
