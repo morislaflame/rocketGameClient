@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import styles from './RaffleComponents.module.css';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import InfiniteSlider from '../../ui/infinite-slider';
+import { getRaffleTicketImg } from '@/utils/getTicketImg';
 
 interface TicketsSliderProps {
   items?: React.ReactNode[];
@@ -22,7 +23,8 @@ const TicketsSlider: React.FC<TicketsSliderProps> = ({
       className={styles.sliderItem}
       data-ticket={i + 1}
     >
-      {i + 1}
+      <img src={getRaffleTicketImg()} alt="Ticket" className={styles.ticketImg} />
+      <span className={styles.ticketNumber}>{i + 1}</span>
     </div>
   ));
   

@@ -7,6 +7,7 @@ import { GlowEffect } from '@/components/ui/glow-effect';
 import TicketsSlider from './TicketsSlider';
 import { getUserName } from '@/utils/getUserName';
 import { Button } from '@/components/ui/button';
+import questionImg from '@/assets/Question.png';
 
 interface RaffleInfoProps {
   // id: number;
@@ -90,7 +91,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
             <div className='relative flex items-center justify-center flex-col'>
               <div className={styles.trophyContainer}>
                 <img 
-                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Question%20Mark.webp" 
+                  src={questionImg} 
                   alt="Question Mark" 
                   className={styles.trophyIcon} 
                 />

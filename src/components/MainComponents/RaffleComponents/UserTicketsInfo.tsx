@@ -7,6 +7,8 @@ import styles from './RaffleComponents.module.css';
 import UserTicketsDialog from '@/components/FunctionalComponents/UserTicketsDialog';
 import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
+import { getTicketSolidImg } from '@/utils/getTicketImg';
+
 
 const UserTicketsInfo: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
@@ -81,7 +83,7 @@ const UserTicketsInfo: React.FC = observer(() => {
     <div className={styles.ticketsContainer}>
       {haveTickets ? (
         <div className={styles.ticketsHeader}>
-          <FaTicketAlt className={styles.ticketIcon} />
+          <img src={getTicketSolidImg()} alt="Ticket" width={22} height={22} />
           <strong
             className={styles.ticketsLabel}
             onClick={handleTicketsClick}
@@ -95,7 +97,7 @@ const UserTicketsInfo: React.FC = observer(() => {
         </div>
       ) : (
         <div className={styles.ticketsHeader}>
-          <FaTicketAlt className={styles.ticketIcon} />
+          <img src={getTicketSolidImg()} alt="Ticket" width={22} height={22} />
           <strong className={styles.ticketsLabel}>You don't have tickets yet</strong>
           <p className="text-sm text-muted-foreground">
             Buy tickets to participate in the raffle
@@ -109,7 +111,8 @@ const UserTicketsInfo: React.FC = observer(() => {
       </div>
 
       <Button className={styles.ticketsButton} onClick={toggleTicketsList}>
-        <FaTicketAlt /> {isTicketsListOpen ? 'Close' : 'Buy Tickets'}
+        {/* <img src={getTicketDarkImg()} alt="Ticket" width={20} height={20} />  */}
+        {isTicketsListOpen ? 'Close' : 'Buy Tickets'}
       </Button>
 
       <UserTicketsDialog open={dialogOpen} onOpenChange={setDialogOpen} />

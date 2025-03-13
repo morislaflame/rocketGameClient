@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import styles from "./FunctionalComponents.module.css";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FaTicketAlt } from "react-icons/fa";
+import { getTicketSolidImg2 } from "@/utils/getTicketImg";
 
 interface UserTicketsDialogProps {
   open: boolean;
@@ -42,8 +42,8 @@ const UserTicketsDialog: React.FC<UserTicketsDialogProps> = observer(({
             <div className={styles.ticketsGrid}>
               {tickets.map((ticket) => (
                 <div key={ticket.id} className={styles.ticketItem}>
-                  <FaTicketAlt className={styles.ticketIcon} />
-                  {ticket.ticketNumber}
+                  <img src={getTicketSolidImg2()} alt="Ticket" className={styles.ticketImg} />
+                  <span className={styles.ticketNumber}>{ticket.ticketNumber}</span>
                 </div>
               ))}
             </div>

@@ -3,12 +3,11 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import styles from './UserAccountComponents.module.css';
 import { TonConnectButton } from '@tonconnect/ui-react';
-import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import { Context } from '@/store/StoreProvider';
 import { IStoreContext } from '@/store/StoreProvider';
 import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from "@/utils/getPlanetImg";
-import avatarImg from '@/assets/ACC_SOLID.svg';
+import avatarImg from '@/assets/AVATAR.png';
 
 const UserHeader: React.FC = () => {
   const { user } = React.useContext(Context) as IStoreContext;
@@ -41,10 +40,6 @@ const UserHeader: React.FC = () => {
         <AvatarFallback>
           {getAvatarFallback()}
         </AvatarFallback>
-        <ProgressiveBlur
-        className='pointer-events-none absolute bottom-0 left-0 h-[50%] w-full'
-        blurIntensity={1}
-      />
       </Avatar>
         <TonConnectButton />
         

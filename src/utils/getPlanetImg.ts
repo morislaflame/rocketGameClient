@@ -1,4 +1,4 @@
-import planetImg from '@/assets/EARTH_SOLID_V1.svg';
+import planetImg from '@/assets/PLANET_SOLID.png';
 import triesImg from '@/assets/ROCKET_SOLID.svg';
 
 export const getPlanetImg = () => {

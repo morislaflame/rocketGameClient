@@ -39,8 +39,8 @@ const raffleParticipationHandler: TaskHandler = async (task: Task, store) => {
     console.log("Raffle participation check response:", result);
     
     const message = result.message || (result.success 
-        ? "Вы получили награду за участие в розыгрыше"
-        : "Вам необходимо купить хотя бы один билет розыгрыша");
+        ? "You got a prize for participating in the raffle"
+        : "You need to buy at least one raffle ticket");
     
     if (result.success) {
       toast.success(message);
@@ -56,8 +56,8 @@ const raffleParticipationHandler: TaskHandler = async (task: Task, store) => {
     }
   } catch (error) {
     console.error("Error checking raffle participation:", error);
-    toast.error("Ошибка проверки участия в розыгрыше");
-    return { success: false, message: "Ошибка проверки участия в розыгрыше" };
+    toast.error("Error checking raffle participation");
+    return { success: false, message: "Error checking raffle participation" };
   }
 };
 
@@ -92,7 +92,7 @@ const telegramSubscriptionHandler: TaskHandler = async (task: Task, store) => {
         console.log("channelUrl", channelUrl);
         
         // Логируем для отладки
-        console.log("Перенаправление на канал:", channelUrl);
+        console.log("Redirecting to channel:", channelUrl);
         
         // Используем метод openTelegramLink для открытия канала
         if (tg && typeof tg.openTelegramLink === 'function') {
@@ -132,16 +132,16 @@ const storyShareHandler: TaskHandler = async (task: Task, store) => {
     const result = await store.shareTaskToStory(task);
     
     if (result.success) {
-      toast.success("История успешно опубликована");
-      return { success: true, message: "История успешно опубликована" };
+    //   toast.success("Story published successfully");
+      return { success: true, message: "Story published successfully" };
     } else {
       toast.error(result.message);
       return { success: false, message: result.message };
     }
   } catch (error) {
     console.error("Error during story sharing:", error);
-    toast.error("Ошибка при публикации истории");
-    return { success: false, message: "Ошибка при публикации истории" };
+    toast.error("Error during story sharing");
+    return { success: false, message: "Error during story sharing" };
   }
 };
 

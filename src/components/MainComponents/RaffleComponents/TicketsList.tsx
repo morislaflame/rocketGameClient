@@ -8,11 +8,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./RaffleComponents.module.css";
 import ListSkeleton from "../ListSkeleton";
 import SendTx from "@/utils/sendTx";
-import { FaTicketAlt } from "react-icons/fa";
 import { Switch } from "@/components/ui/switch";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
+import { getTicketMutedImg } from "@/utils/getTicketImg";
 
 interface TicketsListProps {
   onTransactionClose?: () => void;
@@ -147,7 +147,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
                       )}
                     </CardTitle>
                     <CardDescription className="text-sm text-muted-foreground flex flex-row gap-2 items-center">
-                      +{p.ticketCount} <FaTicketAlt />
+                      +{p.ticketCount} <img src={getTicketMutedImg()} alt="Ticket" width={18} height={18} />
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-row gap-2 items-center p-0">

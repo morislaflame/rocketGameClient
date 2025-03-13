@@ -6,7 +6,7 @@ import styles from './mainComponents.module.css';
 import SoonAlert from "../FunctionalComponents/SoonAlert";
 
 import rocketBlured from '../../assets/rocketblured.svg';
-import planetImg from '../../assets/planet.svg';
+import planetImg from '../../assets/PLANET_SOLID.png';
 
 // Импортируем Lottie и JSON с анимацией ракеты
 import Lottie, { LottieRefCurrentProps } from "lottie-react";

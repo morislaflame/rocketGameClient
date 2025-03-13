@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { getPlanetImg } from "@/utils/getPlanetImg";
 import ReceivePrizeDialog from "@/components/FunctionalComponents/ReceivePrizeDialog";
 import SellPrizeDialog from "@/components/FunctionalComponents/SellPrizeDialog";
+import Lottie from "lottie-react";
+import moneyBag from "@/assets/moneybag.json";
 
 import { Skeleton } from "@/components/ui/skeleton";
 const UserPrizesDrawer: React.FC = observer(() => {
@@ -119,13 +121,9 @@ const UserPrizesDrawer: React.FC = observer(() => {
             {isEmpty && (
               <div className={styles.emptyMessage}>
                 <p style={{width: "80%"}}>You don't have any winning gifts yet. Participate in the drawings to win!</p>
-                <img 
-                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Money%20Bag.webp" 
-                  alt="Money Bag" 
-                  width="25" 
-                  height="25" 
-                  className="inline-block mr-2"
-                  />
+                  <div className="flex items-center justify-center w-[100px] h-[100px]">
+                  <Lottie animationData={moneyBag} loop={true} />
+                  </div>
               </div>
             )}
             <div className={styles.prizesList}>

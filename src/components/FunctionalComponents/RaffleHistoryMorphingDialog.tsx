@@ -8,7 +8,6 @@ import {
   MorphingDialogContainer,
   MorphingDialogContent,
   MorphingDialogClose,
-  MorphingDialogImage,
   MorphingDialogTitle,
   MorphingDialogSubtitle,
 } from "@/components/ui/morphing-dailog"
@@ -20,6 +19,8 @@ import { getUserName } from "@/utils/getUserName"
 import { UserInfo } from "@/types/types"
 import styles from "./FunctionalComponents.module.css"
 import { Button } from "../ui/button"
+import Lottie from "lottie-react"
+import trophy from "@/assets/trophy.json"
 
 const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext
@@ -80,12 +81,9 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
         
       >
         <div className="flex items-center space-x-3 p-3" onClick={handleOpenHistory}>
-          <MorphingDialogImage
-            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/Trophy.webp"
-            alt="Trophy"
-            className="h-8 w-8 object-cover object-top"
-            style={{ borderRadius: "4px" }}
-          />
+          <div className="flex items-center justify-center w-[36px] h-[36px]"> 
+          <Lottie animationData={trophy} loop={true} width={36} height={36}/>
+          </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             <MorphingDialogTitle className="text-[16px] font-medium">
               Raffle History
@@ -103,12 +101,10 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
           className="relative h-auto w-[90%] border bg-black"
         >
           <div className="flex justify-center items-center p-4 text-center relative">
-            <div className="absolute top-2 left-2">
-              <MorphingDialogImage
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Activity/Trophy.webp"
-                alt="Trophy"
-                className="h-16 w-16 object-cover object-center rounded"
-              />
+            <div className="absolute top-4 left-3">
+            <div className="flex items-center justify-center w-[48px] h-[48px]"> 
+            <Lottie animationData={trophy} loop={true} width={48} height={48}/>
+            </div>
             </div>
             <div className="px-6">
               <MorphingDialogTitle className="text-lg font-bold">
