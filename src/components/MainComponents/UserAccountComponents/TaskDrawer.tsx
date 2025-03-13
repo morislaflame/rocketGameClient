@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import styles from "./UserAccountComponents.module.css";
-import { Task, TaskType } from "@/types/types";
+import { Task, TaskType, TelegramWebApp } from "@/types/types";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowForward } from "react-icons/io";
@@ -23,18 +23,43 @@ import ListSkeleton from "../ListSkeleton";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-// Добавляем новую утилитарную функцию
-const formatTaskDescription = (description: string) => {
+// Получаем доступ к объекту Telegram
+const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
+
+// Модифицированная функция форматирования с использованием openTelegramLink
+const renderFormattedDescription = (description: string) => {
   // Регулярное выражение для поиска @username в тексте
-  // \S+ означает "один или более символов, не являющихся пробелами"
   const regex = /(@\S+)/g;
+  const parts = description.split(regex);
   
-  // Заменяем найденные совпадения на ссылки
-  return description.replace(regex, (match) => {
-    // Удаляем @ для создания правильной ссылки
-    const username = match.substring(1);
-    return `<a href="https://t.me/${username}" target="_blank" rel="noopener noreferrer" style="color:rgb(255, 255, 255); text-decoration: underline;">${match}</a>`;
-  }); 
+  return parts.map((part, index) => {
+    // Если часть соответствует формату @username
+    if (part.match(/^@\S+$/)) {
+      const username = part.substring(1);
+      const telegramUrl = `https://t.me/${username}`;
+      
+      // Создаем кликабельный спан, который вызывает openTelegramLink
+      return (
+        <span 
+          key={index}
+          style={{ color: "#FFFFFF", textDecoration: "underline", cursor: "pointer" }}
+          onClick={(e) => {
+            e.stopPropagation(); // Предотвращаем всплытие события
+            if (tg && typeof tg.openTelegramLink === 'function') {
+              tg.openTelegramLink(telegramUrl);
+            } else {
+              // Запасной вариант, если метод недоступен
+              window.open(telegramUrl, '_blank');
+            }
+          }}
+        >
+          {part}
+        </span>
+      );
+    }
+    // Обычный текст возвращаем как есть
+    return part;
+  });
 };
 
 const TasksDrawer: React.FC = observer(() => {
@@ -136,12 +161,8 @@ const TasksDrawer: React.FC = observer(() => {
                   <Card key={t.id} className={styles.topUserCard}>
                     <CardHeader className={styles.taskCardHeader}>
                       <CardTitle className={styles.taskCardTitle}>
-                        {/* Используем dangerouslySetInnerHTML для отображения HTML с ссылками */}
-                        <div 
-                          dangerouslySetInnerHTML={{ 
-                            __html: formatTaskDescription(t.description) 
-                          }}
-                        />
+                        {/* Используем модифицированную функцию для отображения ссылок */}
+                        {renderFormattedDescription(t.description)}
                       </CardTitle>
                       <div className={styles.taskCardReward}>
                         + {t.reward} {rewardImg}

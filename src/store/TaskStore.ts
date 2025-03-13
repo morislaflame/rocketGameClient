@@ -11,7 +11,10 @@ import {
 } from "../http/taskAPI";
 import { Task } from "@/types/types";
 import { getTaskHandler } from "@/utils/taskHandlers";
+import { TelegramWebApp } from "@/types/types";
 
+// Получаем доступ к телеграм объекту
+const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 
 export default class TaskStore {
   _tasks: Task[] = [];
@@ -157,6 +160,52 @@ export default class TaskStore {
       throw error;
     } finally {
       runInAction(() => this.setLoading(false));
+    }
+  }
+
+  // Метод для шаринга истории в Telegram
+  async shareTaskToStory(task: Task) {
+    try {
+      // Проверяем наличие метода shareToStory в объекте Telegram
+      if (!tg || typeof tg.shareToStory !== 'function') {
+        console.error("Telegram shareToStory method is not available");
+        return { success: false, message: "Функция поделиться историей недоступна" };
+      }
+      
+      // Получаем параметры шаринга из metadata задания, если они есть
+      const mediaUrl = task.metadata?.mediaUrl || 'https://example.com/placeholder.jpg';
+      const shareText = task.metadata?.shareText || 'Посмотрите на мои достижения!';
+      const widgetName = task.metadata?.widgetName || 'Открыть приложение';
+      const widgetUrl = task.metadata?.widgetUrl || '';
+      
+      // Логируем вызов функции для отладки
+      console.log("Вызов shareToStory с параметрами:", {
+        mediaUrl,
+        shareText,
+        widgetName,
+        widgetUrl
+      });
+      
+      // Вызываем функцию shareToStory
+      tg.shareToStory(mediaUrl, {
+        text: shareText,
+        widget_link: {
+          url: widgetUrl,
+          name: widgetName
+        }
+      });
+      
+      // Логируем успешный вызов
+      console.log("Функция shareToStory успешно вызвана");
+      
+      // Отмечаем задание как выполненное на сервере
+      await this.completeTask(task.id);
+      
+      return { success: true, message: "История успешно опубликована" };
+      
+    } catch (error) {
+      console.error("Error during story sharing:", error);
+      return { success: false, message: "Ошибка при публикации истории" };
     }
   }
 

@@ -313,4 +313,5 @@ export interface TelegramWebApp {
       name: string;
      }
   }) => void;
+  openTelegramLink: (url: string) => void;
 }

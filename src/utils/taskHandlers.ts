@@ -2,6 +2,7 @@ import { Task } from "@/types/types";
 import { toast } from "sonner";
 import { PARTNERS_ROUTE, MAIN_ROUTE } from "./consts";
 import TaskStore from "@/store/TaskStore";
+import { TelegramWebApp } from "@/types/types";
 
 // Тип для результата обработчика задания
 export interface TaskHandlerResult {
@@ -12,6 +13,9 @@ export interface TaskHandlerResult {
 
 // Тип для функции-обработчика задания
 export type TaskHandler = (task: Task, store: TaskStore) => Promise<TaskHandlerResult>;
+
+// Получаем доступ к телеграм объекту
+const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 
 // Обработчик для обычных заданий (стандартное выполнение)
 const defaultTaskHandler: TaskHandler = async (task: Task, store) => {
@@ -77,6 +81,28 @@ const telegramSubscriptionHandler: TaskHandler = async (task: Task, store) => {
     } else {
       // Принудительно вызываем toast при ошибке
       toast.error(message);
+      
+      // Если пользователь не подписан на канал, перенаправляем его
+      if (task.metadata?.channelUsername) {
+        // Получаем имя канала и удаляем символ @, если он там есть
+        const channelName = task.metadata.channelUsername.replace(/^@/, '');
+        
+        // Формируем корректный URL канала
+        const channelUrl = `https://t.me/${channelName}`;
+        console.log("channelUrl", channelUrl);
+        
+        // Логируем для отладки
+        console.log("Перенаправление на канал:", channelUrl);
+        
+        // Используем метод openTelegramLink для открытия канала
+        if (tg && typeof tg.openTelegramLink === 'function') {
+          tg.openTelegramLink(channelUrl);
+        } else {
+          // Если метод недоступен, пробуем открыть ссылку обычным способом
+          window.open(channelUrl, '_blank');
+        }
+      }
+      
       return { success: false, message };
     }
   } catch (error) {
@@ -99,6 +125,26 @@ const referralBonusHandler: TaskHandler = async () => {
   };
 };
 
+// Обработчик для шаринга истории в Telegram
+const storyShareHandler: TaskHandler = async (task: Task, store) => {
+  try {
+    // Используем метод из store для шаринга истории
+    const result = await store.shareTaskToStory(task);
+    
+    if (result.success) {
+      toast.success("История успешно опубликована");
+      return { success: true, message: "История успешно опубликована" };
+    } else {
+      toast.error(result.message);
+      return { success: false, message: result.message };
+    }
+  } catch (error) {
+    console.error("Error during story sharing:", error);
+    toast.error("Ошибка при публикации истории");
+    return { success: false, message: "Ошибка при публикации истории" };
+  }
+};
+
 // Определяем обработчики по типу задания (коду)
 export const getTaskHandler = (task: Task): TaskHandler => {
   // Если у задания есть код, выбираем соответствующий обработчик
@@ -110,6 +156,8 @@ export const getTaskHandler = (task: Task): TaskHandler => {
         return referralBonusHandler;
       case "RAFFLE_PART":
         return raffleParticipationHandler;
+      case "STORY_SHARE":
+        return storyShareHandler;
       // Здесь можно добавить другие типы заданий
       default:
         return defaultTaskHandler;

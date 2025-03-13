@@ -47,7 +47,7 @@ const buyProduct = async (productId: number) => {
   } 
 }
 
-  const rewardImg = <img src={getTriesImg()} alt="Tries" />;
+  const rewardImg = <img src={getTriesImg()} alt="Tries" width={18} height={18}/>;
 
   return (
     <ScrollArea className="h-[70vh] w-[100%] rounded-md" scrollHideDelay={1000}>
