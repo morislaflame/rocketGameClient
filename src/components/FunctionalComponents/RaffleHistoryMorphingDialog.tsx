@@ -88,7 +88,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
             <MorphingDialogTitle className="text-[16px] font-medium">
               Raffle History
             </MorphingDialogTitle>
-            <MorphingDialogSubtitle className="text-[10px] text-gray-600 text-m">
+            <MorphingDialogSubtitle className="text-[10px] text-muted-foreground">
               See all past raffles and winners
             </MorphingDialogSubtitle>
           </div>

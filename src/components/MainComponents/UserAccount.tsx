@@ -5,15 +5,11 @@ import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHe
 import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskDrawer';
 import UserPrizeDrawer from '@/components/MainComponents/UserAccountComponents/UserPrizeDrawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import UserAccCard from '../ui/UserAccCard';
-import { FaUserFriends } from 'react-icons/fa';
-import { PARTNERS_ROUTE } from '@/utils/consts';
-import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { Context, IStoreContext } from '@/store/StoreProvider';
+import AffiliateCard from './UserAccountComponents/AffiliateCard';
 
 const UserAccount: React.FC = observer(() => {
-  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const { user } = useContext(Context) as IStoreContext;
   const dataFetchedRef = useRef(false);
@@ -42,14 +38,7 @@ const UserAccount: React.FC = observer(() => {
         <div className={styles.cardContainer}>
           <TasksDrawer />
           <UserPrizeDrawer />
-          <UserAccCard
-            title="Affiliate"
-            icon={<FaUserFriends />}
-            description="Invite friends and get rewards"
-            onClick={() => {
-              navigate(PARTNERS_ROUTE);
-            }}
-          />
+          <AffiliateCard />
         </div>
       </ScrollArea>
     </div>

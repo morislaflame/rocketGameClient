@@ -53,13 +53,14 @@ const TasksList: React.FC<TasksListProps> = observer(({
           border: "1px solid hsl(0 0% 14.9%)",
           alignSelf: "center",
           width: "100%",
+          backgroundColor: "hsl(0 1% 10%)",
         }}
-        className="border border-gray-200/60 bg-black rounded-xl w-fit"
+        className="border border-gray-200/60 rounded-xl w-fit"
       >
         <div className="flex flex-col space-y-1.5 p-[12px] " onClick={onOpen}>
           <div className="flex items-center gap-2">
             <FaTasks size={16} />
-            <MorphingDialogTitle className="text-[17px] font-semibold">
+            <MorphingDialogTitle className="text-[16px] font-semibold">
               Tasks
             </MorphingDialogTitle>
           </div>
@@ -83,11 +84,11 @@ const TasksList: React.FC<TasksListProps> = observer(({
                 <FaTasks size={24} />
               </div>
             </div>
-            <div className="px-6">
+            <div className="px-6 flex flex-col items-center justify-center gap-1">
               <MorphingDialogTitle className="text-lg font-bold">
                 Tasks
               </MorphingDialogTitle>
-              <MorphingDialogSubtitle className="text-sm text-gray-500">
+              <MorphingDialogSubtitle className="text-sm text-gray-500 w-[80%]">
                 Complete tasks and get rewards
               </MorphingDialogSubtitle>
             </div>

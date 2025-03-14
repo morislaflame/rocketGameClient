@@ -31,7 +31,10 @@ const UserAccCard: React.FC<UserAccCardProps> = memo(({ title, icon, description
   };
 
   return (
-      <Card className={styles.card} ref={cardContainerRef} onClick={handleClick}>
+      <Card className={styles.card} 
+        ref={cardContainerRef} 
+        onClick={handleClick}
+        >
         <CardHeader className={styles.cardHeader}>
           <CardTitle className={styles.cardTitle}>
             {icon} {title}
