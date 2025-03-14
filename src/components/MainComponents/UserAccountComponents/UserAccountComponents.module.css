@@ -232,4 +232,28 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#0965C0", en
     height: 112px;
 }
 
+.cardContainer {
+    width: 100%;
+    /* background-color:  hsl(0 0% 3.9%); */
+    border-radius: 12px;
+    border: 1px solid hsl(0 0% 14.9%);
+}
 
+.card {
+    width: 100%;
+    background-color: black !important;
+    border: none;
+    /* border-color: hsl(20deg 0.67% 27.27%) !important; */
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+}
+
+.cardTitle {
+    display: flex;
+    gap: 6px;
+}

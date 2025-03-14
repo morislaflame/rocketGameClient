@@ -114,8 +114,6 @@ const telegramSubscriptionHandler: TaskHandler = async (task: Task, store) => {
 
 // Обработчик для реферальной программы - просто перенаправляет на страницу партнеров
 const referralBonusHandler: TaskHandler = async () => {
-  // Добавляем уведомление для реферальной программы
-  toast.info("Redirecting to partners page");
   
   // Возвращаем успех и указываем, куда перенаправить пользователя
   return { 
