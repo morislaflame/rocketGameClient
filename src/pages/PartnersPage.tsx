@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import { observer } from 'mobx-react-lite';
 import { ReferralSpendingChart } from '@/components/ReferralComponents/ReferralSpendingChart';
@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useBackButton from '../utils/useBackButton';
 import { useNavigate } from 'react-router-dom';
+import { gsap } from 'gsap';
 
 const BOT_USERNAME = import.meta.env.VITE_BOT_USERNAME;
 const APP_NAME = import.meta.env.VITE_APP_NAME;
 
 const PartnersPage: React.FC = observer(() => {
   const { user } = useContext(Context) as IStoreContext;
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
   // Новый локальный стейт для отображения «Copied!»
@@ -26,6 +27,16 @@ const PartnersPage: React.FC = observer(() => {
 
   useEffect(() => {
     loadUserInfo();
+  }, []);
+
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      gsap.fromTo(
+        containerRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
+      );
+    }
   }, []);
   
   const loadUserInfo = async () => {
@@ -67,7 +78,7 @@ const PartnersPage: React.FC = observer(() => {
   };
 
   return (
-    <div className="flex flex-col items-center h-screen p-4">
+    <div className="flex flex-col items-center h-screen p-4" ref={containerRef}>
       <ScrollArea className="flex-1 w-full">
         <div className="flex flex-col items-center gap-2 mb-4">
           <h2 className="text-3xl font-bold">Affiliate Program</h2>
