@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useEffect, useContext } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './mainComponents.module.css';
 import UserHeader from '@/components/MainComponents/UserAccountComponents/UserHeader';
@@ -6,20 +6,10 @@ import TasksDrawer from '@/components/MainComponents/UserAccountComponents/TaskD
 import UserPrizeDrawer from '@/components/MainComponents/UserAccountComponents/UserPrizeDrawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { gsap } from 'gsap';
-import { Context, IStoreContext } from '@/store/StoreProvider';
 import AffiliateCard from './UserAccountComponents/AffiliateCard';
 
 const UserAccount: React.FC = observer(() => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { user } = useContext(Context) as IStoreContext;
-  const dataFetchedRef = useRef(false);
-
-  useEffect(() => {
-    if (!dataFetchedRef.current) {
-      user.fetchMyInfo();
-      dataFetchedRef.current = true;
-    }
-  }, []);
 
   useLayoutEffect(() => {
     if (containerRef.current) {

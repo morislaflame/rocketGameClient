@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import gsap from "gsap";
 import styles from './mainComponents.module.css';
 import SoonAlert from "../FunctionalComponents/SoonAlert";
+import { toast } from "sonner";
 
 import rocketBlured from '../../assets/rocketblured.svg';
 import planetImg from '../../assets/PLANET_SOLID.png';
@@ -87,6 +88,24 @@ const RocketLaunch = observer(() => {
   // Нажатие на ракету: одновременно запускаем анимацию и отправляем запрос на сервер
   const handleLaunchClick = async () => {
     if (isLaunching || showResult) return;
+    
+    // Проверяем наличие попыток
+    if (user?.user?.attempts === 0) {
+      // HapticFeedback для Telegram WebApp (если поддерживается)
+      if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred("medium");
+      }
+      
+      // Показываем уведомление
+      toast.error("You have no attempts left!", {
+        description: "Buy additional attempts in the shop or complete tasks",
+        position: "top-center",
+        duration: 3000,
+      });
+      
+      // Открываем магазин
+      return;
+    }
 
     try {
       setIsLaunching(true);

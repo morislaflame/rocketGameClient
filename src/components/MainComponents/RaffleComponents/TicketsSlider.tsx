@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import styles from './RaffleComponents.module.css';
-import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import InfiniteSlider from '../../ui/infinite-slider';
 import { getRaffleTicketImg } from '@/utils/getTicketImg';
 
@@ -58,17 +57,6 @@ const TicketsSlider: React.FC<TicketsSliderProps> = ({
           })}
         </InfiniteSlider>
       </div>
-      
-      <ProgressiveBlur
-        className='pointer-events-none absolute top-0 left-0 h-full w-[50px]'
-        direction='left'
-        blurIntensity={1}
-      />
-      <ProgressiveBlur
-        className='pointer-events-none absolute top-0 right-0 h-full w-[50px]'
-        direction='right'
-        blurIntensity={1}
-      />
     </div>
   );
 };
