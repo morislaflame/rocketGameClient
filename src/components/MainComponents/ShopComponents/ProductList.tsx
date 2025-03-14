@@ -58,11 +58,11 @@ const buyProduct = async (productId: number) => {
           ) : product.products.length ? (
             product.products.map((p: Product) => (
               <Card key={p.id} className="flex flex-row justify-between p-4">
-                <CardHeader className="flex flex-col gap-1 p-0">
+                <CardHeader className="flex flex-col p-0">
                     <CardTitle className="text-m font-bold">
                         {p.name}
                     </CardTitle>
-                    <CardDescription className="text-sm text-muted-foreground flex flex-row gap-2 items-center">
+                    <CardDescription style={{ color: "#8E8E93" }} className='flex flex-row items-center gap-2'>
                       +{p.attempts} Launches {rewardImg}
                     </CardDescription>
                 </CardHeader>

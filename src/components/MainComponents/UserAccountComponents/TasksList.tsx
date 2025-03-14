@@ -78,7 +78,10 @@ const TasksList: React.FC<TasksListProps> = observer(({
           style={{ borderRadius: "12px", border: "1px solid hsl(0 0% 14.9%)" }}
           className="relative h-auto w-[90%] border bg-black"
         >
-          <div className="flex justify-center items-center p-4 text-center relative">
+          <div className="flex justify-center items-center text-center relative" 
+          style={{
+            padding: "calc(var(--spacing)* 4) calc(var(--spacing)* 4) calc(var(--spacing)* 2)",
+          }}>
             <div className="absolute top-3 left-3">
               <div className="flex items-center justify-center w-[48px] h-[48px]">
                 <FaTasks size={24} />
@@ -139,7 +142,7 @@ const TasksList: React.FC<TasksListProps> = observer(({
                           <CardTitle className={styles.taskCardTitle}>
                             {renderFormattedDescription(t.description)}
                           </CardTitle>
-                          <div className={styles.taskCardReward}>
+                          <div style={{ color: "#8E8E93" }} className='flex flex-row items-center gap-2'>
                             + {t.reward} {rewardImg}
                           </div>
                         </CardHeader>
