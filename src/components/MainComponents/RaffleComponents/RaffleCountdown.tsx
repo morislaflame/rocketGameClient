@@ -15,7 +15,7 @@ const RaffleCountdown: React.FC<RaffleCountdownProps> = ({ startTime, duration }
     const formatTimeLeft = (ms: number): string => {
       if (ms <= 0) {
         setIsExpired(true);
-        return "Розыгрыш завершается...";
+        return "Raffle ends...";
       }
       
       // Преобразуем миллисекунды в часы, минуты и секунды

@@ -63,6 +63,9 @@ const CurrentRaffle: React.FC = observer(() => {
           endTime={currentRaffle.endTime || undefined}
           formatDate={formatDate}
           onTabChange={handleTabChange}
+          ticketThreshold={currentRaffle.ticketThreshold}
+          totalTickets={currentRaffle.totalTickets}
+          raffleDuration={currentRaffle.raffleDuration}
         />
         <ScrollArea className="flex-1 w-full">
           <div className="flex flex-col gap-2 items-center justify-center">

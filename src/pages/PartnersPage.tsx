@@ -119,6 +119,24 @@ const PartnersPage: React.FC = observer(() => {
               )}
             </CardContent>
           </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Terms of partnership</CardTitle>
+                  <CardDescription>
+                      Payments are made twice a month - on the 2nd and 16th of the month
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>
+                    Submit a payout request to our support:
+                  </p>
+                  <p>
+                    <a href="https://t.me/Rocket_Raffle" className="text-blue-500 underline">
+                      @Rocket_Raffle
+                    </a>
+                  </p>
+                </CardContent>
+              </Card>
 
           <ReferralSpendingChart />
         </div>

@@ -109,7 +109,7 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
                 </div>
               ) : (
                 userPrizes.map((prize: UserPrize) => (
-                  <div key={prize.id} className={styles.prizeCard}>
+                  <div key={prize.id} className={styles.prizeCard} >
                     <div className={styles.prizeImageContainer}>
                       <img 
                         src={prize.raffle.raffle_prize.imageUrl || tokenImg} 
@@ -123,11 +123,12 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
                     <div className="flex items-center gap-2 text-m text-white">
                       {prize.raffle.raffle_prize.value} <img src={tokenImg} alt="Planet" width="18" height="18" />
                     </div>
-                    <div>
+                    <div className="flex items-center justify-center w-full">
                       <div className={styles.prizeStatus}>
                         {prize.status === 'pending' && ""}
-                        {prize.status === 'sold' && "Sold for tokens"}
-                        {prize.status === 'received' && "Received physically"}
+                        {prize.status === 'sold' && "Sold"}
+                        {prize.status === 'received' && "Received"}
+                        {prize.status === 'requested' && "Requested"}
                       </div>
                     </div>
                     {prize.status === 'pending' && (

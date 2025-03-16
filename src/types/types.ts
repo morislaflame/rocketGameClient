@@ -152,6 +152,8 @@ export interface Raffle {
   winnerChance: number | null;
   timerActive: boolean;
   winningTicketNumber: number | null;
+  ticketThreshold: number;
+  raffleDuration: number;
   winner: {
     id: number;
     username: string | null;

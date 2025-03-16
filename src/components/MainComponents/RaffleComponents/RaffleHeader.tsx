@@ -13,6 +13,9 @@ interface RaffleHeaderProps {
   endTime?: string;                 
   formatDate: (dateString: string) => string;
   onTabChange: (tab: 'current' | 'previous') => void;  // коллбэк для переключения вкладок
+  ticketThreshold?: number;         // Новое поле - минимальное количество билетов для активации таймера
+  totalTickets?: number;            // Новое поле - текущее количество билетов
+  raffleDuration?: number;          // Новое поле - продолжительность розыгрыша в мс
 }
 
 const RaffleHeader: React.FC<RaffleHeaderProps> = ({
@@ -24,10 +27,10 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
   endTime,
   formatDate,
   onTabChange,
+  ticketThreshold = 50,  // Значение по умолчанию
+  totalTickets = 0,      // Значение по умолчанию
+  raffleDuration = 4 * 60 * 60 * 1000, // Значение по умолчанию - 4 часа
 }) => {
-  // Константа с продолжительностью розыгрыша - 4 часа в миллисекундах
-  const RAFFLE_DURATION = 4 * 60 * 60 * 1000;
-  
   return (
     <div className="flex flex-col w-full gap-2 ">
       {/* Верхняя строка: кнопка переключения и заголовок */}
@@ -59,26 +62,26 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
             {/* Отображаем обратный отсчет, если таймер активен */}
             <RaffleCountdown 
               startTime={thresholdReachedAt} 
-              duration={RAFFLE_DURATION} 
+              duration={raffleDuration} 
             />
           </>
         )}
 
-            {isActive && !timerActive && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>
-                Raffle has not yet started
-                </span>
-            </div>
-            )}
+        {isActive && !timerActive && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>
+              {totalTickets}/{ticketThreshold} tickets to start the raffle
+            </span>
+          </div>
+        )}
 
-            {endTime && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <FaCalendarAlt />
-                <span>End: {formatDate(endTime)}</span>
-            </div>
-            )}
-        </div>
+        {endTime && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <FaCalendarAlt />
+            <span>End: {formatDate(endTime)}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

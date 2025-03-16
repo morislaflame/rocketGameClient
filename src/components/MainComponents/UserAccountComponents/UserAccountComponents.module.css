@@ -7,6 +7,12 @@
     gap: 10px;
 }
 
+.prizeStatus {
+    font-weight: 600;
+    color: white;
+    text-align: center;
+}
+
 .balanceContainer {
     /* background-color: #2C2C2C; */
     padding: 4px 12px;
