@@ -85,6 +85,16 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#0965C0", en
 
 }
 
+.physicalPrizesList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid hsl(0 0% 14.9%);
+    border-radius: 12px; 
+    padding: 6px 12px;
+    /* background-color: hsl(0 0% 3.9%); */
+}
+
 .topUsersList {
     display: flex;
     flex-direction: column;

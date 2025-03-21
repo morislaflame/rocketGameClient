@@ -120,46 +120,60 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
           </div>
 
           <div className="w-full p-2 bg-black">
-            {/* Отображение информации о призовом фонде только если есть активные настройки */}
+            {/* Отображение даты окончания и информации о призовом фонде только если есть активные настройки */}
             {settings?.isActive && (
-              settings.prizeType === 'money' ? (
-                // Для денежных призов показываем общий фонд
-                <div className={styles.totalRewardsPool}>
-                  <p>Prize pool: {settings.totalMoneyPool} </p>
-                  <img src={tonImg} alt="TON" 
-                  style={{ width: "20px", height: "20px", verticalAlign: "middle", }}/>
-                </div>
-              ) : (
-                // Для физических призов показываем список призов по местам
-                <div className={styles.physicalPrizesList}>
-                  <p className="text-center font-bold mb-2">Prizes:</p>
-                  <div className="grid grid-cols-1 gap-2">
-                    {settings.placePrizes
-                      .slice() // Создаем копию массива перед сортировкой
-                      .sort((a, b) => a.place - b.place)
-                      .filter(prize => prize.rafflePrize)
-                      .map(prize => (
-                        <div key={prize.id} className="flex items-center justify-between p-2 border-b border-gray-800">
-                          <span className="font-medium">Place #{prize.place}</span>
-                          <div className="flex items-center gap-1">
-                            <span>{prize.rafflePrize?.name}</span>
-                            {prize.rafflePrize?.imageUrl && (
-                              <img 
-                                src={prize.rafflePrize.imageUrl} 
-                                alt={prize.rafflePrize.name} 
-                                style={{ width: "20px", height: "20px", borderRadius: "4px" }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      ))
-                    }
+              <>
+                {/* Блок с датой окончания */}
+                {settings.endDate && (
+                  <div className={styles.endDateBlock || "text-center mb-2"}>
+                    <p className="text-sm text-gray-400">
+                      Rewards on {new Date(settings.endDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
                   </div>
-                </div>
-              )
+                )}
+
+                {settings.prizeType === 'money' ? (
+                  // Для денежных призов показываем общий фонд
+                  <div className={styles.totalRewardsPool}>
+                    <p>Prize pool: {settings.totalMoneyPool} </p>
+                    <img src={tonImg} alt="TON" 
+                    style={{ width: "20px", height: "20px", verticalAlign: "middle", }}/>
+                  </div>
+                ) : (
+                  // Для физических призов показываем список призов по местам
+                  <div className={styles.physicalPrizesList}>
+                    <div className="grid grid-cols-1 gap-1">
+                      {settings.placePrizes
+                        .slice() // Создаем копию массива перед сортировкой
+                        .sort((a, b) => a.place - b.place)
+                        .filter(prize => prize.rafflePrize)
+                        .map(prize => (
+                          <div key={prize.id} className="flex items-center justify-between p-1 border-b border-gray-900" id='physical-prize-item'>
+                            <span className="font-sm text-gray-400">#{prize.place}</span>
+                            <div className="flex items-center gap-1">
+                              <span className="font-sm text-gray-500">{prize.rafflePrize?.name}</span>
+                              {prize.rafflePrize?.imageUrl && (
+                                <img 
+                                  src={prize.rafflePrize.imageUrl} 
+                                  alt={prize.rafflePrize.name} 
+                                  style={{ width: "40px", height: "40px", borderRadius: "4px" }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+                )}
+              </>
             )}
             
-            <ScrollArea className="h-[50vh] mt-3">
+            <ScrollArea className="h-[45vh] mt-3">
               <div className={styles.topUsersList}>
                 {isLoading ? (
                   <ListSkeleton count={5}/>

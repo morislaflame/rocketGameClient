@@ -114,7 +114,7 @@ const PartnersPage: React.FC = observer(() => {
                 </div>
               ) : (
                 <Button onClick={generateReferralCode} disabled={loading}>
-                  {loading ? 'Generating...' : 'Generate code'}
+                  {loading ? 'Generating...' : 'Generate link'}
                 </Button>
               )}
             </CardContent>

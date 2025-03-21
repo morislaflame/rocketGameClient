@@ -8,6 +8,7 @@ import TicketsSlider from './TicketsSlider';
 import { getUserName } from '@/utils/getUserName';
 import { Button } from '@/components/ui/button';
 import questionImg from '@/assets/Question.png';
+import { getRaffleTicketImg } from '@/utils/getTicketImg';
 
 interface RaffleInfoProps {
   // id: number;
@@ -47,12 +48,13 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
 
   // Компонент с выигрышным билетом
   const WinningTicketDisplay = () => (
-        <div className='m-4'>
+        <div className='m-1'>
           <div 
             className={`${styles.sliderItem} ${styles.winningTicket} ${styles.pulseAnimation}`}
             data-ticket={winningTicket}
           >
-            {winningTicket}
+            <span className={styles.ticketNumber}>{winningTicket}</span>
+            <img src={getRaffleTicketImg()} alt="Ticket" className={styles.ticketImg} />
           </div>
         </div>
   );

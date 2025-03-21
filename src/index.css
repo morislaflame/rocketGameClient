@@ -1,5 +1,3 @@
-
-
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
@@ -145,8 +143,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100vw;
-  background: black ;
-  color: white ;
+  background: black url('./assets/first.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
 .balanceBadge {
@@ -163,4 +161,8 @@ img {
 button[data-tc-button="true"] {
   background: hsl(0 1% 10%) !important;
   border: 1px solid hsl(0deg 0.67% 27.27%) !important;
+}
+
+#physical-prize-item:last-child {
+  border-bottom: none !important;
 }

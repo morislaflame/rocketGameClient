@@ -67,6 +67,7 @@ const Navigation: React.FC = () => {
                 alt={item.label}
                 width={32}
                 height={32}
+                className='z-10'
               />
             }
             onClick={() => navigate(item.route)}

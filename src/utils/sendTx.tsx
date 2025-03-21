@@ -114,8 +114,8 @@ const SendTx: React.FC<SendTxProps> = (props) => {
     setErrorMessage("Transaction failed");
 
     let errorType = "unknown";
-    if (error?.name === "_TonConnectUIError") errorType = "_TonConnectUIError";
-    else if (error?.name === "_UserRejectsError") errorType = "_UserRejectsError";
+    if (error instanceof Error && error.name === "_TonConnectUIError") errorType = "_TonConnectUIError";
+    else if (error instanceof Error && error.name === "_UserRejectsError") errorType = "_UserRejectsError";
 
     // Отмена транзакции с использованием newUniqueId
     if (newUniqueId) {
