@@ -51,6 +51,17 @@ export const getTransactionStatus = async (userId: number, uniqueId: string) => 
     return data;
 };
 
+// ... existing code ...
+export const cancelTransaction = async (userId: number, uniqueId: string, errorType: string) => {
+    const { data } = await $authHost.post('api/raffle/purchase/cancel', {
+        userId,
+        uniqueId,
+        errorType
+    });
+    return data;
+};
+// ... existing code ...
+
 export const getRaffleById = async (id: string | number) => {
     const { data } = await $authHost.get(`api/raffle/${id}`);
     return data;

@@ -44,13 +44,17 @@ export const fetchTopUsers = async () => {
     return data;
 };
 
-
 export const getAvailableBonuses = async () => {
     const { data } = await $authHost.get('api/user/bonuses');
     return data; 
   };
 
-  export const generateReferralCode = async () => {
+export const generateReferralCode = async () => {
     const { data } = await $authHost.post('api/referral/generate-referral-code');
+    return data;
+};
+
+export const getLeaderboard = async () => {
+    const { data } = await $host.get('api/leaderboard');
     return data;
 };

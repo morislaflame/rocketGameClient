@@ -290,6 +290,23 @@ export interface Referral {
   totalItems: number;
 }
 
+export interface LeaderboardSettings {
+  id: number;
+  isActive: boolean;
+  endDate: string | null;
+  prizeType: 'money' | 'physical';
+  totalMoneyPool: number | null;
+  placePrizes: LeaderboardPlacePrize[];
+}
+
+export interface LeaderboardPlacePrize {
+  id: number;
+  place: number;
+  moneyAmount?: number;
+  rafflePrizeId?: number;
+  rafflePrize?: RafflePrize;
+}
+
 
 export interface TelegramWebApp {
   BackButton: {

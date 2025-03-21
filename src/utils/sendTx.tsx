@@ -19,7 +19,6 @@ const SendTx: React.FC<SendTxProps> = (props) => {
   const [tonConnectUI] = useTonConnectUI();
   const { user, raffle } = useContext(Context) as IStoreContext;
 
-  // Обращаемся к актуальным значениям подключения через геттеры
   const address = import.meta.env.VITE_TON_ADDRESS;
   const amount = Number(props.price) * 1000000000;
 
@@ -28,7 +27,6 @@ const SendTx: React.FC<SendTxProps> = (props) => {
   const [uniqueId, setUniqueId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Отслеживаем статус транзакции по uniqueId
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (uniqueId && transactionStatus === "pending") {
@@ -48,16 +46,14 @@ const SendTx: React.FC<SendTxProps> = (props) => {
             setUniqueId(null);
           }
         }
-      }, 2000);
+      }, 10000);
     }
     return () => clearInterval(interval);
   }, [uniqueId, transactionStatus, raffle, user.user?.id]);
 
   const handleSendTx = async () => {
-    // Проверяем подключение прямо перед выполнением транзакции
     if (!tonConnectUI.connected) {
       await tonConnectUI.openModal();
-      // Если после модалки кошелек все еще не подключен – выходим
       if (!tonConnectUI.connected) {
         return;
       }
@@ -72,16 +68,16 @@ const SendTx: React.FC<SendTxProps> = (props) => {
       return;
     }
 
-    // После успешной проверки подключения, устанавливаем состояния транзакции
     setIsLoading(true);
     setTransactionStatus("pending");
     setErrorMessage(null);
     setUniqueId(null);
     if (props.onTxStart) props.onTxStart();
 
+    let newUniqueId;
+
     try {
-      // Генерируем новый uniqueId
-      const newUniqueId = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      newUniqueId = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       const rawPayload = `${user.user.id}:${props.packageId}:raffleTicket:${newUniqueId}`;
 
       await raffle.initRaffleTicketPurchase(
@@ -115,14 +111,27 @@ const SendTx: React.FC<SendTxProps> = (props) => {
     } catch (error) {
       console.error("Transaction error:", error);
       setTransactionStatus("error");
-      setErrorMessage("Transaction failed");
-      if (props.onTxComplete) props.onTxComplete("Transaction not sent");
-    } finally {
-      setIsLoading(false);
+    setErrorMessage("Transaction failed");
+
+    let errorType = "unknown";
+    if (error?.name === "_TonConnectUIError") errorType = "_TonConnectUIError";
+    else if (error?.name === "_UserRejectsError") errorType = "_UserRejectsError";
+
+    // Отмена транзакции с использованием newUniqueId
+    if (newUniqueId) {
+      try {
+        await raffle.cancelTransaction(user.user.id, newUniqueId, errorType);
+      } catch (cancelError) {
+        console.error("Error cancelling transaction:", cancelError);
+      }
     }
+
+    if (props.onTxComplete) props.onTxComplete("Transaction not sent");
+  } finally {
+    setIsLoading(false);
+  }
   };
 
-  // Уведомляем родительский компонент о завершении транзакции
   useEffect(() => {
     if (transactionStatus === "success" || transactionStatus === "error") {
       if (props.onTxComplete) {
@@ -130,7 +139,6 @@ const SendTx: React.FC<SendTxProps> = (props) => {
           transactionStatus === "error" ? errorMessage || "Transaction failed" : undefined
         );
       }
-      // Сбрасываем статус для возможности новой транзакции
       setTransactionStatus(null);
     }
   }, [transactionStatus, errorMessage, props]);

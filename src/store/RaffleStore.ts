@@ -6,7 +6,8 @@ import {
     getUserTickets,
     initTicketPurchase,
     getTransactionStatus,
-    getRaffleById
+    getRaffleById,
+    cancelTransaction
 } from "@/http/raffleAPI";
 import { CurrentRaffle, RaffleHistory, RafflePackage, PreviousRaffle, UserTickets, SelectedRaffle } from "@/types/types";
 import { makeAutoObservable } from "mobx";
@@ -187,6 +188,16 @@ export default class RaffleStore {
             return null;
         }
     }
+
+    async cancelTransaction(userId: number, uniqueId: string, errorType: string) {
+        try {
+          const result = await cancelTransaction(userId, uniqueId, errorType);
+          return result;
+        } catch (error) {
+          console.error("Error cancelling transaction:", error);
+          return null;
+        }
+      }
 
     async fetchRaffleById(id: string | number) {
         try {

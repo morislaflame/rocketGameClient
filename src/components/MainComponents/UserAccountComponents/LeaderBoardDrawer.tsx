@@ -8,13 +8,13 @@ const LeaderboardDrawer: React.FC = observer(() => {
   const { user } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Вызываем fetchTopUsers при открытии диалога и устанавливаем состояние загрузки
+  // Вызываем fetchLeaderboard при открытии диалога и устанавливаем состояние загрузки
   const handleLeaderboardOpen = useCallback(async () => {
     try {
       setIsLoading(true);
-      await user.fetchTopUsers();
+      await user.fetchLeaderboard();
     } catch (error) {
-      console.error("Error during fetching top users:", error);
+      console.error("Error during fetching leaderboard data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -25,6 +25,7 @@ const LeaderboardDrawer: React.FC = observer(() => {
       isLoading={isLoading}
       users={user.users}
       onOpen={handleLeaderboardOpen}
+      settings={user.leaderboardSettings || undefined}
     />
   );
 });

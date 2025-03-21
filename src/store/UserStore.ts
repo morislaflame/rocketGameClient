@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction } from "mobx";
-import { fetchMyInfo, fetchTopUsers, telegramAuth, check, getAvailableBonuses, generateReferralCode } from "../http/userAPI";
-import { UserInfo, UserBonus } from "../types/types";
+import { fetchMyInfo, fetchTopUsers, telegramAuth, check, getAvailableBonuses, generateReferralCode, getLeaderboard } from "../http/userAPI";
+import { UserInfo, UserBonus, LeaderboardSettings } from "../types/types";
 export default class UserStore {
     _user: UserInfo | null = null;
     _isAuth = false;
@@ -8,6 +8,8 @@ export default class UserStore {
     _loading = false;
     isTooManyRequests = false;
     _availableBonuses: UserBonus[] = [];
+    _leaderboardSettings: LeaderboardSettings | null = null;
+    _leaderboardUsers: UserInfo[] = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -43,6 +45,13 @@ export default class UserStore {
         }
       }
 
+      setLeaderboardSettings(settings: LeaderboardSettings | null) {
+        this._leaderboardSettings = settings;
+      }
+
+      setLeaderboardUsers(users: UserInfo[]) {
+        this._leaderboardUsers = users;
+      }
 
     async logout() {
         try {
@@ -126,7 +135,24 @@ export default class UserStore {
         }
     }
     
-
+    async fetchLeaderboard() {
+        try {
+            const data = await getLeaderboard();
+            runInAction(() => {
+                this.setLeaderboardUsers(data.users);
+                if (data.settings && data.settings.isActive) {
+                    this.setLeaderboardSettings(data.settings);
+                } else {
+                    this.setLeaderboardSettings(null);
+                }
+                this.setUsers(data.users);
+            });
+            return data;
+        } catch (error) {
+            console.error("Error during fetching leaderboard:", error);
+            throw error;
+        }
+    }
 
     get availableBonuses() {
         return this._availableBonuses;
@@ -150,5 +176,13 @@ export default class UserStore {
 
     get referralCode() {
         return this._user?.referralCode;
+    }
+
+    get leaderboardSettings() {
+        return this._leaderboardSettings;
+    }
+    
+    get leaderboardUsers() {
+        return this._leaderboardUsers;
     }
 }
