@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
+import Lottie from "lottie-react";
 import { MdLeaderboard } from "react-icons/md";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { UserInfo, LeaderboardSettings } from '@/types/types';
+import { UserInfo, LeaderboardSettings, RafflePrize } from '@/types/types';
 import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from '@/utils/getPlanetImg';
 import ListSkeleton from '../ListSkeleton';
@@ -17,7 +18,6 @@ import {
   MorphingDialogTitle,
   MorphingDialogSubtitle,
 } from "@/components/ui/morphing-dailog";
-
 import tonImg from "@/assets/TonIcon.svg";
 
 interface LeaderBoardListProps {
@@ -27,8 +27,6 @@ interface LeaderBoardListProps {
   settings?: LeaderboardSettings;
 }
 
-// Функция для расчета награды в зависимости от позиции
-// Оставляем для обратной совместимости, если настройки не загружены
 const calculateReward = (position: number): number => {
   if (position === 1) return 1000;
   if (position === 2) return 700;
@@ -36,7 +34,6 @@ const calculateReward = (position: number): number => {
   if (position === 5) return 300;
   if (position === 6 || position === 7) return 150;
   if (position === 8 || position === 9) return 100;
-  // Для остальных - 50 TON (до исчерпания общего пула)
   if (position >= 10 && position <= 39) return 50;
   return 0;
 };
@@ -47,14 +44,34 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
   onOpen,
   settings
 }) => {
-  // Получаем приз для места из настроек
+  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
+
+  useEffect(() => {
+    const loadAnimations = async () => {
+      if (!settings?.placePrizes) return;
+      const newAnimations: { [url: string]: Record<string, unknown> } = {};
+      for (const prize of settings.placePrizes) {
+        const mediaFile = prize.rafflePrize?.media_file;
+        if (mediaFile && mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
+          try {
+            const response = await fetch(mediaFile.url);
+            const data = await response.json();
+            newAnimations[mediaFile.url] = data;
+          } catch (error) {
+            console.error(`Error loading animation for ${mediaFile.url}:`, error);
+          }
+        }
+      }
+      setAnimations(prev => ({ ...prev, ...newAnimations }));
+    };
+    loadAnimations();
+  }, [settings]);
+
   const getPrizeForPlace = (place: number) => {
     if (!settings || !settings.placePrizes) return null;
-    
     return settings.placePrizes.find(prize => prize.place === place);
   };
 
-  // Проверяем, есть ли приз для позиции
   const hasRewardForPosition = (position: number) => {
     if (settings?.placePrizes) {
       return !!getPrizeForPlace(position);
@@ -62,14 +79,30 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
     return calculateReward(position) > 0;
   };
 
+  const renderPrizeMedia = (prize: RafflePrize) => {
+    const mediaFile = prize.media_file;
+    if (mediaFile) {
+      const { url, mimeType } = mediaFile;
+      if (mimeType === 'application/json' && animations[url]) {
+        return (
+          <Lottie
+            animationData={animations[url]}
+            loop={true}
+            autoplay={true}
+            style={{ width: 40, height: 40, borderRadius: "4px" }}
+          />
+        );
+      } else if (mimeType.startsWith('image/')) {
+        return <img src={url} alt={prize.name} style={{ width: "40px", height: "40px", borderRadius: "4px" }} />;
+      }
+    } else if (prize.imageUrl) {
+      return <img src={prize.imageUrl} alt={prize.name} style={{ width: "40px", height: "40px", borderRadius: "4px" }} />;
+    }
+    return null;
+  };
+
   return (
-    <MorphingDialog
-      transition={{
-        type: "spring",
-        stiffness: 200,
-        damping: 24,
-      }}
-    >
+    <MorphingDialog transition={{ type: "spring", stiffness: 200, damping: 24 }}>
       <MorphingDialogTrigger
         style={{
           borderRadius: "12px",
@@ -80,7 +113,7 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
         }}
         className="border border-gray-200/60 rounded-xl w-fit"
       >
-        <div className="flex flex-col space-y-1.5 p-[12px] " onClick={onOpen}>
+        <div className="flex flex-col space-y-1.5 p-[12px]" onClick={onOpen}>
           <div className="flex items-center gap-2">
             <MdLeaderboard size={16} />
             <MorphingDialogTitle className="text-[16px] font-semibold">
@@ -101,9 +134,9 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
           className="relative h-auto w-[90%] border bg-black"
         >
           <div className="flex justify-center items-center text-center relative"
-          style={{
-            padding: "calc(var(--spacing)* 4) calc(var(--spacing)* 4) calc(var(--spacing)* 2)",
-          }}>
+            style={{
+              padding: "calc(var(--spacing)* 4) calc(var(--spacing)* 4) calc(var(--spacing)* 2)",
+            }}>
             <div className="absolute top-3 left-3">
               <div className="flex items-center justify-center w-[48px] h-[48px]">
                 <MdLeaderboard size={24} />
@@ -120,10 +153,8 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
           </div>
 
           <div className="w-full p-2 bg-black">
-            {/* Отображение даты окончания и информации о призовом фонде только если есть активные настройки */}
             {settings?.isActive && (
               <>
-                {/* Блок с датой окончания */}
                 {settings.endDate && (
                   <div className={styles.endDateBlock || "text-center mb-2"}>
                     <p className="text-sm text-gray-400">
@@ -137,18 +168,16 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
                 )}
 
                 {settings.prizeType === 'money' ? (
-                  // Для денежных призов показываем общий фонд
                   <div className={styles.totalRewardsPool}>
                     <p>Prize pool: {settings.totalMoneyPool} </p>
                     <img src={tonImg} alt="TON" 
-                    style={{ width: "20px", height: "20px", verticalAlign: "middle", }}/>
+                      style={{ width: "20px", height: "20px", verticalAlign: "middle" }}/>
                   </div>
                 ) : (
-                  // Для физических призов показываем список призов по местам
                   <div className={styles.physicalPrizesList}>
                     <div className="grid grid-cols-1 gap-1">
                       {settings.placePrizes
-                        .slice() // Создаем копию массива перед сортировкой
+                        .slice()
                         .sort((a, b) => a.place - b.place)
                         .filter(prize => prize.rafflePrize)
                         .map(prize => (
@@ -156,13 +185,7 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
                             <span className="font-sm text-gray-400">#{prize.place}</span>
                             <div className="flex items-center gap-1">
                               <span className="font-sm text-gray-500">{prize.rafflePrize?.name}</span>
-                              {prize.rafflePrize?.imageUrl && (
-                                <img 
-                                  src={prize.rafflePrize.imageUrl} 
-                                  alt={prize.rafflePrize.name} 
-                                  style={{ width: "40px", height: "40px", borderRadius: "4px" }}
-                                />
-                              )}
+                              {prize.rafflePrize && renderPrizeMedia(prize.rafflePrize)}
                             </div>
                           </div>
                         ))
@@ -186,7 +209,6 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
                         </CardTitle>
                         <CardDescription style={{ color: "#8E8E93" }} className='flex flex-row items-center gap-2'>
                           #{index + 1} 
-                          {/* Показываем приз только если это денежный приз и настройки активны */}
                           {settings?.isActive && settings.prizeType === 'money' && hasRewardForPosition(index + 1) && (
                             <span className="flex flex-row items-center gap-1 justify-center">
                               {` • ${settings.placePrizes.find(p => p.place === index + 1)?.moneyAmount || calculateReward(index + 1)}`} 

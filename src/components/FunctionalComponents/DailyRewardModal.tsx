@@ -43,7 +43,7 @@ const DailyRewardModal: React.FC = observer(() => {
 
   const rewardImg =
     dailyReward.rewardInfo?.rewardType === "attempts" ? (
-      <img src={getTriesImg()} alt="Tries" />
+      <img src={getTriesImg()} alt="Tries" width={24} height={24}/>
     ) : null;
 
   

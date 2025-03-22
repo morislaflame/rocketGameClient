@@ -117,6 +117,20 @@ export interface RafflePrize {
   imageUrl: string;
   value: number;
   description: string | null;
+  media_file: {
+            id: number;
+            fileName: string;
+            originalName: string;
+            mimeType: string;
+            size: number;
+            bucket: string;
+            url: string;
+            entityType: string;
+            entityId: number;
+            createdAt: string;
+            updatedAt: string;
+            userId: number;
+        }
 }
 
 // Интерфейс для пользовательского приза

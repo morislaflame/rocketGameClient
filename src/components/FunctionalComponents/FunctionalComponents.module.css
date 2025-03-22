@@ -188,8 +188,8 @@
     z-index: 100;
     flex-direction: row;
     align-items: center;
-    /* justify-content: space-between; */
-    gap: 42px;
+    justify-content: space-between;
+    /* gap: 42px; */
 }
 
 .raffleHistoryItemHeader {
@@ -198,6 +198,8 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    max-width: 40%;
+    text-align: center;
 }
 
 .prizeImageContainer {
@@ -217,4 +219,5 @@
       gap: 6px;
       flex: 1;
       /* align-items: center; */
+      max-width: 50%;
 }
