@@ -5,7 +5,7 @@ import StoreProvider, { Context } from "./store/StoreProvider";
 import {THEME, TonConnectUIProvider} from "@tonconnect/ui-react"
 
 export { Context };
-const manifestUrl = 'https://gist.githubusercontent.com/siandreev/75f1a2ccf2f3b4e2771f6089aeb06d7f/raw/d4986344010ec7a2d1cc8a2a9baa57de37aaccb8/gistfile1.txt';
+const manifestUrl = 'https://gist.githubusercontent.com/morislaflame/7899ba7c1781a8dcb39f5c62548ffe1b/raw/c75c5ede411d64876cae669c0237c30664aa5905/gistfile1.txt';
 
 // Избегаем повторного создания root при горячей перезагрузке
 const rootElement = document.getElementById("root") as HTMLElement;
