@@ -85,7 +85,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
         return (
           <Lottie
             animationData={animations[url]}
-            loop={true}
+            loop={false}
             autoplay={true}
             // style={{ width: 40, height: 40 }}
           />
@@ -111,7 +111,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
       >
         <div className="flex items-center space-x-3 p-3" onClick={handleOpenHistory}>
           <div className="flex items-center justify-center w-[36px] h-[36px]"> 
-            <Lottie animationData={trophy} loop={true} width={36} height={36}/>
+            <Lottie animationData={trophy} loop={false} width={36} height={36}/>
           </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             <MorphingDialogTitle className="text-[16px] font-medium">
@@ -132,7 +132,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
           <div className="flex justify-center items-center p-4 text-center relative">
             <div className="absolute top-4 left-3">
               <div className="flex items-center justify-center w-[48px] h-[48px]"> 
-                <Lottie animationData={trophy} loop={true} width={48} height={48}/>
+                <Lottie animationData={trophy} loop={false} width={48} height={48}/>
               </div>
             </div>
             <div className="px-6">

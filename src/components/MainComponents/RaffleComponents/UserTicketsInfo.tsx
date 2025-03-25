@@ -33,6 +33,7 @@ const UserTicketsInfo: React.FC = observer(() => {
 
   useEffect(() => {
     if (ticketsListRef.current) {
+      gsap.killTweensOf(ticketsListRef.current);
       if (isTicketsListOpen) {
         // Устанавливаем начальные стили перед анимацией открытия
         gsap.set(ticketsListRef.current, { height: 0, opacity: 0, display: 'block' });
@@ -42,6 +43,7 @@ const UserTicketsInfo: React.FC = observer(() => {
           opacity: 1,
           duration: 0.5,
           ease: 'power2.out',
+          clearProps: 'height',
         });
       } else {
         // Анимация закрытия
