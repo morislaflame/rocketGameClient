@@ -56,12 +56,14 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
           }
         }
       }
-      setAnimations(prev => ({ ...prev, ...newAnimations }));
+      if (Object.keys(newAnimations).length > 0) {
+        setAnimations(prev => ({ ...prev, ...newAnimations }));
+      }
     };
     if (userPrizes && userPrizes.length > 0) {
       loadAnimations();
     }
-  }, [userPrizes, animations]);
+  }, [userPrizes]);
 
   // Функция для отображения медиа приза (анимация или изображение)
   const renderPrizeMedia = (rafflePrize: RafflePrize) => {
