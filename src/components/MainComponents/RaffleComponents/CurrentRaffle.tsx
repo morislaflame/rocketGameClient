@@ -9,6 +9,7 @@ import RaffleHeader from './RaffleHeader';
 import LoadingRaffle from './LoadingRaffle';
 import RaffleHistoryMorphingDialog from '@/components/FunctionalComponents/RaffleHistoryMorphingDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import NoPreviousRaffle from './NoPreviousRaffle';
 
 const CurrentRaffle: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
@@ -87,10 +88,10 @@ const CurrentRaffle: React.FC = observer(() => {
     if (raffle.loadingPreviousRaffle) {
       return <LoadingRaffle />;
     }
-    if (!raffle.previousRaffle) {
+    if (!raffle.previousRaffle || !raffle.previousRaffle.raffle) {
       return (
-        <div className={styles.noRaffleContainer}>
-          <p className={styles.noRaffleText}>No data about previous raffles</p>
+        <div className='w-full h-full flex items-center justify-center'>
+          <NoPreviousRaffle />
         </div>
       );
     }
@@ -100,12 +101,12 @@ const CurrentRaffle: React.FC = observer(() => {
     return (
       <div className={styles.raffleContainer}>
         <RaffleHeader
-          raffleId={prevRaffle.id}
+          raffleId={prevRaffle?.id}
           isCurrent={false}
           isActive={false}
           timerActive={false}
           thresholdReachedAt={null}
-          endTime={prevRaffle.endTime || undefined}
+          endTime={prevRaffle?.endTime || undefined}
           formatDate={formatDate}
           onTabChange={handleTabChange}
         />
@@ -113,12 +114,12 @@ const CurrentRaffle: React.FC = observer(() => {
           <div className="flex flex-col gap-2 items-center justify-center">
             <RaffleInfo
               isActive={false}
-              winner={prevRaffle.winner || undefined}
+              winner={prevRaffle?.winner || undefined}
               totalParticipants={raffle.previousRaffle.totalParticipants}
-              rafflePrize={prevRaffle.raffle_prize}
-              totalTickets={prevRaffle.totalTickets}
-              winningTicket={prevRaffle.winningTicketNumber || undefined}
-              winnerChance={prevRaffle.winnerChance || 0}
+              rafflePrize={prevRaffle?.raffle_prize}
+              totalTickets={prevRaffle?.totalTickets}
+              winningTicket={prevRaffle?.winningTicketNumber || undefined}
+              winnerChance={prevRaffle?.winnerChance || 0}
             />
             <div>
               <RaffleHistoryMorphingDialog />

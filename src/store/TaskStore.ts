@@ -113,11 +113,11 @@ export default class TaskStore {
   }
 
   // Обновленный метод для выполнения задания с учетом типа
-  async handleTaskAction(task: Task) {
+  async handleTaskAction(task: Task, userRefCode?: string) {
     try {
       this.setLoading(true);
       const taskHandler = getTaskHandler(task);
-      const result = await taskHandler(task, this);
+      const result = await taskHandler(task, this, userRefCode);
       
       // Возвращаем результат обработки, включая возможное перенаправление
       return result;
@@ -164,7 +164,7 @@ export default class TaskStore {
   }
 
   // Метод для шаринга истории в Telegram
-  async shareTaskToStory(task: Task) {
+  async shareTaskToStory(task: Task, userRefCode?: string) {
     try {
       // Проверяем наличие метода shareToStory в объекте Telegram
       if (!tg || typeof tg.shareToStory !== 'function') {
@@ -176,7 +176,17 @@ export default class TaskStore {
       const mediaUrl = task.metadata?.mediaUrl || 'https://example.com/placeholder.jpg';
       const shareText = task.metadata?.shareText || 'Check out my achievements!';
       const widgetName = task.metadata?.widgetName || 'Open app';
-      const widgetUrl = task.metadata?.widgetUrl || '';
+      let widgetUrl = task.metadata?.widgetUrl || '';
+      
+      // Добавляем реферальный код, если он есть
+      if (userRefCode) {
+        // Проверяем, содержит ли URL уже параметры
+        if (widgetUrl.includes('?')) {
+          widgetUrl = `${widgetUrl}=${userRefCode}`;
+        } else {
+          widgetUrl = `${widgetUrl}=${userRefCode}`;
+        }
+      }
       
       // Логируем вызов функции для отладки
       console.log("Calling shareToStory with parameters:", {
@@ -194,8 +204,6 @@ export default class TaskStore {
           name: widgetName
         }
       });
-      
-      // Логируем успешный вызо
       
       // Отмечаем задание как выполненное на сервере
       await this.completeTask(task.id);

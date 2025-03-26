@@ -27,8 +27,11 @@ const TasksDrawer: React.FC = observer(() => {
 
   const handleComplete = async (taskItem: Task) => {
     try {
-      // Вызываем обработчик задания
-      const result = await task.handleTaskAction(taskItem);
+      // Получаем реферальный код пользователя
+      const userRefCode = user.referralCode;
+      
+      // Вызываем обработчик задания с передачей реферального кода
+      const result = await task.handleTaskAction(taskItem, userRefCode || undefined);
       
       // Если в результате есть redirect, перенаправляем пользователя независимо от успеха
       if (result.redirect) {

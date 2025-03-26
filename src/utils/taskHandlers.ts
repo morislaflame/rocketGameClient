@@ -12,7 +12,7 @@ export interface TaskHandlerResult {
 }
 
 // Тип для функции-обработчика задания
-export type TaskHandler = (task: Task, store: TaskStore) => Promise<TaskHandlerResult>;
+export type TaskHandler = (task: Task, store: TaskStore, userRefCode?: string) => Promise<TaskHandlerResult>;
 
 // Получаем доступ к телеграм объекту
 const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
@@ -124,13 +124,12 @@ const referralBonusHandler: TaskHandler = async () => {
 };
 
 // Обработчик для шаринга истории в Telegram
-const storyShareHandler: TaskHandler = async (task: Task, store) => {
+const storyShareHandler: TaskHandler = async (task: Task, store, userRefCode) => {
   try {
     // Используем метод из store для шаринга истории
-    const result = await store.shareTaskToStory(task);
+    const result = await store.shareTaskToStory(task, userRefCode);
     
     if (result.success) {
-    //   toast.success("Story published successfully");
       return { success: true, message: "Story published successfully" };
     } else {
       toast.error(result.message);
