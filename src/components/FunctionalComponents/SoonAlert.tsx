@@ -45,7 +45,7 @@ const SoonAlert: React.FC<SoonAlertProps> = ({ showAlert, onClose }) => {
             <AlertDescription>
               Check for updates in our{" "}
               <a
-                href="https://t.me/updates"
+                href="https://t.me/rocketraffle"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.telegramLink}
