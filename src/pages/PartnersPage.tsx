@@ -84,7 +84,7 @@ const PartnersPage: React.FC = observer(() => {
           <h2 className="text-3xl font-bold">Affiliate Program</h2>
         </div>
 
-        <div className="flex flex-col items-center gap-3 mb-4 w-full">
+        <div className="flex flex-col items-center gap-3 mb-4 w-full p-1">
           <Card className="w-full max-w-[600px]">
             <CardHeader>
               <CardTitle>Your referral link</CardTitle>
