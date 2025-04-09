@@ -100,6 +100,7 @@ const PartnersPage: React.FC = observer(() => {
                   {referralLink && (
                     <div
                       className="text-white underline cursor-pointer"
+                      style={{ wordBreak: 'break-all' }}
                       onClick={handleCopyLink}
                     >
                       {referralLink}
