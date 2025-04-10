@@ -169,7 +169,7 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
                     <div className={styles.prizeImageContainer}>
                       {renderPrizeMedia(prize.raffle.raffle_prize)}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground text-center">
                       {prize.raffle.raffle_prize.name}
                     </div>
                     <div className="flex items-center gap-2 text-m text-white">
