@@ -348,3 +348,21 @@ export interface TelegramWebApp {
   }) => void;
   openTelegramLink: (url: string) => void;
 }
+
+
+export enum PrizeType {
+  COMMON = 'common',
+  RARE = 'rare',
+  EPIC = 'epic',
+  SPECIAL = 'special',
+}
+
+// Prize item interface
+export interface PrizeItem {
+  id: string | number;
+  image: string;
+  text?: string;
+  type?: PrizeType;
+  isSpecial?: boolean;
+  [key: string]: any;
+}

@@ -166,3 +166,18 @@ button[data-tc-button="true"] {
 #physical-prize-item:last-child {
   border-bottom: none !important;
 }
+
+.roulette-pro-regular-image-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.roulette-pro-regular-prize-item-wrapper {
+  background: #00000000 !important;
+  border: none !important;
+  border-left: 1px solid hsl(0 1% 10%) !important;
+  border-right: 1px solid hsl(0 1% 10%) !important;
+  /* border-radius: 10px !important; */
+}
+
