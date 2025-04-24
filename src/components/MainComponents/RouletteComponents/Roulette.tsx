@@ -69,6 +69,25 @@ const Roulette = () => {
   const hideCenterDelimiter = settings.hideCenterDelimiter.value;
   const spinningTime = +settings.spinningTime.value;
 
+  const customPrizeItemRender = (item: any) => {
+    return (
+      <div className='roulette-pro-regular-prize-item'>
+        <div className='roulette-pro-regular-prize-item-wrapper'>
+          <div className='roulette-pro-regular-image-wrapper'>
+                <img 
+                src={item.image} 
+                alt={item.text || 'Приз'} 
+                className='roulette-pro-regular-prize-item-image' 
+            />
+          </div>
+          <p className='roulette-pro-regular-prize-item-text'>
+            {item.text}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
 
   // Отображаем компонент рулетки с настройками из конфигурационного файла
   return (
@@ -87,6 +106,7 @@ const Roulette = () => {
             }}
             options={{ stopInCenter, withoutAnimation }}
             defaultDesignOptions={{ prizesWithText, hideCenterDelimiter }}
+            prizeItemRenderFunction={customPrizeItemRender}
           />
         </div>
       </div>
