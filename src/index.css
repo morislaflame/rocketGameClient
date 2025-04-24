@@ -176,8 +176,26 @@ button[data-tc-button="true"] {
 .roulette-pro-regular-prize-item-wrapper {
   background: #00000000 !important;
   border: none !important;
-  border-left: 1px solid hsl(0 1% 10%) !important;
-  border-right: 1px solid hsl(0 1% 10%) !important;
+  border-left: 1px solid hsl(0, 0%, 70%) !important;
+  /* border-right: 1px solid hsl(0, 0%, 70%) !important; */
   /* border-radius: 10px !important; */
 }
 
+@media (max-width: 768px) {
+  .roulette-pro-regular-design-prize-item-horizontal {
+    transform: translateX(35px);
+  }
+}
+
+
+.roulette-pro-regular-prize-item-text {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: hsl(0 0% 63.9%) !important;
+  height: fit-content !important;
+  padding: 8px 0 0 0 !important;
+}
+
+.roulette-pro-regular-prize-item {
+  height: fit-content !important;
+}

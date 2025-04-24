@@ -1,153 +1,40 @@
-import React, { useState, useEffect } from 'react';
-// import Swal from 'sweetalert2';
-import { nanoid } from 'nanoid';
+import { observer } from 'mobx-react-lite'
+import React, { useLayoutEffect, useRef } from 'react'
+import Roulette from '@/components/MainComponents/RouletteComponents/Roulette'
+import { gsap } from 'gsap'
+import styles from './RoulettePage.module.css'
+const RoulettePage: React.FC = observer(() => {
 
-import RoulettePro, { RouletteType } from 'react-roulette-pro';
-import 'react-roulette-pro/dist/index.css';
+  const containerRef = useRef<HTMLDivElement>(null);
 
-// Импортируем настройки и функции из конфигурационного файла
-import { 
-  prizes, 
-  rouletteSettings, 
-  getDesignOptions, 
-  isArrayOf, 
-  getOptionsAsString, 
-  API, 
-  createPrizeList 
-} from './utils/rouletteConfig';
-
-import styles from './RoulettePage.module.css';
-
-// const Toast = Swal.mixin({
-//   toast: true,
-//   position: 'bottom-end',
-//   showConfirmButton: false,
-//   timer: 3000,
-//   timerProgressBar: true,
-//   didOpen: (toast) => {
-//     toast.addEventListener('mouseenter', Swal.stopTimer);
-//     toast.addEventListener('mouseleave', Swal.resumeTimer);
-//   },
-// });
-
-const RoulettePage = () => {
-  // Используем настройки из конфигурационного файла
-  const [settings, setSettings] = useState(rouletteSettings);
-  const [prizeList, setPrizeList] = useState<any[]>([]);
-  const [start, setStart] = useState(false);
-  const [spinning, setSpinning] = useState(false);
-  const [prizeIndex, setPrizeIndex] = useState(0);
-
-  useEffect(() => {
-    // Используем функцию из конфигурационного файла для создания списка призов
-    const list = createPrizeList(prizes);
-    setPrizeList(list);
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      gsap.fromTo(
+        containerRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
+      );
+    }
   }, []);
 
-  useEffect(() => {
-    if (!prizeIndex || start) {
-      return;
-    }
 
-    setStart(true);
-  }, [prizeIndex, start]);
-
-  useEffect(() => {
-    if (!spinning || !prizeList.length) {
-      return;
-    }
-
-    const prepare = async () => {
-      // Используем API из конфигурационного файла
-      const newPrizeIndex = await API.getPrizeIndex(prizes.length);
-      setPrizeIndex(newPrizeIndex);
-      setStart(false);
-
-      const { id } = prizeList[newPrizeIndex];
-
-      // Toast.fire({ icon: 'info', title: `Must win id - ${id}` });
-    };
-
-    prepare();
-  }, [spinning, prizeList]);
-
-  const handleStart = () => {
-    setSpinning(true);
-  };
-
-  const handlePrizeDefined = () => {
-    // Toast.fire({ icon: 'success', title: '🥳 Prize defined 🥳', timer: 1500 });
-
-    setSpinning(false);
-    const winningPrize = prizeList[prizeIndex];
-    console.log('Выигранный приз:', winningPrize);
-  };
-
-  const type = settings.type.value;
-  const design = settings.design.value;
-  const soundWhileSpinning = settings.soundWhileSpinning.value;
-  const stopInCenter = settings.stopInCenter.value;
-  const withoutAnimation = settings.withoutAnimation.value;
-  const prizesWithText = settings.prizesWithText.value;
-  const hideCenterDelimiter = settings.hideCenterDelimiter.value;
-  const spinningTime = +settings.spinningTime.value;
-
-  const designOptions = getDesignOptions(settings);
-
-  // Создаем строку настроек для отображения в UI
-  const designOptionsString = getOptionsAsString(settings, design);
-  const options = Object.entries({
-    stopInCenter,
-    withoutAnimation,
-  });
-  const availableOptions = options.filter((item) => Boolean(item[1]));
-
-  const optionsString = availableOptions
-    .map(([key, value]) => `${key}: ${value}, `)
-    .join('');
-
-  // Отображаем компонент рулетки с настройками из конфигурационного файла
   return (
-    <div className='w-full h-full'>
-      <div >
-        <div className={`roulette ${type}`}>
-          <RoulettePro
-            type={type as RouletteType}
-            prizes={prizeList}
-            // design={design}
-            // designOptions={designOptions}
-            start={start}
-            prizeIndex={prizeIndex}
-            onPrizeDefined={handlePrizeDefined}
-            spinningTime={spinningTime}
-            classes={{
-              wrapper: 'roulette-pro-wrapper-additional-styles',
-            }}
-            // soundWhileSpinning={soundWhileSpinning ? sound : null}
-            options={{ stopInCenter, withoutAnimation }}
-            defaultDesignOptions={{ prizesWithText, hideCenterDelimiter }}
-          />
-        </div>
-        <div
-          className={`roulette-actions ${
-            // settings.replaceBottomArrowWithTopArrow.value ? 'down' : ''
-            ''
-          }`}
-        >
-          <div className="gray-block">
-            <div className="button-wrapper">
-              <button onClick={handleStart} className="spin-button" type="button">
-                Spin
-              </button>
-            </div>
+    <div className={styles.Container} ref={containerRef}>
+      <div className='flex flex-col items-center gap-7 w-full h-full overflow-hidden'>
+        <div className='flex flex-col items-center gap-2'>
+          <h2 className="text-3xl font-semibold leading-none tracking-tight">
+              LootBox #1
+          </h2>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            Win gifts from the lootbox!
           </div>
         </div>
-
-        {/* Для отладки можно показать текущие настройки */}
-        
+        <div className='w-full h-full'>
+          <Roulette />
+        </div>
       </div>
     </div>
-  );
-};
+  )
+})
 
-export default RoulettePage;
+export default RoulettePage  

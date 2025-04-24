@@ -79,7 +79,7 @@ export const rouletteSettings = {
   hideCenterDelimiter: {
     name: 'Hide center delimiter',
     options: [false, true],
-    value: false,
+    value: true,
     forDesign: 'Regular',
   },
   soundWhileSpinning: {
@@ -90,59 +90,13 @@ export const rouletteSettings = {
   stopInCenter: {
     name: 'Stop in the prize item center',
     options: [false, true],
-    value: false,
+    value: true,
   },
   spinningTime: {
     name: 'Spinning time',
     options: ['3', '5', '10', '15', '20'],
-    value: '10',
+    value: '3',
   },
-};
-
-// Вспомогательные функции
-export const getDesignOptions = (settings: Record<string, any>) => {
-  const result: Record<string, any> = {};
-  const keys = Object.keys(settings);
-
-  keys.forEach((key) => {
-    const { forDesign, value } = settings[key];
-
-    if (!forDesign) {
-      return;
-    }
-
-    result[key] = value;
-  });
-
-  return result;
-};
-
-// eslint-disable-next-line valid-typeof
-export const isArrayOf = (type: string, array: any[]) => array.every((item) => typeof item === type);
-
-export const getOptionsAsString = (settings: Record<string, any>, design: string) => {
-  let string = '';
-  const keys = Object.keys(settings);
-
-  keys.forEach((key) => {
-    const { options, value, forDesign } = settings[key];
-
-    if (!forDesign) {
-      return;
-    }
-
-    if (typeof forDesign !== 'boolean' && forDesign !== design) {
-      return;
-    }
-
-    if (options[0] === value) {
-      return;
-    }
-
-    string += `${key}: ${value},\n`;
-  });
-
-  return string;
 };
 
 // API для получения индекса приза
