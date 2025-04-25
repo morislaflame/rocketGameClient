@@ -136,19 +136,20 @@ export interface RafflePrize {
 // Интерфейс для пользовательского приза
 export interface UserPrize {
   id: number;
-  raffleId: number;
+  raffleId: number | null;
+  prizeId: number | null;
   status: string;
   winDate: string;
   createdAt: string;
   updatedAt: string;
   userId: number;
   rafflePrizeId: number;
+  prize: RafflePrize;
   raffle: {
     id: number;
     startTime: string;
     endTime: string;
     totalTickets: number;
-    raffle_prize: RafflePrize;
     };
 };
 

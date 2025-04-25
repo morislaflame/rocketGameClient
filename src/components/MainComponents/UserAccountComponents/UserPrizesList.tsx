@@ -45,14 +45,17 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
     const loadAnimations = async () => {
       const newAnimations: { [url: string]: Record<string, unknown> } = {};
       for (const prize of userPrizes) {
-        const mediaFile = prize.raffle.raffle_prize.media_file;
-        if (mediaFile && mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
-          try {
-            const response = await fetch(mediaFile.url);
-            const data = await response.json();
-            newAnimations[mediaFile.url] = data;
-          } catch (error) {
-            console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
+        // Добавляем проверку на null для prize.prize
+        if (prize.prize && prize.prize.media_file) {
+          const mediaFile = prize.prize.media_file;
+          if (mediaFile && mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
+            try {
+              const response = await fetch(mediaFile.url);
+              const data = await response.json();
+              newAnimations[mediaFile.url] = data;
+            } catch (error) {
+              console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
+            }
           }
         }
       }
@@ -66,7 +69,12 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
   }, [userPrizes]);
 
   // Функция для отображения медиа приза (анимация или изображение)
-  const renderPrizeMedia = (rafflePrize: RafflePrize) => {
+  const renderPrizeMedia = (rafflePrize: RafflePrize | null) => {
+    // Добавляем проверку на null
+    if (!rafflePrize) {
+      return <img src={tokenImg} alt="No prize" className={styles.prizeImage} />;
+    }
+
     const mediaFile = rafflePrize.media_file;
     if (mediaFile) {
       const { url, mimeType } = mediaFile;
@@ -87,6 +95,16 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
       return <img src={rafflePrize.imageUrl} alt={rafflePrize.name} className={styles.prizeImage} />;
     }
     return <img src={tokenImg} alt="No prize" className={styles.prizeImage} />;
+  };
+
+  // Функция для получения названия приза
+  const getPrizeName = (prize: UserPrize) => {
+    return prize.prize?.name || "Unknown Prize";
+  };
+
+  // Функция для получения стоимости приза
+  const getPrizeValue = (prize: UserPrize) => {
+    return prize.prize?.value || 0;
   };
 
   return (
@@ -167,13 +185,13 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
                 userPrizes.map((prize: UserPrize) => (
                   <div key={prize.id} className={styles.prizeCard}>
                     <div className={styles.prizeImageContainer}>
-                      {renderPrizeMedia(prize.raffle.raffle_prize)}
+                      {renderPrizeMedia(prize.prize)}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground text-center">
-                      {prize.raffle.raffle_prize.name}
+                      {getPrizeName(prize)}
                     </div>
                     <div className="flex items-center gap-2 text-m text-white">
-                      {prize.raffle.raffle_prize.value}{" "}
+                      {getPrizeValue(prize)}{" "}
                       <img src={tokenImg} alt="Planet" width="18" height="18" />
                     </div>
                     <div className="flex items-center justify-center w-full">

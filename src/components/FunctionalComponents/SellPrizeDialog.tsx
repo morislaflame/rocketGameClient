@@ -37,7 +37,7 @@ const SellPrizeDialog: React.FC<SellPrizeDialogProps> = ({
         </DialogHeader>
         {prize && (
           <div className='flex flex-col items-center gap-1 w-full'>
-            <p>You will receive: {prize.raffle.raffle_prize.value} tokens</p>
+            <p>You will receive: {prize.prize.value} tokens</p>
           </div>
         )}
         <DialogFooter className="flex flex-col gap-1">
