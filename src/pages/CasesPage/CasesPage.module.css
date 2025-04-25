@@ -1,0 +1,14 @@
+.Container {
+    width: 100vw;
+    height: 88vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+  }
+
+  .scrollArea {
+    flex: 1;
+    width: 100%;/* Добавьте отступ от хедера */
+}

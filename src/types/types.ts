@@ -367,3 +367,85 @@ export interface PrizeItem {
   isSpecial?: boolean;
   [key: string]: any;
 }
+
+// Типы для кейсов
+export type CaseType = 'standard' | 'author' | 'free';
+export type CaseItemType = 'attempts' | 'tickets' | 'prize';
+
+// Интерфейс для предмета кейса
+export interface CaseItem {
+  id: number;
+  type: CaseItemType;
+  value: number | null;
+  probability: number;
+  rafflePrizeId: number | null;
+  imageUrl: string | null;
+  name: string | null;
+  caseId: number;
+  createdAt: string;
+  updatedAt: string;
+  prize?: RafflePrize;
+  media_file?: {
+    id: number;
+    url: string;
+    mimeType: string;
+  };
+}
+
+// Интерфейс для кейса
+export interface Case {
+  id: number;
+  name: string;
+  type: CaseType;
+  description: string | null;
+  price: number | null;
+  imageUrl: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  case_items?: CaseItem[];
+  media_file?: {
+    id: number;
+    url: string;
+    mimeType: string;
+  };
+}
+
+// Интерфейс для истории открытия кейсов
+export interface CaseHistory {
+  count: number;
+  rows: {
+    id: number;
+    openedAt: string;
+    createdAt: string;
+    updatedAt: string;
+    userId: number;
+    caseId: number;
+    wonItemId: number;
+    case: Case;
+    wonItem: CaseItem;
+  }[];
+}
+
+// Интерфейс для результата открытия кейса
+export interface CaseOpenResult {
+  message: string;
+  wonItem: CaseItem;
+  result: {
+    message: string;
+    type: CaseItemType;
+    value?: number;
+    prize?: RafflePrize;
+  };
+  user: {
+    balance: number;
+    attempts: number;
+    tickets: number;
+  };
+}
+
+// Интерфейс для проверки доступности бесплатного кейса
+export interface FreeCaseAvailability {
+  isAvailable: boolean;
+  nextAvailableAt: string;
+}
