@@ -5,6 +5,7 @@ import { Case } from '@/types/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import styles from './CasesComponents.module.css';
 import { Button } from '@/components/ui/button';
+import CasePurchaseButtons from './CasePurchaseButtons';
 
 const CasesList: React.FC = observer(() => {
   const { cases } = useContext(Context) as IStoreContext;
@@ -34,7 +35,16 @@ const CasesList: React.FC = observer(() => {
     if (caseItem.type === 'free') {
       return <span className="text-green-500 font-semibold">Free</span>;
     }
-    return <span className="text-white font-semibold">{caseItem.price} tokens</span>;
+    return (
+      <div className={styles.priceContainer}>
+        {caseItem.price && (
+          <span className="text-white font-semibold">{caseItem.price} TON</span>
+        )}
+        {caseItem.starsPrice && (
+          <span className="text-yellow-500 font-semibold">{caseItem.starsPrice} ★</span>
+        )}
+      </div>
+    );
   };
 
   // Функция для отображения изображения кейса
@@ -91,8 +101,23 @@ const CasesList: React.FC = observer(() => {
           <div className={styles.caseImageContainer}>
             {renderCaseImage(caseItem)}
           </div>
-          <div className="text-md font-medium mt-2">{caseItem.name}</div>
-          <div className="text-sm mt-1">{renderCasePrice(caseItem)}</div>
+          <div className="text-md font-medium mt-2 text-center">{caseItem.name}</div>
+          <div className="text-sm mt-1 text-center">{renderCasePrice(caseItem)}</div>
+          
+          {/* Добавляем кнопки покупки */}
+          {caseItem.type !== 'free' && (
+            <CasePurchaseButtons
+              caseId={caseItem.id}
+              price={caseItem.price?.toString() || ''}
+              starsPrice={caseItem.starsPrice || 0}
+              onPurchase={(success) => {
+                if (success) {
+                  cases.fetchUserCases();
+                }
+              }}
+            />
+          )}
+          
           <Button 
             variant="secondary" 
             className={styles.openCaseButton}

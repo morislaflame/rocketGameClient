@@ -29,3 +29,49 @@ export const fetchUserCaseHistory = async (params = {}) => {
   const { data } = await $authHost.get("api/case/user/history", { params });
   return data;
 };
+
+// Инициализация покупки кейса за TON
+export const initCasePurchaseTON = async (
+  userId: number,
+  caseId: number,
+  rawPayload: string, 
+  uniqueId: string
+) => {
+  const { data } = await $authHost.post("api/case/purchase/ton/init", {
+    userId,
+    caseId,
+    rawPayload,
+    uniqueId
+  });
+  return data;
+};
+
+// Получение статуса транзакции
+export const getCaseTransactionStatus = async (userId: number, uniqueId: string) => {
+  const { data } = await $authHost.get("api/case/purchase/ton/status", {
+    params: { userId, uniqueId }
+  });
+  return data;
+};
+
+// Отмена транзакции
+export const cancelCaseTransaction = async (userId: number, uniqueId: string, errorType: string) => {
+  const { data } = await $authHost.post("api/case/purchase/ton/cancel", {
+    userId,
+    uniqueId,
+    errorType
+  });
+  return data;
+};
+
+// Получение купленных кейсов
+export const fetchUserCases = async (params = {}) => {
+  const { data } = await $authHost.get("api/case/user/cases", { params });
+  return data;
+};
+
+// Генерация счета для оплаты за звёзды (Telegram)
+export const generateCaseInvoice = async (caseId: number) => {
+  const { data } = await $authHost.post(`api/case/${caseId}/purchase/generate-invoice`);
+  return data.invoiceLink as string;
+};

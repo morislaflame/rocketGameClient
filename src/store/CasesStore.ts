@@ -4,9 +4,16 @@ import {
   fetchOneCase, 
   openCase, 
   checkFreeCaseAvailability, 
-  fetchUserCaseHistory 
+  fetchUserCaseHistory,
+  initCasePurchaseTON,
+  getCaseTransactionStatus,
+  cancelCaseTransaction,
+  fetchUserCases,
+  generateCaseInvoice
 } from "../http/casesAPI";
-import { Case, CaseHistory, CaseOpenResult, FreeCaseAvailability } from "@/types/types";
+import { Case, CaseHistory, CaseOpenResult, FreeCaseAvailability, TelegramWebApp } from "@/types/types";
+
+const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 
 export default class CasesStore {
   _cases: Case[] = [];
@@ -16,6 +23,9 @@ export default class CasesStore {
   _openResult: CaseOpenResult | null = null;
   _loading = false;
   _error = "";
+  _userCases: any[] = [];
+  _loadingPurchase: boolean = false;
+  _loadingUserCases: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -47,6 +57,18 @@ export default class CasesStore {
 
   setError(error: string) {
     this._error = error;
+  }
+
+  setUserCases(cases: any[]) {
+    this._userCases = cases;
+  }
+
+  setLoadingPurchase(loading: boolean) {
+    this._loadingPurchase = loading;
+  }
+
+  setLoadingUserCases(loading: boolean) {
+    this._loadingUserCases = loading;
   }
 
   // Получение всех кейсов с опциональной фильтрацией
@@ -162,6 +184,94 @@ export default class CasesStore {
     this.setSelectedCase(null);
   }
 
+  // Инициализация покупки кейса за TON
+  async initCasePurchase(
+    userId: number,
+    caseId: number,
+    rawPayload: string,
+    uniqueId: string
+  ) {
+    try {
+      this.setLoadingPurchase(true);
+      const result = await initCasePurchaseTON(
+        userId,
+        caseId,
+        rawPayload,
+        uniqueId
+      );
+      return result;
+    } catch (error) {
+      console.error("Error initiating case purchase:", error);
+      this.setError("Failed to initiate case purchase");
+      return null;
+    } finally {
+      this.setLoadingPurchase(false);
+    }
+  }
+
+  // Проверка статуса транзакции
+  async checkTransactionStatus(userId: number, uniqueId: string) {
+    try {
+      const status = await getCaseTransactionStatus(userId, uniqueId);
+      return status;
+    } catch (error) {
+      console.error("Error checking transaction status:", error);
+      this.setError("Failed to check transaction status");
+      return null;
+    }
+  }
+
+  // Отмена транзакции
+  async cancelTransaction(userId: number, uniqueId: string, errorType: string) {
+    try {
+      const result = await cancelCaseTransaction(userId, uniqueId, errorType);
+      return result;
+    } catch (error) {
+      console.error("Error cancelling transaction:", error);
+      this.setError("Failed to cancel transaction");
+      return null;
+    }
+  }
+
+  // Получение купленных кейсов пользователя
+  async fetchUserCases(params = {}) {
+    try {
+      this.setLoadingUserCases(true);
+      const data = await fetchUserCases(params);
+      runInAction(() => {
+        this.setUserCases(data.rows || []);
+      });
+      return data;
+    } catch (error) {
+      runInAction(() => {
+        console.error("Error fetching user cases:", error);
+        this.setError("Failed to load user cases");
+      });
+      return null;
+    } finally {
+      runInAction(() => this.setLoadingUserCases(false));
+    }
+  }
+
+  // Генерация счета Telegram для оплаты звездами
+  async generateInvoice(caseId: number) {
+    try {
+      this.setLoadingPurchase(true);
+      const invoiceLink = await generateCaseInvoice(caseId);
+      try {
+        tg?.openInvoice(invoiceLink);
+      } catch (error) {
+        console.error("Error opening invoice:", error);
+        this.setError("Failed to open invoice");
+      }
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      this.setError("Failed to generate invoice");
+    } finally {
+      this.setLoadingPurchase(false);
+    }
+  }
+
   // Геттеры для доступа к состоянию
   get cases() {
     return this._cases;
@@ -189,5 +299,17 @@ export default class CasesStore {
 
   get error() {
     return this._error;
+  }
+
+  get userCases() {
+    return this._userCases;
+  }
+
+  get loadingPurchase() {
+    return this._loadingPurchase;
+  }
+
+  get loadingUserCases() {
+    return this._loadingUserCases;
   }
 }

@@ -399,6 +399,7 @@ export interface Case {
   type: CaseType;
   description: string | null;
   price: number | null;
+  starsPrice: number | null;
   imageUrl: string | null;
   isActive: boolean;
   createdAt: string;
