@@ -155,7 +155,7 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
           border: "1px solid hsl(0deg 0.67% 27.27%)",
         }}
       >
-        {isLoading || transactionStatus === "pending" ? "Processing..." : props.price}
+        {isLoading || transactionStatus === "pending" ? "Processing..." : Number(props.price).toFixed(1)}
         {!isLoading && transactionStatus !== "pending" && (
           <img src={tonImg} alt="Ton" className={styles.tonIcon} />
         )}

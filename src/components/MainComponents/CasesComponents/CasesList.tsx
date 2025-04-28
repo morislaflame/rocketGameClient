@@ -5,53 +5,35 @@ import { Case } from '@/types/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import styles from './CasesComponents.module.css';
 import { Button } from '@/components/ui/button';
-import CasePurchaseButtons from './CasePurchaseButtons';
+import CaseItem from './CaseItem';
 
 const CasesList: React.FC = observer(() => {
   const { cases } = useContext(Context) as IStoreContext;
   const [sortedCases, setSortedCases] = useState<Case[]>([]);
 
   useEffect(() => {
-    // Загружаем все кейсы при монтировании компонента
-    const loadCases = async () => {
-      await cases.fetchCases();
+    // Загружаем все кейсы и кейсы пользователя при монтировании компонента
+    const loadData = async () => {
+      await Promise.all([
+        cases.fetchCases(),
+        cases.fetchUserCases()
+      ]);
     };
     
-    loadCases();
+    loadData();
   }, [cases]);
 
   useEffect(() => {
     // Сортируем кейсы так, чтобы бесплатные были в начале
     if (cases.cases && cases.cases.length > 0) {
-      const freeCases = cases.cases.filter(caseItem => caseItem.type === 'free');
-      const otherCases = cases.cases.filter(caseItem => caseItem.type !== 'free');
-      
-      setSortedCases([...freeCases, ...otherCases]);
+      setSortedCases([...cases.cases]);
     }
   }, [cases.cases]);
 
-  // Функция для отображения цены кейса
-  const renderCasePrice = (caseItem: Case) => {
-    if (caseItem.type === 'free') {
-      return <span className="text-green-500 font-semibold">Free</span>;
-    }
-    return (
-      <div className={styles.priceContainer}>
-        {caseItem.price && (
-          <span className="text-white font-semibold">{caseItem.price} TON</span>
-        )}
-        {caseItem.starsPrice && (
-          <span className="text-yellow-500 font-semibold">{caseItem.starsPrice} ★</span>
-        )}
-      </div>
-    );
-  };
-
-  // Функция для отображения изображения кейса
-  const renderCaseImage = (caseItem: Case) => {
-    const imageUrl = caseItem.media_file?.url || caseItem.imageUrl || '/default-case-image.png';
-    return <img src={imageUrl} alt={caseItem.name} className={styles.caseImage} />;
-  };
+  // Группируем кейсы по типу
+  const freeCases = sortedCases.filter(caseItem => caseItem.type === 'free');
+  const standardCases = sortedCases.filter(caseItem => caseItem.type === 'standard');
+  const authorCases = sortedCases.filter(caseItem => caseItem.type === 'author');
 
   // Отображение загрузки
   if (cases.loading) {
@@ -72,13 +54,13 @@ const CasesList: React.FC = observer(() => {
   if (cases.error) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-red-500">
-        <p>Ошибка загрузки: {cases.error}</p>
+        <p>Error loading: {cases.error}</p>
         <Button 
           variant="secondary" 
           className="mt-2" 
           onClick={() => cases.fetchCases()}
         >
-          Повторить
+          Repeat
         </Button>
       </div>
     );
@@ -88,45 +70,38 @@ const CasesList: React.FC = observer(() => {
   if (sortedCases.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-4">
-        <p className="text-gray-400">Кейсы не найдены</p>
+        <p className="text-gray-400">No cases found</p>
       </div>
     );
   }
 
-  // Отображение списка кейсов
-  return (
-    <div className={styles.casesGrid}>
-      {sortedCases.map((caseItem) => (
-        <div key={caseItem.id} className={styles.caseCard}>
-          <div className={styles.caseImageContainer}>
-            {renderCaseImage(caseItem)}
-          </div>
-          <div className="text-md font-medium mt-2 text-center">{caseItem.name}</div>
-          <div className="text-sm mt-1 text-center">{renderCasePrice(caseItem)}</div>
-          
-          {/* Добавляем кнопки покупки */}
-          {caseItem.type !== 'free' && (
-            <CasePurchaseButtons
-              caseId={caseItem.id}
-              price={caseItem.price?.toString() || ''}
-              starsPrice={caseItem.starsPrice || 0}
-              onPurchase={(success) => {
-                if (success) {
-                  cases.fetchUserCases();
-                }
-              }}
+  // Функция для отображения секции кейсов
+  const renderCaseSection = (title: string, casesList: Case[]) => {
+    if (casesList.length === 0) return null;
+    
+    return (
+      <div className="mb-8">
+        <h2 className="text-xl font-bold mb-4">{title}</h2>
+        <div className={styles.casesGrid}>
+          {casesList.map((caseItem) => (
+            <CaseItem
+              key={caseItem.id}
+              caseItem={caseItem}
+              onOpenCase={(caseId: number) => cases.fetchOneCase(caseId)}
+              onPurchaseSuccess={() => cases.fetchUserCases()}
             />
-          )}
-          
-          <Button 
-            variant="secondary" 
-            className={styles.openCaseButton}
-            onClick={() => cases.fetchOneCase(caseItem.id)}
-          >
-            Открыть кейс
-          </Button>
+          ))}
         </div>
-      ))}
+      </div>
+    );
+  };
+
+  // Отображение списка кейсов по секциям
+  return (
+    <div className="space-y-8">
+      {renderCaseSection('Free case', freeCases)}
+      {renderCaseSection('Standard cases', standardCases)}
+      {renderCaseSection('Author cases', authorCases)}
     </div>
   );
 });

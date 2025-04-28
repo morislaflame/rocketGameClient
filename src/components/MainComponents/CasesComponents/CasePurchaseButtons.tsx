@@ -22,9 +22,6 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = ({
 }) => {
   const { cases, user } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Получаем доступ к Telegram WebApp
-  const tg = window.Telegram?.WebApp;
 
   const handleStarsPurchase = async () => {
     try {

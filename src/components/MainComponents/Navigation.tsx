@@ -6,12 +6,12 @@ import styles from './mainComponents.module.css';
 import homeSolidIcon from "@/assets/HOME_SOLID2.png";
 import astronautSolidIcon from "@/assets/ACC_SOLID.png";
 import ticketSolidIcon from "@/assets/TICKET_SOLID.png";
-// import caseSolidIcon from "@/assets/CASE_SOLID.png";
+import caseSolidIcon from "@/assets/CASE_SOLID.png";
 
 import homeIcon from "@/assets/HOME_LINE.png";
 import astronautIcon from "@/assets/ACC_LINE.png";
 import ticketIcon from "@/assets/TICKET 1.png";
-// import caseIcon from "@/assets/CASE_LINE.png";
+import caseIcon from "@/assets/CASE_LINE.png";
 
 const navigationItems = [
   { 
@@ -29,8 +29,8 @@ const navigationItems = [
   { 
     label: 'Cases', 
     route: '/cases', 
-    icon: ticketIcon,
-    solidIcon: ticketSolidIcon 
+    icon: caseIcon,
+    solidIcon: caseSolidIcon 
   },
   { 
     label: 'User', 

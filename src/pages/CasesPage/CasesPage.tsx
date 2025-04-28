@@ -20,11 +20,11 @@ const CasesPage: React.FC = () => {
   return (
     <div className={styles.Container} ref={containerRef}>
       <ScrollArea className={styles.scrollArea}>
-        <div className='flex flex-col items-center gap-4 w-full h-full overflow-hidden'>
+        <div className='flex flex-col items-center gap-2 w-full h-full overflow-hidden'>
           <h2 className="text-3xl font-semibold leading-none tracking-tight">
               LootBoxes
           </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
             Win gifts from the lootbox!
           </div>
         </div>
