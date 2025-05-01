@@ -88,15 +88,57 @@
   height: 20px;
 }
 
-.purchaseButtonsContainer {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+.balanceImg {
+  width: 20px;
+  height: 20px;
 }
 
-.starsButton {
+.purchaseButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.quantityInput {
+  width: 50px;
+  text-align: center;
+  margin: 0 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.buttonsRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.starsButton, .pointsButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.75rem;
   min-width: 90px;
   border: 1px solid hsl(0deg 0.67% 27.27%);
+}
+
+.starsIcon, .pointsIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.pointsIcon {
+  color: gold;
 }
 
 .casePurchaseButtons {
@@ -108,4 +150,10 @@
   flex-direction: column;
   gap: 10px;
   margin: 10px;
+}
+
+.userCaseCount {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
 }

@@ -12,15 +12,7 @@ const CasesList: React.FC = observer(() => {
   const [sortedCases, setSortedCases] = useState<Case[]>([]);
 
   useEffect(() => {
-    // Загружаем все кейсы и кейсы пользователя при монтировании компонента
-    const loadData = async () => {
-      await Promise.all([
-        cases.fetchCases(),
-        cases.fetchUserCases()
-      ]);
-    };
-    
-    loadData();
+    cases.fetchCases();
   }, [cases]);
 
   useEffect(() => {
@@ -87,8 +79,7 @@ const CasesList: React.FC = observer(() => {
             <CaseItem
               key={caseItem.id}
               caseItem={caseItem}
-              onOpenCase={(caseId: number) => cases.fetchOneCase(caseId)}
-              onPurchaseSuccess={() => cases.fetchUserCases()}
+              onPurchaseSuccess={() => null}
             />
           ))}
         </div>

@@ -10,6 +10,7 @@ import { beginCell } from "ton-core";
 interface SendCaseTxProps {
   price: string;
   caseId: number;
+  quantity?: number;
   onTxStart?: () => void;
   onTxComplete?: (error?: string) => void;
   disabled?: boolean;
@@ -20,7 +21,8 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
   const { user, cases } = useContext(Context) as IStoreContext;
 
   const address = import.meta.env.VITE_TON_ADDRESS;
-  const amount = Number(props.price) * 1000000000;
+  const quantity = props.quantity || 1;
+  const amount = Number(props.price) * quantity * 1000000000;
 
   const [isLoading, setIsLoading] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState<"pending" | "success" | "error" | null>(null);
@@ -86,7 +88,8 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
         user.user.id,
         props.caseId,
         rawPayload,
-        newUniqueId
+        newUniqueId,
+        quantity
       );
 
       const payload = beginCell()
@@ -155,7 +158,7 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
           border: "1px solid hsl(0deg 0.67% 27.27%)",
         }}
       >
-        {isLoading || transactionStatus === "pending" ? "Processing..." : Number(props.price).toFixed(1)}
+        {isLoading || transactionStatus === "pending" ? "Processing..." : (Number(props.price) * (props.quantity || 1)).toFixed(1)}
         {!isLoading && transactionStatus !== "pending" && (
           <img src={tonImg} alt="Ton" className={styles.tonIcon} />
         )}

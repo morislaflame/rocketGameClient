@@ -35,13 +35,15 @@ export const initCasePurchaseTON = async (
   userId: number,
   caseId: number,
   rawPayload: string, 
-  uniqueId: string
+  uniqueId: string,
+  quantity: number = 1
 ) => {
   const { data } = await $authHost.post("api/case/purchase/ton/init", {
     userId,
     caseId,
     rawPayload,
-    uniqueId
+    uniqueId,
+    quantity
   });
   return data;
 };
@@ -71,7 +73,13 @@ export const fetchUserCases = async (params = {}) => {
 };
 
 // Генерация счета для оплаты за звёзды (Telegram)
-export const generateCaseInvoice = async (caseId: number) => {
-  const { data } = await $authHost.post(`api/case/${caseId}/purchase/generate-invoice`);
+export const generateCaseInvoice = async (caseId: number, quantity: number = 1) => {
+  const { data } = await $authHost.post(`api/case/${caseId}/purchase/generate-invoice`, { quantity });
   return data.invoiceLink as string;
+};
+
+// Покупка кейса за поинты (баланс пользователя)
+export const purchaseCaseWithPoints = async (caseId: number, quantity: number = 1) => {
+  const { data } = await $authHost.post(`api/case/${caseId}/purchase/points`, { quantity });
+  return data;
 };

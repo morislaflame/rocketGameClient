@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { Case } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import CasePurchaseButtons from './CasePurchaseButtons';
 import styles from './CasesComponents.module.css';
-import { Context, IStoreContext } from '@/store/StoreProvider';
+import { useNavigate } from 'react-router-dom';
+import UserCaseCount from './UserCaseCount';
 
 interface CaseItemProps {
   caseItem: Case;
-  onOpenCase: (caseId: number) => void;
   onPurchaseSuccess: () => void;
 }
 
-const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onOpenCase, onPurchaseSuccess }) => {
-  const { cases } = useContext(Context) as IStoreContext;
+const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onPurchaseSuccess }) => {
+  const navigate = useNavigate();
+  const [userCaseCount, setUserCaseCount] = useState<number>(0);
   
   // Функция для отображения изображения кейса
   const renderCaseImage = (caseItem: Case) => {
@@ -20,13 +21,15 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onOpenCase, onPurchaseSuc
     return <img src={imageUrl} alt={caseItem.name} className={styles.caseImage} />;
   };
 
-  // Получаем количество кейсов у пользователя
-  const getUserCaseCount = () => {
-    if (!cases.userCases || cases.userCases.length === 0) return 0;
-    return cases.userCases.filter(userCase => userCase.caseId === caseItem.id).length;
+  // Функция для перенаправления на страницу рулетки с ID кейса
+  const handleOpenCase = () => {
+    navigate(`/roulette/${caseItem.id}`);
   };
 
-  const userCaseCount = getUserCaseCount();
+  // Обработчик изменения количества кейсов
+  const handleCountChange = (count: number) => {
+    setUserCaseCount(count);
+  };
 
   return (
     <div className={styles.caseCard}>
@@ -44,29 +47,31 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onOpenCase, onPurchaseSuc
       </div>
       {caseItem.type !== 'free' && (
       <div className={styles.casePurchaseButtons}>
-        {userCaseCount > 0 && (
-          <div className="text-sm text-green-500 font-medium">
-            You have: {userCaseCount}
-          </div>
-        )}
-        {/* Добавляем кнопки покупки */}
+        {/* Используем новый компонент для отображения количества кейсов */}
+        <UserCaseCount 
+          caseId={caseItem.id} 
+          onCountChange={handleCountChange}
+        />
         
-            <CasePurchaseButtons
-            caseId={caseItem.id}
-            price={caseItem.price?.toString() || ''}
-            starsPrice={caseItem.starsPrice || 0}
-            onPurchase={(success) => {
-                if (success) {
+        {/* Добавляем кнопки покупки */}
+        <CasePurchaseButtons
+          caseId={caseItem.id}
+          price={caseItem.price?.toString() || ''}
+          starsPrice={caseItem.starsPrice || 0}
+          pointsPrice={caseItem.pointsPrice || 0}
+          onPurchase={(success) => {
+              if (success) {
                 onPurchaseSuccess();
-                }
-            }}
-            />
+              }
+          }}
+        />
       </div>
       )}
       
       <Button
         className={styles.openCaseButton}
-        onClick={() => onOpenCase(caseItem.id)}
+        onClick={handleOpenCase}
+        disabled={userCaseCount <= 0 && caseItem.type !== 'free'}
       >
         Open case
       </Button>

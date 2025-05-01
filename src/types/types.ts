@@ -396,15 +396,14 @@ export interface CaseItem {
 export interface Case {
   id: number;
   name: string;
-  type: CaseType;
-  description: string | null;
-  price: number | null;
-  starsPrice: number | null;
-  imageUrl: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  case_items?: CaseItem[];
+  description?: string;
+  type: 'standard' | 'author' | 'free';
+  price?: number;
+  starsPrice?: number;
+  pointsPrice?: number;
+  imageUrl?: string;
+  isActive?: boolean;
+  case_items?: any[];
   media_file?: {
     id: number;
     url: string;

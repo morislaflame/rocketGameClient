@@ -9,7 +9,8 @@ import {
   getCaseTransactionStatus,
   cancelCaseTransaction,
   fetchUserCases,
-  generateCaseInvoice
+  generateCaseInvoice,
+  purchaseCaseWithPoints
 } from "../http/casesAPI";
 import { Case, CaseHistory, CaseOpenResult, FreeCaseAvailability, TelegramWebApp } from "@/types/types";
 
@@ -189,7 +190,8 @@ export default class CasesStore {
     userId: number,
     caseId: number,
     rawPayload: string,
-    uniqueId: string
+    uniqueId: string,
+    quantity: number = 1
   ) {
     try {
       this.setLoadingPurchase(true);
@@ -197,7 +199,8 @@ export default class CasesStore {
         userId,
         caseId,
         rawPayload,
-        uniqueId
+        uniqueId,
+        quantity
       );
       return result;
     } catch (error) {
@@ -254,10 +257,10 @@ export default class CasesStore {
   }
 
   // Генерация счета Telegram для оплаты звездами
-  async generateInvoice(caseId: number) {
+  async generateInvoice(caseId: number, quantity: number = 1) {
     try {
       this.setLoadingPurchase(true);
-      const invoiceLink = await generateCaseInvoice(caseId);
+      const invoiceLink = await generateCaseInvoice(caseId, quantity);
       try {
         tg?.openInvoice(invoiceLink);
       } catch (error) {
@@ -267,6 +270,23 @@ export default class CasesStore {
     } catch (error) {
       console.error("Error generating invoice:", error);
       this.setError("Failed to generate invoice");
+    } finally {
+      this.setLoadingPurchase(false);
+    }
+  }
+
+  // Покупка кейса за поинты (баланс пользователя)
+  async purchaseCaseWithPoints(caseId: number, quantity: number = 1) {
+    try {
+      this.setLoadingPurchase(true);
+      const result = await purchaseCaseWithPoints(caseId, quantity);
+      // Обновляем список кейсов пользователя после успешной покупки
+      await this.fetchUserCases();
+      return result;
+    } catch (error: any) {
+      console.error("Error purchasing case with points:", error);
+      this.setError(error?.response?.data?.message || "Failed to purchase case");
+      return null;
     } finally {
       this.setLoadingPurchase(false);
     }

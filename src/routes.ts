@@ -5,7 +5,7 @@ import UserAccountPage from './pages/UserAccountPage/UserAccountPage';
 import RocketPage from './pages/RocketPage/RocketPage';
 import CasesPage from './pages/CasesPage/CasesPage';
 import RoulettePage from './pages/RoulettePage/RoulettePage';
-import { MAIN_ROUTE, PARTNERS_ROUTE, USER_ACCOUNT_ROUTE, ROCKET_ROUTE, CASES_ROUTE, ROULETTE_ROUTE } from './utils/consts';
+import { MAIN_ROUTE, PARTNERS_ROUTE, USER_ACCOUNT_ROUTE, ROCKET_ROUTE, CASES_ROUTE, ROULETTE_ROUTE, ROULETTE_CASE_ROUTE } from './utils/consts';
 
 
 export const publicRoutes = [
@@ -15,6 +15,7 @@ export const publicRoutes = [
   { path: ROCKET_ROUTE, Component: RocketPage },
   { path: CASES_ROUTE, Component: CasesPage },
   { path: ROULETTE_ROUTE, Component: RoulettePage },
+  { path: ROULETTE_CASE_ROUTE, Component: RoulettePage },
 ];
 
 export const privateRoutes = [
