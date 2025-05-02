@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Skeleton } from '@/components/ui/skeleton';
-import styles from './CasesComponents.module.css';
 import { observer } from 'mobx-react-lite';
 import { getCaseSolidImg } from '@/utils/getTicketImg';
 

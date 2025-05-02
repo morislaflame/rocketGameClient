@@ -79,7 +79,6 @@ const CasesList: React.FC = observer(() => {
             <CaseItem
               key={caseItem.id}
               caseItem={caseItem}
-              onPurchaseSuccess={() => null}
             />
           ))}
         </div>

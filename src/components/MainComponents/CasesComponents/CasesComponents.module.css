@@ -73,7 +73,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
 }
 
@@ -163,8 +163,15 @@
 
 .priceContainer {
   display: flex;
-  gap: 12px;
+  /* gap: 12px; */
   flex-wrap: wrap;
+}
+
+.priceDivider {
+  width: 1px;
+  height: 16px; /* Регулируйте высоту по необходимости */
+  background-color: hsl(0deg 0.67% 27.27%);
+  margin: 0 10px; /* Регулируйте отступы по необходимости */
 }
 
 .priceTag {
@@ -172,8 +179,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 0px;
-  background-color: rgba(0, 0, 0, 0.15);
-  border-radius: 5px;
+  /* border-radius: 5px; */
   font-size: 14px;
 }
 

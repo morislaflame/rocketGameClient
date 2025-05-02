@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Case } from '@/types/types';
 import { Button } from '@/components/ui/button';
-import CasePurchaseButtons from './CasePurchaseButtons';
 import styles from './CasesComponents.module.css';
 import { useNavigate } from 'react-router-dom';
 import UserCaseCount from './UserCaseCount';
@@ -11,12 +10,11 @@ import { getPlanetImg } from '@/utils/getPlanetImg';
 
 interface CaseItemProps {
   caseItem: Case;
-  onPurchaseSuccess: () => void;
 }
 
-const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onPurchaseSuccess }) => {
+const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
   const navigate = useNavigate();
-  const [userCaseCount, setUserCaseCount] = useState<number>(0);
+  const [_userCaseCount, setUserCaseCount] = useState<number>(0);
   const planetImg = getPlanetImg();
   
   // Функция для отображения изображения кейса
@@ -54,6 +52,47 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onPurchaseSuccess }) => {
     );
   };
 
+  // Компонент-разделитель между ценовыми тегами
+  const Divider = () => (
+    <div className={styles.priceDivider}></div>
+  );
+
+  // Функция для рендеринга ценовых тегов с разделителями между ними
+  const renderPricesWithDividers = () => {
+    const prices = [];
+    
+    // Добавляем TON цену если есть
+    if (caseItem.price && Number(caseItem.price) > 0) {
+      prices.push(
+        renderPriceTag(tonImg, caseItem.price, 'TON')
+      );
+    }
+    
+    // Добавляем Stars цену если есть
+    if (caseItem.starsPrice && caseItem.starsPrice > 0) {
+      // Если уже есть элементы, добавляем разделитель перед
+      if (prices.length > 0) {
+        prices.push(<Divider key={`divider-stars`} />);
+      }
+      prices.push(
+        renderPriceTag(starImg, caseItem.starsPrice, 'Stars')
+      );
+    }
+    
+    // Добавляем Points цену если есть
+    if (caseItem.pointsPrice && caseItem.pointsPrice > 0) {
+      // Если уже есть элементы, добавляем разделитель перед
+      if (prices.length > 0) {
+        prices.push(<Divider key={`divider-points`} />);
+      }
+      prices.push(
+        renderPriceTag(planetImg, caseItem.pointsPrice, 'Points')
+      );
+    }
+    
+    return prices;
+  };
+
   return (
     <div className={styles.caseCard}>
       <div className={styles.caseImageContainer}>
@@ -70,11 +109,8 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onPurchaseSuccess }) => {
         <div className='flex justify-between'>
           {caseItem.type !== 'free' && (
             <div className={styles.priceContainer}>
-              <div className='flex items-center gap-4'>
-                {/* <span className='text-sm'>Price:</span> */}
-                {renderPriceTag(tonImg, caseItem.price, 'TON')}
-                {renderPriceTag(starImg, caseItem.starsPrice, 'Stars')}
-                {renderPriceTag(planetImg, caseItem.pointsPrice, 'Points')}
+              <div className='flex items-center'>
+                {renderPricesWithDividers()}
               </div>
             </div>
           )}
@@ -110,7 +146,6 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem, onPurchaseSuccess }) => {
       <Button
         className={styles.openCaseButton}
         onClick={handleOpenCase}
-        disabled={userCaseCount <= 0 && caseItem.type !== 'free'}
       >
         Open case
       </Button>
