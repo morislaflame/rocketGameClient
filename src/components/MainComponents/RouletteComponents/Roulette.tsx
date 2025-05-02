@@ -4,7 +4,7 @@ import 'react-roulette-pro/dist/index.css';
 import { nanoid } from 'nanoid';
 import { rouletteSettings } from './utils/rouletteConfig';
 import RouletteButton from './RouletteButton';
-import { Case, CaseItem, CaseOpenResult } from '@/types/types';
+import { Case, CaseOpenResult } from '@/types/types';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -15,12 +15,12 @@ interface RouletteProps {
 
 const Roulette: React.FC<RouletteProps> = ({ caseData }) => {
   const { cases } = useContext(Context) as IStoreContext;
-  const [settings, setSettings] = useState(rouletteSettings);
+  const [settings, _setSettings] = useState(rouletteSettings);
   const [prizeList, setPrizeList] = useState<any[]>([]);
   const [start, setStart] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [prizeIndex, setPrizeIndex] = useState(0);
-  const [wonItemId, setWonItemId] = useState<number | null>(null);
+  const [_wonItemId, setWonItemId] = useState<number | null>(null);
   const [openResult, setOpenResult] = useState<CaseOpenResult | null>(null);
   const [showDialog, setShowDialog] = useState(false);
 
