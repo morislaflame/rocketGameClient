@@ -3,6 +3,7 @@ import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Skeleton } from '@/components/ui/skeleton';
 import styles from './CasesComponents.module.css';
 import { observer } from 'mobx-react-lite';
+import { getCaseSolidImg } from '@/utils/getTicketImg';
 
 interface UserCaseCountProps {
   caseId: number;
@@ -47,9 +48,12 @@ const UserCaseCount: React.FC<UserCaseCountProps> = observer(({ caseId, onCountC
     return null;
   }
 
+  const caseImg = getCaseSolidImg();
+
   return (
-    <div className={styles.userCaseCount}>
-      <span className="text-sm text-green-500 font-medium">You have: {count}</span>
+    <div className='flex items-center gap-2 w-full justify-center'>
+      <span className="text-sm font-medium">You have: {count}</span>
+      <img src={caseImg} alt="Case" className='w-4 h-4' />
     </div>
   );
 });

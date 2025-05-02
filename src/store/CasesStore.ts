@@ -13,6 +13,7 @@ import {
   purchaseCaseWithPoints
 } from "../http/casesAPI";
 import { Case, CaseHistory, CaseOpenResult, FreeCaseAvailability, TelegramWebApp } from "@/types/types";
+import { getStore } from "./StoreProvider"; // Импортируем функцию доступа к хранилищу
 
 const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 
@@ -280,8 +281,36 @@ export default class CasesStore {
     try {
       this.setLoadingPurchase(true);
       const result = await purchaseCaseWithPoints(caseId, quantity);
-      // Обновляем список кейсов пользователя после успешной покупки
-      await this.fetchUserCases();
+      
+      // Вместо запроса на обновление списка кейсов, обновляем локальные данные
+      if (result) {
+        runInAction(() => {
+          // 1. Обновляем баланс пользователя напрямую
+          if (result.pointsLeft !== undefined) {
+            const userStore = getStore().user;
+            if (userStore.user) {
+              userStore.user.balance = result.pointsLeft;
+            }
+          }
+          
+          // 2. Добавляем купленные кейсы в список userCases
+          const now = new Date();
+          const newCases = Array(quantity).fill(null).map(() => ({
+            id: Date.now() + Math.floor(Math.random() * 1000), // Временный ID
+            caseId: caseId,
+            userId: getStore().user.user?.id,
+            purchasedAt: now.toISOString(),
+            case: {
+              id: caseId,
+              name: result.caseName,
+              type: result.type
+            }
+          }));
+          
+          this.setUserCases([...newCases, ...this._userCases]);
+        });
+      }
+      
       return result;
     } catch (error: any) {
       console.error("Error purchasing case with points:", error);

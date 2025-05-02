@@ -22,7 +22,10 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
 
   const address = import.meta.env.VITE_TON_ADDRESS;
   const quantity = props.quantity || 1;
-  const amount = Number(props.price) * quantity * 1000000000;
+  
+  const pricePerCase = parseFloat(props.price);
+  const totalPrice = pricePerCase * quantity;
+  const amountInNanotons = Math.floor(totalPrice * 1000000000);
 
   const [isLoading, setIsLoading] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState<"pending" | "success" | "error" | null>(null);
@@ -104,7 +107,7 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
         messages: [
           {
             address: address,
-            amount: amount.toString(),
+            amount: amountInNanotons.toString(),
             payload: payload,
           },
         ],
@@ -158,7 +161,7 @@ const SendCaseTx: React.FC<SendCaseTxProps> = (props) => {
           border: "1px solid hsl(0deg 0.67% 27.27%)",
         }}
       >
-        {isLoading || transactionStatus === "pending" ? "Processing..." : (Number(props.price) * (props.quantity || 1)).toFixed(1)}
+        {isLoading || transactionStatus === "pending" ? "Processing..." : totalPrice.toFixed(1)}
         {!isLoading && transactionStatus !== "pending" && (
           <img src={tonImg} alt="Ton" className={styles.tonIcon} />
         )}

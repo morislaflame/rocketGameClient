@@ -61,7 +61,7 @@ const CasesPage: React.FC = observer(() => {
           </div>
           
           {/* Отображение баланса с учетом загрузки */}
-          <div className="flex items-center justify-center gap-2 mb-4 bg-black/30 px-6 py-2.5 rounded-full">
+          <div className="flex items-center justify-center gap-2 bg-black/30 px-6 rounded-full">
             {loading ? (
               <Skeleton className="w-24 h-6" />
             ) : (

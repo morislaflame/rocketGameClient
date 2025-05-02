@@ -3,6 +3,7 @@ import ticketSolidImg from '@/assets/White.png';
 import ticketSolidImg2 from '@/assets/ffff.png';
 import ticketDarkImg from '@/assets/black.png';
 import ticketMutedImg from '@/assets/MUTED.png';
+import caseSolidImg from '@/assets/CASE_SOLID.png';
 
 export const getRaffleTicketImg = () => {
     return raffleTicketImg;
@@ -22,5 +23,9 @@ export const getTicketDarkImg = () => {
 
 export const getTicketMutedImg = () => {
     return ticketMutedImg;
+}
+
+export const getCaseSolidImg = () => {
+    return caseSolidImg;
 }
 

@@ -10,12 +10,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.3); */
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   height: 100%;
+  background-color: rgba(30, 30, 30, 0.8);
 }
 
 .caseCard:hover {
@@ -103,6 +104,7 @@
 .quantitySelector {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-bottom: 0.5rem;
 }
 
@@ -156,4 +158,27 @@
   margin-bottom: 0.5rem;
   display: flex;
   justify-content: center;
+}
+
+
+.priceContainer {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.priceTag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0px;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.priceIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
