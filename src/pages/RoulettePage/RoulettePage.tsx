@@ -9,14 +9,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import UserCaseCount from '@/components/MainComponents/CasesComponents/UserCaseCount'
 import CasePurchaseButtons from '@/components/MainComponents/CasesComponents/CasePurchaseButtons'
 import casesStyles from '@/components/MainComponents/CasesComponents/CasesComponents.module.css'
+import { getPlanetImg } from '@/utils/getPlanetImg'
 
 const RoulettePage: React.FC = observer(() => {
   const { caseId } = useParams<{ caseId: string }>();
-  const { cases } = useContext(Context) as IStoreContext;
+  const { cases, user } = useContext(Context) as IStoreContext;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [userCaseCount, setUserCaseCount] = useState<number>(0);
   const [loadingUserCases, setLoadingUserCases] = useState(false);
+  const planetImg = getPlanetImg();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +44,10 @@ const RoulettePage: React.FC = observer(() => {
           await cases.fetchUserCases();
           setLoadingUserCases(false);
         }
-        
+
+        if (!user.user?.balance) {
+          await user.fetchMyInfo();
+        }
         setLoading(false);
       } else {
         // Если ID кейса не указан, вернуться на страницу кейсов
@@ -76,15 +81,8 @@ const RoulettePage: React.FC = observer(() => {
     setLoadingUserCases(false);
   };
 
-  // Количество кейсов данного типа у пользователя
-  // const getUserCaseCount = () => {
-  //   if (!cases.userCases || !cases.selectedCase) return 0;
-    
-  //   // Подсчитываем количество кейсов данного типа у пользователя
-  //   return cases.userCases.filter(
-  //     userCase => userCase.caseId === cases.selectedCase?.id
-  //   ).length;
-  // };
+  const balance = user?.user?.balance ?? 0;
+
 
   // Если данные загружаются, показываем скелетон загрузки
   if (loading) {
@@ -110,6 +108,16 @@ const RoulettePage: React.FC = observer(() => {
           </h2>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             Win gifts from the lootbox!
+          </div>
+          <div className="flex items-center justify-center gap-2 bg-black/30 px-6 rounded-full">
+            {loading ? (
+              <Skeleton className="w-24 h-6" />
+            ) : (
+              <>
+                <img src={planetImg} alt="Planet" className="w-6 h-6" />
+                <span className="font-medium text-lg">{balance}</span>
+              </>
+            )}
           </div>
         </div>
         <div className='w-full h-full'>
