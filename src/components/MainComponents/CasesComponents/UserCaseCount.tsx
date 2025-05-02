@@ -40,7 +40,11 @@ const UserCaseCount: React.FC<UserCaseCountProps> = observer(({ caseId, onCountC
   }, [cases.userCases]);
 
   if (cases.loadingUserCases) {
-    return <Skeleton className="w-24 h-5" />;
+    return (
+      <div className='flex items-center gap-2 w-full justify-center'>
+        <Skeleton className="w-24 h-5" />
+      </div>
+    );
   }
 
   if (count <= 0) {

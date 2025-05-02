@@ -11,9 +11,10 @@ import { Button } from '@/components/ui/button';
 
 interface RouletteProps {
   caseData: Case;
+  onCaseOpened?: () => void;
 }
 
-const Roulette: React.FC<RouletteProps> = ({ caseData }) => {
+const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
   const { cases } = useContext(Context) as IStoreContext;
   const [settings, _setSettings] = useState(rouletteSettings);
   const [prizeList, setPrizeList] = useState<any[]>([]);
@@ -114,8 +115,13 @@ const Roulette: React.FC<RouletteProps> = ({ caseData }) => {
     setShowDialog(true);
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = async () => {
     setShowDialog(false);
+    
+    // Обновляем список кейсов пользователя после открытия кейса
+    if (onCaseOpened) {
+      onCaseOpened();
+    }
     
     // Сбрасываем состояние рулетки
     setOpenResult(null);
@@ -228,7 +234,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData }) => {
   };
 
   return (
-    <div className='w-full h-full flex flex-col items-center gap-6'>
+    <div className='w-full flex flex-col items-center gap-6'>
       <div className='top-40 w-full overflow-hidden'>
         <div className={`roulette ${type}`}>
           <RoulettePro

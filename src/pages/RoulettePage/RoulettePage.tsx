@@ -10,6 +10,8 @@ import UserCaseCount from '@/components/MainComponents/CasesComponents/UserCaseC
 import CasePurchaseButtons from '@/components/MainComponents/CasesComponents/CasePurchaseButtons'
 import casesStyles from '@/components/MainComponents/CasesComponents/CasesComponents.module.css'
 import { getPlanetImg } from '@/utils/getPlanetImg'
+import CaseContents from '@/components/MainComponents/RouletteComponents/CaseContents'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const RoulettePage: React.FC = observer(() => {
   const { caseId } = useParams<{ caseId: string }>();
@@ -81,6 +83,13 @@ const RoulettePage: React.FC = observer(() => {
     setLoadingUserCases(false);
   };
 
+  // Обработчик успешного открытия кейса
+  const handleCaseOpened = async () => {
+    setLoadingUserCases(true);
+    await cases.fetchUserCases();
+    setLoadingUserCases(false);
+  };
+
   const balance = user?.user?.balance ?? 0;
 
 
@@ -101,7 +110,8 @@ const RoulettePage: React.FC = observer(() => {
 
   return (
     <div className={styles.Container} ref={containerRef}>
-      <div className='flex flex-col items-center gap-7 w-full h-full overflow-hidden'>
+      
+      <div className='flex flex-col items-center gap-4 w-full overflow-hidden'>
         <div className='flex flex-col items-center gap-2'>
           <h2 className="text-3xl font-semibold leading-none tracking-tight">
               {cases.selectedCase?.name || 'LootBox'}
@@ -120,31 +130,42 @@ const RoulettePage: React.FC = observer(() => {
             )}
           </div>
         </div>
-        <div className='w-full h-full'>
-          {cases.selectedCase && <Roulette caseData={cases.selectedCase} />}
+        <div className='w-full'>
+          {cases.selectedCase && (
+            <Roulette 
+              caseData={cases.selectedCase} 
+              onCaseOpened={handleCaseOpened}
+            />
+          )}
         </div>
-        
-        {cases.selectedCase && cases.selectedCase.type !== 'free' && (
-          <div className={casesStyles.casePurchaseButtons}>
-            <UserCaseCount 
-              caseId={cases.selectedCase.id} 
-              onCountChange={handleCountChange}
-            />
-            
-            <CasePurchaseButtons
-              caseId={cases.selectedCase.id}
-              price={cases.selectedCase.price?.toString() || ''}
-              starsPrice={cases.selectedCase.starsPrice || 0}
-              pointsPrice={cases.selectedCase.pointsPrice || 0}
-              onPurchase={(success) => {
-                  if (success) {
-                    handlePurchaseSuccess();
-                  }
-              }}
-            />
-          </div>
-        )}
+        {/* <ScrollArea className={styles.scrollArea}> */}
+          {cases.selectedCase && (
+            <CaseContents caseData={cases.selectedCase} />
+          )}
+          
+          {cases.selectedCase && cases.selectedCase.type !== 'free' && (
+            <div className={casesStyles.casePurchaseButtons}>
+              <UserCaseCount 
+                caseId={cases.selectedCase.id} 
+                onCountChange={handleCountChange}
+              />
+              
+              <CasePurchaseButtons
+                caseId={cases.selectedCase.id}
+                price={cases.selectedCase.price?.toString() || ''}
+                starsPrice={cases.selectedCase.starsPrice || 0}
+                pointsPrice={cases.selectedCase.pointsPrice || 0}
+                onPurchase={(success) => {
+                    if (success) {
+                      handlePurchaseSuccess();
+                    }
+                }}
+              />
+            </div>
+          )}
+        {/* </ScrollArea> */}
       </div>
+      
     </div>
   )
 })
