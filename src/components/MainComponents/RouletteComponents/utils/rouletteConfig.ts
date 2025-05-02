@@ -95,7 +95,7 @@ export const rouletteSettings = {
   spinningTime: {
     name: 'Spinning time',
     options: ['3', '5', '10', '15', '20'],
-    value: '3',
+    value: '5',
   },
 };
 
