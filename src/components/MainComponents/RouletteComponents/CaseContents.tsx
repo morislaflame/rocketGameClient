@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Case } from '@/types/types';
 import { Card, CardContent } from "@/components/ui/card";
 import tonImg from "@/assets/TonIcon.svg";
-import Lottie from "lottie-react";
+import { MediaRenderer } from "@/utils/media-renderer";
+import { useAnimationLoader } from '@/utils/useAnimationLoader';
 
 interface CaseContentsProps {
   caseData: Case;
@@ -14,34 +15,12 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     return null;
   }
 
-  // Состояние для хранения JSON-анимаций
-  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
-
-  // Загружаем анимации для призов с JSON-медиа
-  useEffect(() => {
-    const loadAnimations = async () => {
-      const newAnimations: { [url: string]: Record<string, unknown> } = {};
-      for (const item of caseData.case_items || []) {
-        if (item.type === 'prize' && item.prize?.media_file) {
-          const mediaFile = item.prize.media_file;
-          if (mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
-            try {
-              const response = await fetch(mediaFile.url);
-              const data = await response.json();
-              newAnimations[mediaFile.url] = data;
-            } catch (error) {
-              console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
-            }
-          }
-        }
-      }
-      if (Object.keys(newAnimations).length > 0) {
-        setAnimations(prev => ({ ...prev, ...newAnimations }));
-      }
-    };
-    
-    loadAnimations();
-  }, [caseData.case_items]);
+  // Используем новый хук для загрузки анимаций
+  const [animations] = useAnimationLoader(
+    caseData.case_items,
+    (item) => item.type === 'prize' && item.prize?.media_file ? item.prize.media_file : item.media_file,
+    [caseData.id]
+  );
 
   // Группируем предметы по типу и обрабатываем для отображения
   const displayItems = useMemo(() => {
@@ -99,34 +78,27 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     return result;
   }, [caseData.case_items]);
 
-  // Функция для отображения медиа предмета
+  // Функция для отображения медиа предмета с использованием MediaRenderer
   const renderItemMedia = (item: any) => {
-    // Для призов с JSON анимацией
-    if (item.type === 'prize' && item.prize?.media_file) {
-      const mediaFile = item.prize.media_file;
-      if (mediaFile.mimeType === 'application/json' && animations[mediaFile.url]) {
-        return (
-          <Lottie
-            animationData={animations[mediaFile.url]}
-            loop={false}
-            autoplay={true}
-            className="w-10 h-10 object-contain mb-2"
-          />
-        );
-      }
-    }
+    // Определяем media_file для отображения
+    const mediaFile = item.type === 'prize' && item.prize?.media_file 
+      ? item.prize.media_file 
+      : item.media_file;
     
-    // Для обычных изображений
-    const imageUrl = item.media_file?.url || item.imageUrl || 
-                    (item.prize?.media_file?.url) || 
-                    item.prize?.imageUrl || 
-                    '/default-item-image.png';
+    const imageUrl = item.type === 'prize' && item.prize?.imageUrl 
+      ? item.prize.imageUrl 
+      : item.imageUrl;
+    
+    const name = item.name || (item.prize?.name || '');
     
     return (
-      <img 
-        src={imageUrl}
-        alt={item.name || ''}
+      <MediaRenderer
+        mediaFile={mediaFile}
+        imageUrl={imageUrl}
+        animations={animations}
+        name={name}
         className="w-10 h-10 object-contain mb-2"
+        loop={false}
       />
     );
   };

@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import Lottie from "lottie-react";
 import { toast } from "sonner";
+import { useAnimationLoader } from '@/utils/useAnimationLoader';
+import { MediaRenderer } from '@/utils/media-renderer';
 
 interface RouletteProps {
   caseData: Case;
@@ -26,35 +28,13 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
   const [_wonItemId, setWonItemId] = useState<number | null>(null);
   const [openResult, setOpenResult] = useState<CaseOpenResult | null>(null);
   const [showDialog, setShowDialog] = useState(false);
-  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
-
-  // Загружаем анимации для призов с JSON-медиа
-  useEffect(() => {
-    const loadAnimations = async () => {
-      const newAnimations: { [url: string]: Record<string, unknown> } = {};
-      for (const item of caseData.case_items || []) {
-        if (item.type === 'prize' && item.prize?.media_file) {
-          const mediaFile = item.prize.media_file;
-          if (mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
-            try {
-              const response = await fetch(mediaFile.url);
-              const data = await response.json();
-              newAnimations[mediaFile.url] = data;
-            } catch (error) {
-              console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
-            }
-          }
-        }
-      }
-      if (Object.keys(newAnimations).length > 0) {
-        setAnimations(prev => ({ ...prev, ...newAnimations }));
-      }
-    };
-    
-    if (caseData?.case_items?.length) {
-      loadAnimations();
-    }
-  }, [caseData.case_items]);
+  
+  // Используем хук для загрузки анимаций
+  const [animations] = useAnimationLoader(
+    caseData.case_items || [],
+    (item) => item.type === 'prize' && item.prize?.media_file ? item.prize.media_file : item.media_file,
+    [caseData.id]
+  );
 
   useEffect(() => {
     if (!caseData?.case_items?.length) return;
@@ -268,25 +248,23 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
 
   // Отображение медиа в диалоге результата
   const renderDialogPrizeMedia = (wonItem: any) => {
-    if (wonItem.type === 'prize' && wonItem.prize?.media_file) {
-      const mediaFile = wonItem.prize.media_file;
-      if (mediaFile.mimeType === 'application/json' && animations[mediaFile.url]) {
-        return (
-          <Lottie
-            animationData={animations[mediaFile.url]}
-            loop={true}
-            autoplay={true}
-            className="w-20 h-20 object-contain mb-2"
-          />
-        );
-      }
-    }
+    const mediaFile = wonItem.type === 'prize' && wonItem.prize?.media_file 
+      ? wonItem.prize.media_file 
+      : wonItem.media_file;
     
+    const imageUrl = wonItem.media_file?.url || wonItem.imageUrl || 
+      (wonItem.prize?.media_file?.url) || wonItem.prize?.imageUrl || 
+      '/default-item-image.png';
+
+    // Для сохранения точных стилей, используем тот же класс
     return (
-      <img 
-        src={wonItem.media_file?.url || wonItem.imageUrl || '/default-item-image.png'} 
-        alt={wonItem.name || ''} 
-        className="w-20 h-20 object-contain mb-2" 
+      <MediaRenderer
+        mediaFile={mediaFile}
+        imageUrl={imageUrl}
+        animations={animations}
+        name={wonItem.name || ''}
+        className="w-20 h-20 object-contain mb-2"
+        loop={true}
       />
     );
   };

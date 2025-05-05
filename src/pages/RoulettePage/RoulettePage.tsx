@@ -18,8 +18,8 @@ const RoulettePage: React.FC = observer(() => {
   const { cases, user } = useContext(Context) as IStoreContext;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [userCaseCount, setUserCaseCount] = useState<number>(0);
-  const [loadingUserCases, setLoadingUserCases] = useState(false);
+  const [_userCaseCount, setUserCaseCount] = useState<number>(0);
+  const [_loadingUserCases, setLoadingUserCases] = useState(false);
   const planetImg = getPlanetImg();
 
   const containerRef = useRef<HTMLDivElement>(null);
