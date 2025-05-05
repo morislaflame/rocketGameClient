@@ -8,6 +8,8 @@ import { Case, CaseOpenResult } from '@/types/types';
 import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import Lottie from "lottie-react";
+import { toast } from "sonner";
 
 interface RouletteProps {
   caseData: Case;
@@ -24,6 +26,35 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
   const [_wonItemId, setWonItemId] = useState<number | null>(null);
   const [openResult, setOpenResult] = useState<CaseOpenResult | null>(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
+
+  // Загружаем анимации для призов с JSON-медиа
+  useEffect(() => {
+    const loadAnimations = async () => {
+      const newAnimations: { [url: string]: Record<string, unknown> } = {};
+      for (const item of caseData.case_items || []) {
+        if (item.type === 'prize' && item.prize?.media_file) {
+          const mediaFile = item.prize.media_file;
+          if (mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
+            try {
+              const response = await fetch(mediaFile.url);
+              const data = await response.json();
+              newAnimations[mediaFile.url] = data;
+            } catch (error) {
+              console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
+            }
+          }
+        }
+      }
+      if (Object.keys(newAnimations).length > 0) {
+        setAnimations(prev => ({ ...prev, ...newAnimations }));
+      }
+    };
+    
+    if (caseData?.case_items?.length) {
+      loadAnimations();
+    }
+  }, [caseData.case_items]);
 
   useEffect(() => {
     if (!caseData?.case_items?.length) return;
@@ -75,8 +106,15 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
           // В случае ошибки останавливаем вращение
           setSpinning(false);
         }
-      } catch (error) {
-        console.error('Ошибка при открытии кейса:', error);
+      } catch (error: any) {
+        console.error('Error opening case:', error);
+        
+        // Проверяем сообщение об ошибке
+        const errorMessage = error?.response?.data?.message || "Failed to open case";
+        
+        // Показываем toast с сообщением об ошибке
+        toast.error(errorMessage);
+        
         setSpinning(false);
       }
     };
@@ -102,7 +140,20 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
     return index + prizesList.length / 2;
   };
 
+  // Проверка наличия кейсов у пользователя
+  const hasUserCases = () => {
+    if (!cases.userCases) return false;
+    
+    return cases.userCases.some(userCase => userCase.caseId === caseData.id);
+  };
+
   const handleStart = () => {
+    // Проверяем, есть ли кейсы у пользователя
+    if (caseData.type !== 'free' && !hasUserCases()) {
+      toast.error("You need to purchase this case first");
+      return;
+    }
+    
     setSpinning(true);
   };
 
@@ -115,19 +166,34 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
     setShowDialog(true);
   };
 
-  const handleCloseDialog = async () => {
+  const handleCloseDialog = () => {
     setShowDialog(false);
-    
-    // Обновляем список кейсов пользователя после открытия кейса
-    if (onCaseOpened) {
-      onCaseOpened();
-    }
-    
-    // Сбрасываем состояние рулетки
     setOpenResult(null);
     setWonItemId(null);
     setPrizeIndex(0);
     setStart(false);
+    if (onCaseOpened) {
+      onCaseOpened();
+    }
+  };
+
+  // Обработчик изменения состояния диалога
+  const handleDialogOpenChange = (open: boolean) => {
+    setShowDialog(open);
+    
+    // Если диалог закрывается, вызываем обработчик
+    if (!open && openResult) {
+      // Сбрасываем состояние рулетки
+      setOpenResult(null);
+      setWonItemId(null);
+      setPrizeIndex(0);
+      setStart(false);
+      
+      // Вызываем внешний обработчик для обновления данных
+      if (onCaseOpened) {
+        onCaseOpened();
+      }
+    }
   };
 
   const type = settings.type.value;
@@ -137,16 +203,36 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
   const hideCenterDelimiter = settings.hideCenterDelimiter.value;
   const spinningTime = +settings.spinningTime.value;
 
+  // Отображение медиа элемента в рулетке
+  const renderPrizeItemMedia = (item: any) => {
+    if (item?.caseItem?.type === 'prize' && 
+        item?.caseItem?.prize?.media_file?.mimeType === 'application/json' && 
+        animations[item.caseItem.prize.media_file.url]) {
+      return (
+        <Lottie
+          animationData={animations[item.caseItem.prize.media_file.url]}
+          loop={true}
+          autoplay={true}
+          className='roulette-pro-regular-prize-item-image w-30 h-30'
+        />
+      );
+    }
+    
+    return (
+      <img 
+        src={item.image} 
+        alt={item.text || 'Приз'} 
+        className='roulette-pro-regular-prize-item-image' 
+      />
+    );
+  };
+
   const customPrizeItemRender = (item: any) => {
     return (
       <div className='roulette-pro-regular-prize-item'>
         <div className='roulette-pro-regular-prize-item-wrapper'>
           <div className='roulette-pro-regular-image-wrapper'>
-            <img 
-              src={item.image} 
-              alt={item.text || 'Приз'} 
-              className='roulette-pro-regular-prize-item-image' 
-            />
+            {renderPrizeItemMedia(item)}
           </div>
           <p className='roulette-pro-regular-prize-item-text'>
             {item.text}
@@ -180,6 +266,31 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
       .map(() => array[Math.floor(Math.random() * array.length)]),
   ];
 
+  // Отображение медиа в диалоге результата
+  const renderDialogPrizeMedia = (wonItem: any) => {
+    if (wonItem.type === 'prize' && wonItem.prize?.media_file) {
+      const mediaFile = wonItem.prize.media_file;
+      if (mediaFile.mimeType === 'application/json' && animations[mediaFile.url]) {
+        return (
+          <Lottie
+            animationData={animations[mediaFile.url]}
+            loop={true}
+            autoplay={true}
+            className="w-20 h-20 object-contain mb-2"
+          />
+        );
+      }
+    }
+    
+    return (
+      <img 
+        src={wonItem.media_file?.url || wonItem.imageUrl || '/default-item-image.png'} 
+        alt={wonItem.name || ''} 
+        className="w-20 h-20 object-contain mb-2" 
+      />
+    );
+  };
+
   // Рендер диалога с выигрышем
   const renderPrizeDialog = () => {
     if (!openResult) return null;
@@ -187,10 +298,10 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
     const { wonItem, result } = openResult;
     
     return (
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      <Dialog open={showDialog} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Поздравляем!</DialogTitle>
+            <DialogTitle>Congratulations!</DialogTitle>
             <DialogDescription>
               {result?.message}
             </DialogDescription>
@@ -198,19 +309,15 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
           
           <div className="flex items-center justify-center py-4">
             <div className="flex flex-col items-center">
-              <img 
-                src={wonItem.media_file?.url || wonItem.imageUrl || '/default-item-image.png'} 
-                alt={wonItem.name || ''} 
-                className="w-32 h-32 object-contain mb-2" 
-              />
+              {renderDialogPrizeMedia(wonItem)}
               <p className="text-lg font-medium">{wonItem.name}</p>
               
               {wonItem.type === 'attempts' && (
-                <p className="text-sm text-gray-500">+{wonItem.value} попыток</p>
+                <p className="text-sm text-gray-500">+{wonItem.value} attempts</p>
               )}
               
               {wonItem.type === 'tickets' && (
-                <p className="text-sm text-gray-500">+{wonItem.value} билетов</p>
+                <p className="text-sm text-gray-500">+{wonItem.value} tickets</p>
               )}
               
               {wonItem.type === 'prize' && wonItem.prize && (
@@ -225,7 +332,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
               onClick={handleCloseDialog} 
               className="w-full"
             >
-              Закрыть
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>

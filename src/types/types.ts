@@ -116,6 +116,7 @@ export interface RafflePrize {
   name: string;
   imageUrl: string;
   value: number;
+  tonPrice: number | null;
   description: string | null;
   media_file: {
             id: number;

@@ -30,7 +30,7 @@ const CasesList: React.FC = observer(() => {
   // Отображение загрузки
   if (cases.loading) {
     return (
-      <div className={styles.casesList}>
+      <div className='flex flex-col gap-3 mt-3'>
         {[1, 2, 3, 4].map((_, index) => (
           <div key={index} className={styles.caseCard}>
             <Skeleton className="w-full h-[150px] rounded-md" />
