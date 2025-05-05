@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import Lottie from "lottie-react";
 import styles from "./FunctionalComponents.module.css";
 import { Button } from "../ui/button";
-import { getPlanetImg } from "@/utils/getPlanetImg";
 import { getUserName } from "@/utils/getUserName";
 import { RafflePrize, UserInfo } from "@/types/types";
 import ListSkeleton from "../MainComponents/ListSkeleton";
@@ -19,14 +18,21 @@ import {
 } from "@/components/ui/morphing-dailog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import trophy from "@/assets/trophy.json";
+import { MediaRenderer } from "@/utils/media-renderer";
+import { useAnimationLoader } from '@/utils/useAnimationLoader';
 
 const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
   const pageSize = 10;
+  
+  const [animations] = useAnimationLoader(
+    raffle.raffleHistory || [],
+    (item) => item.raffle_prize?.media_file, 
+    []
+  );
 
   const loadHistory = async (currentOffset: number, append: boolean = false) => {
     setIsLoading(true);
@@ -55,48 +61,17 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
     await loadHistory(offset, true);
   };
 
-  useEffect(() => {
-    const loadAnimations = async () => {
-      const newAnimations: { [url: string]: Record<string, unknown> } = {};
-      for (const item of raffle.raffleHistory || []) {
-        const mediaFile = item.raffle_prize?.media_file;
-        if (mediaFile && mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
-          try {
-            const response = await fetch(mediaFile.url);
-            const data = await response.json();
-            newAnimations[mediaFile.url] = data;
-          } catch (error) {
-            console.error(`Error loading animation for ${mediaFile.url}:`, error);
-          }
-        }
-      }
-      setAnimations(prev => ({ ...prev, ...newAnimations }));
-    };
-    loadAnimations();
-  }, [raffle.raffleHistory]);
-
-  const tokenImg = getPlanetImg();
-
   const renderPrizeMedia = (prize: RafflePrize) => {
-    const mediaFile = prize.media_file;
-    if (mediaFile) {
-      const { url, mimeType } = mediaFile;
-      if (mimeType === 'application/json' && animations[url]) {
-        return (
-          <Lottie
-            animationData={animations[url]}
-            loop={false}
-            autoplay={true}
-            // style={{ width: 40, height: 40 }}
-          />
-        );
-      } else if (mimeType.startsWith('image/')) {
-        return <img src={url} alt={prize.name} className={styles.prizeImage} />;
-      }
-    } else if (prize.imageUrl) {
-      return <img src={prize.imageUrl} alt={prize.name} className={styles.prizeImage} />;
-    }
-    return <img src={tokenImg} alt="No prize" className={styles.prizeImage} />;
+    return (
+      <MediaRenderer
+        mediaFile={prize.media_file}
+        imageUrl={prize.imageUrl}
+        animations={animations}
+        name={prize.name}
+        className={styles.prizeImage}
+        loop={false}
+      />
+    );
   };
 
   return (

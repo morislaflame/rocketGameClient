@@ -9,7 +9,7 @@ import RaffleStore from "./RaffleStore";
 import UserPrizeStore from "./UserPrizeStore";
 import ReferralStore from "./ReferralStore";
 import CasesStore from "./CasesStore";
-
+import AnimationStore from "./AnimationsStore";
 // Определяем интерфейс для нашего контекста
 export interface IStoreContext {
   user: UserStore;
@@ -21,6 +21,7 @@ export interface IStoreContext {
   userPrize: UserPrizeStore;
   referral: ReferralStore;
   cases: CasesStore;
+  animation: AnimationStore;
 }
 
 let storeInstance: IStoreContext | null = null;
@@ -52,6 +53,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
     userPrize: UserPrizeStore;
     referral: ReferralStore;
     cases: CasesStore;
+    animation: AnimationStore;
   } | null>(null);
 
   useEffect(() => {
@@ -76,6 +78,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
         import("./UserPrizeStore"),
         import("./ReferralStore"),
         import("./CasesStore"),
+        import("./AnimationsStore"),
       ]);
 
       setStores({
@@ -88,6 +91,7 @@ const StoreProvider = ({ children }: StoreProviderProps) => {
         userPrize: new UserPrizeStore(),
         referral: new ReferralStore(),
         cases: new CasesStore(),
+        animation: new AnimationStore(),
       });
     };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { observer } from "mobx-react-lite";
 import { FaTrophy } from "react-icons/fa";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -18,6 +18,8 @@ import {
 import Lottie from "lottie-react";
 import moneyBag from "@/assets/moneybag.json";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MediaRenderer } from "@/utils/media-renderer";
+import { useAnimationLoader } from '@/utils/useAnimationLoader';
 
 interface UserPrizesListProps {
   isLoading: boolean;
@@ -37,64 +39,29 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
   const tokenImg = getPlanetImg();
   const isEmpty = userPrizes && userPrizes.length === 0;
 
-  // Состояние для хранения JSON-анимаций по URL
-  const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
+  // На это (с деструктуризацией массива):
+  const [animationsObj] = useAnimationLoader(
+    userPrizes,
+    (item) => item.prize?.media_file,
+    []
+  );
 
-  // Загружаем анимации для призов с JSON-медиа
-  useEffect(() => {
-    const loadAnimations = async () => {
-      const newAnimations: { [url: string]: Record<string, unknown> } = {};
-      for (const prize of userPrizes) {
-        // Добавляем проверку на null для prize.prize
-        if (prize.prize && prize.prize.media_file) {
-          const mediaFile = prize.prize.media_file;
-          if (mediaFile && mediaFile.mimeType === 'application/json' && !animations[mediaFile.url]) {
-            try {
-              const response = await fetch(mediaFile.url);
-              const data = await response.json();
-              newAnimations[mediaFile.url] = data;
-            } catch (error) {
-              console.error(`Ошибка загрузки анимации ${mediaFile.url}:`, error);
-            }
-          }
-        }
-      }
-      if (Object.keys(newAnimations).length > 0) {
-        setAnimations(prev => ({ ...prev, ...newAnimations }));
-      }
-    };
-    if (userPrizes && userPrizes.length > 0) {
-      loadAnimations();
-    }
-  }, [userPrizes]);
-
-  // Функция для отображения медиа приза (анимация или изображение)
+  // Функция для отображения медиа приза
   const renderPrizeMedia = (rafflePrize: RafflePrize | null) => {
-    // Добавляем проверку на null
     if (!rafflePrize) {
       return <img src={tokenImg} alt="No prize" className={styles.prizeImage} />;
     }
 
-    const mediaFile = rafflePrize.media_file;
-    if (mediaFile) {
-      const { url, mimeType } = mediaFile;
-      if (mimeType === 'application/json' && animations[url]) {
-        return (
-          <Lottie
-            animationData={animations[url]}
-            loop={true}
-            autoplay={true}
-            // При необходимости можно указать размеры, например:
-            // style={{ width: 64, height: 64 }}
-          />
-        );
-      } else if (mimeType.startsWith('image/')) {
-        return <img src={url} alt={rafflePrize.name} className={styles.prizeImage} />;
-      }
-    } else if (rafflePrize.imageUrl) {
-      return <img src={rafflePrize.imageUrl} alt={rafflePrize.name} className={styles.prizeImage} />;
-    }
-    return <img src={tokenImg} alt="No prize" className={styles.prizeImage} />;
+    return (
+      <MediaRenderer
+        mediaFile={rafflePrize.media_file}
+        imageUrl={rafflePrize.imageUrl}
+        animations={animationsObj}
+        name={rafflePrize.name}
+        className={styles.prizeImage}
+        loop={false}
+      />
+    );
   };
 
   // Функция для получения названия приза
