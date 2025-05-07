@@ -138,32 +138,34 @@ const RoulettePage: React.FC = observer(() => {
             />
           )}
         </div>
-        {/* <ScrollArea className={styles.scrollArea}> */}
+        <ScrollArea className={styles.scrollArea}>
           {cases.selectedCase && (
             <CaseContents caseData={cases.selectedCase} />
           )}
           
           {cases.selectedCase && cases.selectedCase.type !== 'free' && (
-            <div className={casesStyles.casePurchaseButtons}>
-              <UserCaseCount 
-                caseId={cases.selectedCase.id} 
-                onCountChange={handleCountChange}
-              />
-              
-              <CasePurchaseButtons
-                caseId={cases.selectedCase.id}
-                price={cases.selectedCase.price?.toString() || ''}
-                starsPrice={cases.selectedCase.starsPrice || 0}
-                pointsPrice={cases.selectedCase.pointsPrice || 0}
-                onPurchase={(success) => {
-                    if (success) {
-                      handlePurchaseSuccess();
-                    }
-                }}
-              />
+            <div className='w-full flex justify-center'>
+              <div className={casesStyles.casePurchaseButtons}>
+                <UserCaseCount 
+                  caseId={cases.selectedCase.id} 
+                  onCountChange={handleCountChange}
+                />
+                
+                <CasePurchaseButtons
+                  caseId={cases.selectedCase.id}
+                  price={cases.selectedCase.price?.toString() || ''}
+                  starsPrice={cases.selectedCase.starsPrice || 0}
+                  pointsPrice={cases.selectedCase.pointsPrice || 0}
+                  onPurchase={(success) => {
+                      if (success) {
+                        handlePurchaseSuccess();
+                      }
+                  }}
+                />
+              </div>
             </div>
           )}
-        {/* </ScrollArea> */}
+        </ScrollArea>
       </div>
       
     </div>

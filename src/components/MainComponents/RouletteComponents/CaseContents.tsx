@@ -142,7 +142,7 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
             )}
           </div>
           <div className="text-sm font-medium truncate">{item.name}</div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap">
             <span className="text-xs text-muted-foreground">{typeLabel}</span>
             <span className="text-xs font-medium">{valueLabel}</span>
           </div>
@@ -154,7 +154,7 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
   return (
     <div className="w-full">
       <h3 className="font-medium text-lg mb-2">Case contents</h3>
-      <ScrollArea className="w-full whitespace-nowrap">
+      <ScrollArea className="w-[89vw] whitespace-nowrap">
         <div className="flex pb-4">
           {displayItems.map(renderItemCard)}
         </div>

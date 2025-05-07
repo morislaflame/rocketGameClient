@@ -191,7 +191,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
       return (
         <Lottie
           animationData={animations[item.caseItem.prize.media_file.url]}
-          loop={true}
+          loop={false}
           autoplay={true}
           className='roulette-pro-regular-prize-item-image w-30 h-30'
         />

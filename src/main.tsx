@@ -29,7 +29,7 @@ window.__REACT_ROOT__.render(
       
     }}
     actionsConfiguration={{
-      twaReturnUrl: 'https://t.me/drusik_test_bot'
+      twaReturnUrl: 'https://t.me/rocket_raffle_bot/rocket_raffle'
     }}
   >
     <StoreProvider>
