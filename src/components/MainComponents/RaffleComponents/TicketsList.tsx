@@ -109,7 +109,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
           ) : txError ? (
             <div className="flex flex-col items-center gap-2">
               <IoMdClose size={48} color="red" />
-              <p>Error during transaction</p>
+              <p>Transaction not completed</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2">

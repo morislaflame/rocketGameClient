@@ -7,7 +7,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineConfig({
   plugins: [react(), tailwindcss(), nodePolyfills()],
   server: {
-    allowedHosts: ['8bhwqk5vpbaz.share.zrok.io', 'localhost', 'uztxcmq864hd.share.zrok.io', 'iogr1xxro9vi.share.zrok.io', '89.104.69.238' ],
+    allowedHosts: ['8bhwqk5vpbaz.share.zrok.io', 'localhost', 'uztxcmq864hd.share.zrok.io', 'hcjgguxxe1g9.share.zrok.io', '89.104.69.238' ],
   },
   resolve: {
     alias: {

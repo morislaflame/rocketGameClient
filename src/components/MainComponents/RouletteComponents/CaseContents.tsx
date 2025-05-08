@@ -130,12 +130,12 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     const hasTonPrice = item.type === 'prize' && item.prize?.tonPrice !== null && item.prize?.tonPrice !== undefined;
     
     return (
-      <Card key={item.id} className="flex-shrink-0 w-36 mx-2 overflow-hidden">
+      <Card key={item.id} className="flex-shrink-0 w-36 mx-2 overflow-hidden bg-[#141414]">
         <CardContent className="p-2">
           <div className="relative">
             {renderItemMedia(item)}
             {hasTonPrice && (
-              <div className="absolute top-0 right-0 bg-black/60 text-white text-xs px-1 rounded-bl flex items-center">
+              <div className="absolute top-0 right-0 text-white text-xs px-1 rounded-bl flex items-center">
                 <span>{Number(item.prize?.tonPrice).toFixed(1)}</span>
                 <img src={tonImg} alt="TON" className="w-3 h-3 ml-1" />
               </div>
@@ -144,7 +144,7 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
           <div className="text-sm font-medium truncate">{item.name}</div>
           <div className="flex items-center justify-between flex-wrap">
             <span className="text-xs text-muted-foreground">{typeLabel}</span>
-            <span className="text-xs font-medium">{valueLabel}</span>
+            {/* <span className="text-xs font-medium">{valueLabel}</span> */}
           </div>
         </CardContent>
       </Card>

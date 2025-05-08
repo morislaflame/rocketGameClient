@@ -56,8 +56,8 @@ const CasesPage: React.FC = observer(() => {
           <h2 className="text-3xl font-semibold leading-none tracking-tight">
               LootBoxes
           </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-            Win gifts from the lootbox!
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            Win and take
           </div>
           
           {/* Отображение баланса с учетом загрузки */}

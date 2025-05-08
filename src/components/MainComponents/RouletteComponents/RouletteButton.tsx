@@ -17,7 +17,7 @@ const RouletteButton: React.FC<RouletteButtonProps> = ({ onStart, disabled = fal
             type="button"
             disabled={disabled}
           >
-            Spin
+            {disabled ? 'Spinning...' : 'Spin'}
           </Button>
         </div>
       </div>

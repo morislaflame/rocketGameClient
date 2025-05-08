@@ -10,6 +10,7 @@ import { getUserName } from '@/utils/getUserName';
 import { Button } from '@/components/ui/button';
 import questionImg from '@/assets/Question.png';
 import { getRaffleTicketImg } from '@/utils/getTicketImg';
+import tonImg from "@/assets/TonIcon.svg";
 
 interface RaffleInfoProps {
   isActive: boolean;
@@ -71,7 +72,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
         return (
           <Lottie
             animationData={animationData}
-            loop={true}
+            loop={false}
             autoplay={true}
             style={{ width: '90%' }}
           />
@@ -103,9 +104,20 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
                 {renderPrizeMedia()}
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-3">
-              <FaGift />
-              <span>{rafflePrize.name}</span>
+            <div className="flex items-center flex-col gap-1 text-sm text-muted-foreground pt-3">
+              <span className='flex items-center gap-2'>
+                <FaGift />
+                {rafflePrize.name || 'Unknown Prize'}
+              </span>
+              {rafflePrize.tonPrice !== undefined && (
+                <span className='flex items-center gap-1'>
+                  {typeof rafflePrize.tonPrice === 'number' 
+                    ? rafflePrize.tonPrice.toFixed(1)
+                    : Number(rafflePrize.tonPrice).toFixed(1)
+                  } 
+                  <img src={tonImg} alt="Ton" className='w-4 h-4' />
+                </span>
+              )}
             </div>
           </>
         )}

@@ -16,7 +16,19 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   height: 100%;
-  background-color: hsl(0 0% 3.9%);
+  background-color: rgb(26, 25, 25);
+}
+
+.caseCardSkeleton {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgb(26, 25, 25);
+  padding: 10px;
 }
 
 .caseCard:hover {
@@ -186,4 +198,17 @@
   width: 16px;
   height: 16px;
   object-fit: contain;
+}
+
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

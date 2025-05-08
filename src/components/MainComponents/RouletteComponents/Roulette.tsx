@@ -285,7 +285,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex items-center justify-center py-4">
+          <div className="flex items-center justify-center">
             <div className="flex flex-col items-center">
               {renderDialogPrizeMedia(wonItem)}
               <p className="text-lg font-medium">{wonItem.name}</p>
@@ -297,10 +297,10 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
               {wonItem.type === 'tickets' && (
                 <p className="text-sm text-gray-500">+{wonItem.value} tickets</p>
               )}
-              
+{/*               
               {wonItem.type === 'prize' && wonItem.prize && (
                 <p className="text-sm text-gray-500">{wonItem.prize.name}</p>
-              )}
+              )} */}
             </div>
           </div>
           

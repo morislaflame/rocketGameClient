@@ -138,10 +138,29 @@
 /* Индикатор активного таба */
 .activeIndicator {
   position: absolute;
-  width: 72px;
+  width: 78px;
   height: 100%;
   background-color: #2C2C2C;
   border-radius: 30px;
   transition: left 0.3s ease;
   z-index: 0;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+}
+
+.navLabel {
+  font-size: 12px;
+  color: #8E8E93;
+  transition: color 0.2s ease;
+  z-index: 100;
+}
+
+.activeLabel {
+  color: #FFFFFF;
 }

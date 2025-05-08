@@ -15,7 +15,7 @@ import caseIcon from "@/assets/CASE_LINE.png";
 
 const navigationItems = [
   { 
-    label: 'Home', 
+    label: 'Rocket', 
     route: '/rocket', 
     icon: astronautIcon,
     solidIcon: astronautSolidIcon 
@@ -33,7 +33,7 @@ const navigationItems = [
     solidIcon: caseSolidIcon 
   },
   { 
-    label: 'User', 
+    label: 'Home', 
     route: '/user-account', 
     icon: homeIcon,
     solidIcon: homeSolidIcon
@@ -51,11 +51,12 @@ const Navigation: React.FC = () => {
   const current = activeIndex === -1 ? 0 : activeIndex;
 
   // Константы для расчёта позиции индикатора (в px)
-  const paddingLeft = 12;
-  const buttonWidth = 48;
-  const gap = 12;
+  const paddingLeft = 9; // внешний паддинг navButtons
+  const buttonWidth = 48; // ширина кнопки
+  const gap = 20; // отступ между кнопками
+  const itemPadding = 4; // паддинг navItem
   const indicatorWidth = 76;
-  const buttonCenter = paddingLeft + current * (buttonWidth + gap) + buttonWidth / 2;
+  const buttonCenter = paddingLeft + current * (buttonWidth + gap) + buttonWidth / 2 + itemPadding;
   const indicatorLeft = buttonCenter - indicatorWidth / 2 + 2;
 
   return (
@@ -67,19 +68,23 @@ const Navigation: React.FC = () => {
           style={{ left: `${indicatorLeft}px` }}
         />
         {navigationItems.map((item, index) => (
-          <NavButton
-            key={item.route}
-            img={
-              <img 
-                src={index === current ? item.solidIcon : item.icon} 
-                alt={item.label}
-                width={32}
-                height={32}
-                className='z-10'
-              />
-            }
-            onClick={() => navigate(item.route)}
-          />
+          <div key={item.route} className={styles.navItem}>
+            <NavButton
+              img={
+                <img 
+                  src={index === current ? item.solidIcon : item.icon} 
+                  alt={item.label}
+                  width={32}
+                  height={32}
+                  className='z-10'
+                />
+              }
+              onClick={() => navigate(item.route)}
+            />
+            <span className={`${styles.navLabel} ${index === current ? styles.activeLabel : ''}`}>
+              {item.label}
+            </span>
+          </div>
         ))}
       </div>
     </div>

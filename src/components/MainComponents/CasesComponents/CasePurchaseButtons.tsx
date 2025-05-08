@@ -7,6 +7,9 @@ import starImg from "@/assets/stars.svg";
 import { Minus, Plus } from "lucide-react";
 import { getPlanetImg } from "@/utils/getPlanetImg";
 import { observer } from "mobx-react-lite";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { IoMdClose } from "react-icons/io";
 
 interface CasePurchaseButtonsProps {
   caseId: number;
@@ -27,7 +30,12 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
 }) => {
   const { cases, user } = useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState(false);
+  const [isPointsLoading, setIsPointsLoading] = useState(false);
+  const [isStarsLoading, setIsStarsLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [txLoading, setTxLoading] = useState(false);
+  const [txError, setTxError] = useState<string | null>(null);
 
   const handleQuantityChange = (value: number) => {
     if (value >= 1 && value <= 20) {
@@ -42,21 +50,19 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
 
   const handleStarsPurchase = async () => {
     try {
-      setIsLoading(true);
+      setIsStarsLoading(true);
       await cases.generateInvoice(caseId, quantity);
-      // После успешной оплаты обновляем список кейсов
-      // cases.fetchUserCases();
     } catch (error) {
       console.error("Error generating invoice:", error);
       if (onPurchase) onPurchase(false);
     } finally {
-      setIsLoading(false);
+      setIsStarsLoading(false);
     }
   };
 
   const handlePointsPurchase = async () => {
     try {
-      setIsLoading(true);
+      setIsPointsLoading(true);
       const result = await cases.purchaseCaseWithPoints(caseId, quantity);
       if (result && onPurchase) {
         onPurchase(true);
@@ -65,17 +71,30 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
       console.error("Error purchasing with points:", error);
       if (onPurchase) onPurchase(false);
     } finally {
-      setIsLoading(false);
+      setIsPointsLoading(false);
     }
   };
 
   const handleTxStart = () => {
     setIsLoading(true);
+    setTxLoading(true);
+    setTxError(null);
+    setAlertVisible(true);
   };
 
   const handleTxComplete = (error?: string) => {
     setIsLoading(false);
-    if (onPurchase) onPurchase(!error);
+    setTxLoading(false);
+    if (error) {
+      setTxError(error);
+    }
+  };
+
+  const closeAlert = () => {
+    if (!txLoading) {
+      setAlertVisible(false);
+      setTxError(null);
+    }
   };
 
   const planetImg = getPlanetImg();
@@ -87,6 +106,32 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
 
   return (
     <div className={styles.purchaseButtonsContainer}>
+      {alertVisible && (
+        <div
+          className="flex flex-col items-center gap-2 w-full h-full bg-black/50 rounded-md p-4 border border-white/10 mb-3"
+        >
+          {txLoading ? (
+            <div className="flex flex-col items-center gap-2">
+              <AiOutlineLoading3Quarters size={48} className={styles.spinningIcon} />
+              <p>Transaction in process... Please wait.</p>
+            </div>
+          ) : txError ? (
+            <div className="flex flex-col items-center gap-2">
+              <IoMdClose size={48} color="red" />
+              <p>Transaction not completed</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <IoIosCheckmarkCircle size={48} color="green" />
+              <p>Transaction completed successfully!</p>
+            </div>
+          )}
+          {!txLoading && <button onClick={closeAlert}>Close</button>}
+        </div>
+      )}
+      
+      {!alertVisible && ( 
+      <>
       <div className={styles.quantitySelector}>
         <Button 
           variant="outline" 
@@ -123,19 +168,19 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
             quantity={quantity}
             onTxStart={handleTxStart}
             onTxComplete={handleTxComplete}
-            disabled={disabled || isLoading || !user.isAuth}
+            disabled={disabled || isLoading || !user.isAuth || isStarsLoading || isPointsLoading}
           />
         )}
         
         {starsPrice && starsPrice > 0 && (
           <Button
             onClick={handleStarsPurchase}
-            disabled={disabled || isLoading || !user.isAuth}
+            disabled={disabled || isStarsLoading || !user.isAuth || isLoading || isPointsLoading}
             variant="secondary"
             className={styles.starsButton}
           >
-            {isLoading ? "Processing..." : starsPrice * quantity}
-            {!isLoading && (
+            {isStarsLoading ? "Processing..." : starsPrice * quantity}
+            {!isStarsLoading && (
               <img src={starImg} alt="Stars" className={styles.starsIcon} />
             )}
           </Button>
@@ -144,17 +189,19 @@ const CasePurchaseButtons: React.FC<CasePurchaseButtonsProps> = observer(({
         {pointsPrice && pointsPrice > 0 && (
           <Button
             onClick={handlePointsPurchase}
-            disabled={disabled || isLoading || !user.isAuth || !hasEnoughPoints}
+            disabled={disabled || isPointsLoading || !user.isAuth || !hasEnoughPoints || isLoading || isStarsLoading}
             variant="secondary"
             className={styles.pointsButton}
           >
-            {isLoading ? "Processing..." : pointsPrice * quantity}
-            {!isLoading && (
+            {isPointsLoading ? "Processing..." : pointsPrice * quantity}
+            {!isPointsLoading && (
               <img src={planetImg} alt="Planet" className={styles.balanceImg} />
             )}
           </Button>
         )}
       </div>
+      </>
+      )}
     </div>
   );
 });

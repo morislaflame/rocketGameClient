@@ -122,26 +122,6 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
           </div>
         </div>
       </div>
-      {/* {caseItem.type !== 'free' && (
-        <div className={styles.casePurchaseButtons}>
-          <UserCaseCount 
-            caseId={caseItem.id} 
-            onCountChange={handleCountChange}
-          />
-          
-          <CasePurchaseButtons
-            caseId={caseItem.id}
-            price={caseItem.price?.toString() || ''}
-            starsPrice={caseItem.starsPrice || 0}
-            pointsPrice={caseItem.pointsPrice || 0}
-            onPurchase={(success) => {
-                if (success) {
-                  onPurchaseSuccess();
-                }
-            }}
-          />
-        </div>
-      )} */}
       
       <Button
         className={styles.openCaseButton}

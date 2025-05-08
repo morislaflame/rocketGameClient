@@ -100,12 +100,21 @@ const RoulettePage: React.FC = observer(() => {
   if (loading) {
     return (
       <div className={styles.Container} ref={containerRef}>
-        <div className='flex flex-col items-center gap-7 w-full h-full overflow-hidden'>
-          <div className='flex flex-col items-center gap-2'>
-            <Skeleton className="h-10 w-56" />
-            <Skeleton className="h-5 w-40" />
+        <div className='flex flex-col items-center gap-4 w-full h-full overflow-hidden '>
+        <div className='flex flex-col items-center gap-2'>
+          <h2 className="text-3xl font-semibold leading-none tracking-tight">
+              Case
+          </h2>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            Open case and get a gift!
           </div>
-          <Skeleton className="h-72 w-full" />
+          </div>
+          <div className='flex flex-col items-center gap-2 bg-[#1a1919] rounded-md p-4 w-full'>
+            <Skeleton className="h-40 w-full" />
+          </div>
+          <div className='flex flex-col items-center gap-2 bg-[#1a1919] rounded-md p-4 w-80'>
+            <Skeleton className="h-30 w-full" />
+          </div>
         </div>
       </div>
     );
@@ -117,11 +126,8 @@ const RoulettePage: React.FC = observer(() => {
       <div className='flex flex-col items-center gap-4 w-full overflow-hidden'>
         <div className='flex flex-col items-center gap-2'>
           <h2 className="text-3xl font-semibold leading-none tracking-tight">
-              {cases.selectedCase?.name || 'LootBox'}
+              {cases.selectedCase?.name || 'Case'}
           </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Win gifts from the lootbox!
-          </div>
           <div className="flex items-center justify-center gap-2 bg-black/30 px-6 rounded-full">
             {loading ? (
               <Skeleton className="w-24 h-6" />
