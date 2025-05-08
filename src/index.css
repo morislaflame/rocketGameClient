@@ -171,7 +171,7 @@ button[data-tc-button="true"] {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  height: 170px !important;
+  height: 120px !important;
   overflow: hidden !important;
 }
 

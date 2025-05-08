@@ -263,7 +263,13 @@ export default class CasesStore {
       this.setLoadingPurchase(true);
       const invoiceLink = await generateCaseInvoice(caseId, quantity);
       try {
-        tg?.openInvoice(invoiceLink);
+        tg?.openInvoice(invoiceLink, (status: string) => {
+          console.log("status =>", status);
+          if (status === "paid") {
+            // После успешной оплаты обновляем список кейсов пользователя
+            this.fetchUserCases();
+          }
+        });
       } catch (error) {
         console.error("Error opening invoice:", error);
         this.setError("Failed to open invoice");

@@ -340,7 +340,7 @@ export interface TelegramWebApp {
       photo_url: string;
     };
   };
-  openInvoice: (url?: string, callback?: () => void) => void;
+  openInvoice: (url: string, callback: (status: string) => void) => void;
   shareToStory: (media_url: string, params: {
      text: string;
      widget_link: {

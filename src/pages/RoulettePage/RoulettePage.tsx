@@ -12,6 +12,7 @@ import casesStyles from '@/components/MainComponents/CasesComponents/CasesCompon
 import { getPlanetImg } from '@/utils/getPlanetImg'
 import CaseContents from '@/components/MainComponents/RouletteComponents/CaseContents'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import useBackButton from '@/utils/useBackButton'
 
 const RoulettePage: React.FC = observer(() => {
   const { caseId } = useParams<{ caseId: string }>();
@@ -23,6 +24,8 @@ const RoulettePage: React.FC = observer(() => {
   const planetImg = getPlanetImg();
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useBackButton(true, () => navigate(-1));
 
   // Загружаем данные о кейсе и кейсах пользователя при монтировании компонента
   useEffect(() => {
