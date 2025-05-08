@@ -10,7 +10,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./ShopComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import starImg from "@/assets/stars.svg";
-import { generateInvoice } from "@/http/productAPI";
 import ListSkeleton from '../ListSkeleton';
 
 interface ProductListProps {
@@ -19,33 +18,19 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = observer(({ isLoading }) => {
   // Предположим, вы храните productStore в Context
-  const { product, user } = useContext(Context) as IStoreContext;
-
-  const tg = window.Telegram?.WebApp;
+  const { product } = useContext(Context) as IStoreContext;
 
   useEffect(() => {
     product.fetchProducts();
   }, [product]);
 
-const buyProduct = async (productId: number) => {
-  try {
-    // 1) Запрос на сервер: получаем invoiceLink
-    const invoiceLink = await generateInvoice(productId);
-    console.log("invoiceLink =>", invoiceLink);
+  const buyProduct = async (productId: number) => {
     try {
-      tg?.openInvoice(invoiceLink, (status: string) => {
-        console.log("status =>", status);
-        if (status === "paid") {
-          user.fetchMyInfo();
-        }
-      });
+      await product.buyProduct(productId);
     } catch (error) {
-      console.error("Error opening invoice:", error);
-    }
-  } catch (error) {
-    console.error("Error generating invoice:", error);
-  } 
-}
+      console.error("Error generating invoice:", error);
+    } 
+  }
 
   const rewardImg = <img src={getTriesImg()} alt="Tries" width={18} height={18}/>;
 

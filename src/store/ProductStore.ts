@@ -3,6 +3,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Product } from "@/types/types";
 import { getProducts, generateInvoice } from "@/http/productAPI";
 import { TelegramWebApp } from "@/types/types";
+import { getStore } from "./StoreProvider";
 
 const tg = window.Telegram?.WebApp as unknown as TelegramWebApp;
 console.log("tg =>", tg);
@@ -50,7 +51,12 @@ export default class ProductStore {
 
       // 2) Открываем окно оплаты через openInvoice
       try {
-        tg.openInvoice(invoiceLink);
+        tg.openInvoice(invoiceLink, (status: string) => {
+          console.log("status =>", status);
+          if (status === "paid") {
+            getStore().user.fetchMyInfo();
+          }
+        });
       } catch (error) {
         console.error("Error opening invoice:", error);
       }
