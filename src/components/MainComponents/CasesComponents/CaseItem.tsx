@@ -7,6 +7,7 @@ import UserCaseCount from './UserCaseCount';
 import tonImg from "@/assets/TonIcon.svg";
 import starImg from "@/assets/stars.svg";
 import { getPlanetImg } from '@/utils/getPlanetImg';
+import { BorderTrail } from '@/components/ui/border-trail';
 
 interface CaseItemProps {
   caseItem: Case;
@@ -14,7 +15,7 @@ interface CaseItemProps {
 
 const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
   const navigate = useNavigate();
-  const [_userCaseCount, setUserCaseCount] = useState<number>(0);
+  const [userCaseCount, setUserCaseCount] = useState<number>(0);
   const planetImg = getPlanetImg();
   
   // Функция для отображения изображения кейса
@@ -94,41 +95,53 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
   };
 
   return (
-    <div className={styles.caseCard}>
-      <div className={styles.caseImageContainer}>
-        {renderCaseImage(caseItem)}
-      </div>
-      <div className="flex flex-col gap-1 p-2">
-          <div className="text-md font-medium">
-              {caseItem.name}
-              <div className="text-sm text-muted-foreground">
-                  {caseItem.description}
-              </div>
-          </div>
-          
-        <div className='flex justify-between'>
-          {caseItem.type !== 'free' && (
-            <div className={styles.priceContainer}>
-              <div className='flex items-center'>
-                {renderPricesWithDividers()}
-              </div>
+    <div className='flex flex-col gap-2'>
+      
+      <div className={styles.caseCard}>
+        {userCaseCount > 0 && (
+          <BorderTrail
+            style={{
+              boxShadow: '0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)',
+              zIndex: 1000
+            }}
+            size={300}
+          />
+        )}
+        <div className={styles.caseImageContainer}>
+          {renderCaseImage(caseItem)}
+        </div>
+        <div className="flex flex-col gap-1 p-2">
+            <div className="text-md font-medium">
+                {caseItem.name}
+                <div className="text-sm text-muted-foreground">
+                    {caseItem.description}
+                </div>
             </div>
-          )}
-          <div className='flex w-fit justify-end'>
-              <UserCaseCount 
-                caseId={caseItem.id} 
-                onCountChange={handleCountChange}
-              />
+            
+          <div className='flex justify-between'>
+            {caseItem.type !== 'free' && (
+              <div className={styles.priceContainer}>
+                <div className='flex items-center'>
+                  {renderPricesWithDividers()}
+                </div>
+              </div>
+            )}
+            <div className='flex w-fit justify-end'>
+                <UserCaseCount 
+                  caseId={caseItem.id} 
+                  onCountChange={handleCountChange}
+                />
+            </div>
           </div>
         </div>
-      </div>
-      
-      <Button
-        className={styles.openCaseButton}
-        onClick={handleOpenCase}
-      >
-        Open case
-      </Button>
+        
+        <Button
+          className={styles.openCaseButton}
+          onClick={handleOpenCase}
+        >
+          Open case
+        </Button>
+      </div>        
     </div>
   );
 };
