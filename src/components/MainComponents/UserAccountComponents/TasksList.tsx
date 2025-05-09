@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { FaCheckCircle, FaTasks } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ListSkeleton from "../ListSkeleton";
 import { getTriesImg } from "@/utils/getPlanetImg";
-import { renderFormattedDescription } from "@/utils/formatUtils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./UserAccountComponents.module.css";
 import {
@@ -19,6 +18,10 @@ import {
   MorphingDialogTitle,
   MorphingDialogSubtitle,
 } from "@/components/ui/morphing-dailog";
+import { useTranslate } from "@/utils/useTranslate";
+import { getTaskText } from "@/utils/translations";
+import { IStoreContext } from "@/store/StoreProvider";
+import { Context } from "@/store/StoreProvider";
 
 interface TasksListProps {
   isLoading: boolean;
@@ -38,6 +41,8 @@ const TasksList: React.FC<TasksListProps> = observer(({
   onOpen
 }) => {
   const filteredTasks = myTasks.filter((t: Task) => t.type === selectedType);
+  const { t } = useTranslate();
+  const { user } = useContext(Context) as IStoreContext;
 
   return (
     <MorphingDialog
@@ -61,13 +66,13 @@ const TasksList: React.FC<TasksListProps> = observer(({
           <div className="flex items-center gap-2">
             <FaTasks size={16} />
             <MorphingDialogTitle className="text-[16px] font-semibold">
-              Tasks
+              {t('tasks')}
             </MorphingDialogTitle>
           </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             
             <MorphingDialogSubtitle className="text-sm text-muted-foreground">
-              Complete tasks and get rewards
+              {t('tasks_subtitle')}
             </MorphingDialogSubtitle>
           </div>
         </div>
@@ -89,10 +94,10 @@ const TasksList: React.FC<TasksListProps> = observer(({
             </div>
             <div className="px-6 flex flex-col items-center justify-center gap-1">
               <MorphingDialogTitle className="text-lg font-bold">
-                Tasks
+                {t('tasks')}
               </MorphingDialogTitle>
               <MorphingDialogSubtitle className="text-sm text-gray-500 w-[80%]">
-                Complete tasks and get rewards
+                {t('tasks_subtitle')}
               </MorphingDialogSubtitle>
             </div>
           </div>
@@ -104,21 +109,21 @@ const TasksList: React.FC<TasksListProps> = observer(({
                 variant={selectedType === "DAILY" ? "default" : "secondary"}
                 size="sm"
               >
-                Daily
+                {t('daily')}
               </Button>
               <Button
                 onClick={() => setSelectedType("ONE_TIME")}
                 variant={selectedType === "ONE_TIME" ? "default" : "secondary"}
                 size="sm"
               >
-                One-Time
+                {t('one_time')}
               </Button>
               <Button
                 onClick={() => setSelectedType("SPECIAL")}
                 variant={selectedType === "SPECIAL" ? "default" : "secondary"}
                 size="sm"
               >
-                Special
+                {t('special')}
               </Button>
             </div>
             
@@ -140,7 +145,7 @@ const TasksList: React.FC<TasksListProps> = observer(({
                       <Card key={t.id} className={styles.topUserCard}>
                         <CardHeader className={styles.taskCardHeader}>
                           <CardTitle className={styles.taskCardTitle}>
-                            {renderFormattedDescription(t.description)}
+                            {getTaskText(t, user.language)}
                           </CardTitle>
                           <div style={{ color: "#8E8E93" }} className='flex flex-row items-center gap-2'>
                             + {t.reward} {rewardImg}

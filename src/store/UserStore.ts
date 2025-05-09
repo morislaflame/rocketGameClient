@@ -10,6 +10,7 @@ export default class UserStore {
     _availableBonuses: UserBonus[] = [];
     _leaderboardSettings: LeaderboardSettings | null = null;
     _leaderboardUsers: UserInfo[] = [];
+    _language: 'ru' | 'en' = 'ru';
 
     constructor() {
         makeAutoObservable(this);
@@ -51,6 +52,11 @@ export default class UserStore {
 
       setLeaderboardUsers(users: UserInfo[]) {
         this._leaderboardUsers = users;
+      }
+
+      setLanguage(lang: 'ru' | 'en') {
+        this._language = lang;
+        localStorage.setItem('language', lang);
       }
 
     async logout() {
@@ -184,5 +190,9 @@ export default class UserStore {
     
     get leaderboardUsers() {
         return this._leaderboardUsers;
+    }
+
+    get language() {
+        return this._language;
     }
 }

@@ -19,6 +19,7 @@ import {
   MorphingDialogSubtitle,
 } from "@/components/ui/morphing-dailog";
 import tonImg from "@/assets/TonIcon.svg";
+import { useTranslate } from "@/utils/useTranslate";
 
 interface LeaderBoardListProps {
   isLoading: boolean;
@@ -45,7 +46,7 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
   settings
 }) => {
   const [animations, setAnimations] = useState<{ [url: string]: Record<string, unknown> }>({});
-
+  const { t } = useTranslate();
   useEffect(() => {
     const loadAnimations = async () => {
       if (!settings?.placePrizes) return;
@@ -117,12 +118,12 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
           <div className="flex items-center gap-2">
             <MdLeaderboard size={16} />
             <MorphingDialogTitle className="text-[16px] font-semibold">
-              Leaderboard
+              {t('leaderboard')}
             </MorphingDialogTitle>
           </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             <MorphingDialogSubtitle className="text-sm text-muted-foreground">
-              View your position on the leaderboard
+              {t('view_your_position_on_the_leaderboard')}
             </MorphingDialogSubtitle>
           </div>
         </div>
@@ -144,10 +145,10 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
             </div>
             <div className="px-6 flex flex-col items-center justify-center gap-1">
               <MorphingDialogTitle className="text-lg font-bold">
-                Leaderboard
+                {t('leaderboard')}
               </MorphingDialogTitle>
               <MorphingDialogSubtitle className="text-sm text-gray-500 w-[70%]">
-                The most active users will receive more rewards
+                {t('the_most_active_users_will_receive_more_rewards')}
               </MorphingDialogSubtitle>
             </div>
           </div>
@@ -158,7 +159,7 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
                 {settings.endDate && (
                   <div className={styles.endDateBlock || "text-center mb-2"}>
                     <p className="text-sm text-gray-400">
-                      Rewards on {new Date(settings.endDate).toLocaleDateString('en-US', {
+                      {t('rewards_on')} {new Date(settings.endDate).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -169,7 +170,7 @@ const LeaderBoardList: React.FC<LeaderBoardListProps> = observer(({
 
                 {settings.prizeType === 'money' ? (
                   <div className={styles.totalRewardsPool}>
-                    <p>Prize pool: {settings.totalMoneyPool} </p>
+                    <p>{t('prize_pool')}: {settings.totalMoneyPool} </p>
                     <img src={tonImg} alt="TON" 
                       style={{ width: "20px", height: "20px", verticalAlign: "middle" }}/>
                   </div>

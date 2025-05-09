@@ -9,19 +9,21 @@ import starImg from "@/assets/stars.svg";
 import { getPlanetImg } from '@/utils/getPlanetImg';
 import { BorderTrail } from '@/components/ui/border-trail';
 import { Context, IStoreContext } from '@/store/StoreProvider';
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 
 interface CaseItemProps {
   caseItem: Case;
 }
 
-const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
+const CaseItem: React.FC<CaseItemProps> = observer(({ caseItem }) => {
   const navigate = useNavigate();
   const [userCaseCount, setUserCaseCount] = useState<number>(0);
   const planetImg = getPlanetImg();
   const { cases } = useContext(Context) as IStoreContext;
   const [countdown, setCountdown] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  
+  const { t } = useTranslate();
   // Проверяем доступность бесплатного кейса
   useEffect(() => {
     if (caseItem.type === 'free') {
@@ -209,11 +211,11 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
           onClick={handleOpenCase}
           disabled={caseItem.type === 'free' && countdown !== null}
         >
-          {caseItem.type === 'free' && countdown !== null ? 'Not available' : 'Open case'}
+          {caseItem.type === 'free' && countdown !== null ? t('not_available') : t('open_case')}
         </Button>
       </div>        
     </div>
   );
-};
+});
 
 export default CaseItem; 

@@ -7,6 +7,7 @@ import UserPrizeDrawer from '@/components/MainComponents/UserAccountComponents/U
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { gsap } from 'gsap';
 import AffiliateCard from './UserAccountComponents/AffiliateCard';
+import LanguageSwitcher from '../FunctionalComponents/LanguageSwitcher';
 
 const UserAccount: React.FC = observer(() => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,7 @@ const UserAccount: React.FC = observer(() => {
     <div className={styles.Container} ref={containerRef}>
       <ScrollArea className={styles.scrollArea}>
         <UserHeader />
+        <LanguageSwitcher />
         <div className={styles.cardContainer}>
           <TasksDrawer />
           <UserPrizeDrawer />

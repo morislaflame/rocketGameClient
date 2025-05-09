@@ -11,6 +11,7 @@ import styles from "./ShopComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
 import starImg from "@/assets/stars.svg";
 import ListSkeleton from '../ListSkeleton';
+import { useTranslate } from "@/utils/useTranslate";
 
 interface ProductListProps {
   isLoading: boolean;
@@ -19,7 +20,7 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = observer(({ isLoading }) => {
   // Предположим, вы храните productStore в Context
   const { product } = useContext(Context) as IStoreContext;
-
+  const { t } = useTranslate();
   useEffect(() => {
     product.fetchProducts();
   }, [product]);
@@ -48,7 +49,7 @@ const ProductList: React.FC<ProductListProps> = observer(({ isLoading }) => {
                         {p.name}
                     </CardTitle>
                     <CardDescription style={{ color: "#8E8E93" }} className='flex flex-row items-center gap-2'>
-                      +{p.attempts} Launches {rewardImg}
+                      +{p.attempts} {t('launches')} {rewardImg}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-row gap-2 items-center p-0">
@@ -69,7 +70,7 @@ const ProductList: React.FC<ProductListProps> = observer(({ isLoading }) => {
               </Card>
             ))
           ) : (
-            <p>Товары не найдены</p>
+            <p>{t('products_not_found')}</p>
           )}
         </div>
       </div>

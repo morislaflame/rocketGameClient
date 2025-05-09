@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 
 interface RouletteButtonProps {
   onStart: () => void;
   disabled?: boolean;
 }
 
-const RouletteButton: React.FC<RouletteButtonProps> = ({ onStart, disabled = false }) => {
+const RouletteButton: React.FC<RouletteButtonProps> = observer(({ onStart, disabled = false }) => {
+  const { t } = useTranslate();
   return (
     <div className="roulette-actions">
       <div className="gray-block">
@@ -17,12 +20,12 @@ const RouletteButton: React.FC<RouletteButtonProps> = ({ onStart, disabled = fal
             type="button"
             disabled={disabled}
           >
-            {disabled ? 'Spinning...' : 'Spin'}
+            {disabled ? t('spinning') : t('spin')}
           </Button>
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default RouletteButton; 

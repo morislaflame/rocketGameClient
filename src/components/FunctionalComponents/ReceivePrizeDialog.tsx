@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import styles from "./FunctionalComponents.module.css";
+import { useTranslate } from "@/utils/useTranslate";
+import { observer } from "mobx-react-lite";
 
 interface ReceivePrizeDialogProps {
   open: boolean;
@@ -17,19 +19,20 @@ interface ReceivePrizeDialogProps {
   isLoading: boolean;
 }
 
-const ReceivePrizeDialog: React.FC<ReceivePrizeDialogProps> = ({
+const ReceivePrizeDialog: React.FC<ReceivePrizeDialogProps> = observer(({
   open,
   onOpenChange,
   onReceive,
   isLoading
 }) => {
+  const { t } = useTranslate();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles.dailyRewardModal}>
         <DialogHeader>
-          <DialogTitle>Receiving a gift</DialogTitle>
+          <DialogTitle>{t('receiving_a_gift')}</DialogTitle>
           <DialogDescription>
-            Once confirmed, you will be contacted within a couple hours to issue the gift
+            {t('once_confirmed_you_will_be_contacted_within_a_couple_hours_to_issue_the_gift')}
           </DialogDescription>
         </DialogHeader>
        
@@ -40,15 +43,15 @@ const ReceivePrizeDialog: React.FC<ReceivePrizeDialogProps> = ({
             onClick={onReceive} 
             disabled={isLoading}
           >
-            Send request
+            {t('send_request')}
           </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel    
+            {t('close')}    
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+});
 
 export default ReceivePrizeDialog;

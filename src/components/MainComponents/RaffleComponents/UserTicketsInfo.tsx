@@ -8,7 +8,7 @@ import UserTicketsDialog from '@/components/FunctionalComponents/UserTicketsDial
 import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
 import { getTicketSolidImg } from '@/utils/getTicketImg';
-
+import { useTranslate } from '@/utils/useTranslate';
 
 const UserTicketsInfo: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
@@ -16,6 +16,7 @@ const UserTicketsInfo: React.FC = observer(() => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isTicketsListOpen, setIsTicketsListOpen] = useState(false);
   const ticketsListRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslate();
 
   useEffect(() => {
     const loadUserTickets = async () => {
@@ -65,7 +66,7 @@ const UserTicketsInfo: React.FC = observer(() => {
       <div className={styles.ticketsContainer}>
         <div className={styles.ticketsHeader}>
           <FaTicketAlt className={styles.ticketIcon} />
-          <strong className={styles.ticketsLabel}>Loading tickets information...</strong>
+          <strong className={styles.ticketsLabel}>{t('loading_tickets_information')}</strong>
         </div>
       </div>
     );
@@ -91,18 +92,18 @@ const UserTicketsInfo: React.FC = observer(() => {
             onClick={handleTicketsClick}
             style={{ cursor: 'pointer', textDecoration: 'underline' }}
           >
-            Your tickets: {raffle.userTickets?.tickets.length} of {raffle.userTickets?.raffle.totalTickets}
+            {t('your_tickets')}: {raffle.userTickets?.tickets.length} {t('of')} {raffle.userTickets?.raffle.totalTickets}
           </strong>
           <p className="text-sm text-muted-foreground">
-            Your chance to win: {raffle.userTickets?.chance}
+            {t('your_chance_to_win')}: {raffle.userTickets?.chance}
           </p>
         </div>
       ) : (
         <div className={styles.ticketsHeader}>
           <img src={getTicketSolidImg()} alt="Ticket" width={22} height={22} />
-          <strong className={styles.ticketsLabel}>You don't have tickets yet</strong>
+          <strong className={styles.ticketsLabel}>{t('you_dont_have_tickets_yet')}</strong>
           <p className="text-sm text-muted-foreground">
-            Buy tickets to participate in the raffle
+            {t('buy_tickets_to_participate_in_the_raffle')}
           </p>
         </div>
       )}
@@ -114,7 +115,7 @@ const UserTicketsInfo: React.FC = observer(() => {
 
       <Button className={styles.ticketsButton} onClick={toggleTicketsList}>
         {/* <img src={getTicketDarkImg()} alt="Ticket" width={20} height={20} />  */}
-        {isTicketsListOpen ? 'Close' : 'Buy Tickets'}
+        {isTicketsListOpen ? t('close') : t('buy_tickets')}
       </Button>
 
       <UserTicketsDialog open={dialogOpen} onOpenChange={setDialogOpen} />

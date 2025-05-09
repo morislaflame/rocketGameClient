@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { FaTrophy } from "react-icons/fa";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,6 +20,9 @@ import moneyBag from "@/assets/moneybag.json";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MediaRenderer } from "@/utils/media-renderer";
 import { useAnimationLoader } from '@/utils/useAnimationLoader';
+import { useTranslate } from "@/utils/useTranslate";
+import { IStoreContext } from "@/store/StoreProvider";
+import { Context } from "@/store/StoreProvider";
 
 interface UserPrizesListProps {
   isLoading: boolean;
@@ -38,6 +41,7 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
 }) => {
   const tokenImg = getPlanetImg();
   const isEmpty = userPrizes && userPrizes.length === 0;
+  const { t } = useTranslate();
 
   // На это (с деструктуризацией массива):
   const [animationsObj] = useAnimationLoader(
@@ -96,12 +100,12 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
           <div className="flex items-center gap-2">
             <FaTrophy size={16} />
             <MorphingDialogTitle className="text-[16px] font-semibold">
-              Winning gifts
+              {t('winning_gifts')}
             </MorphingDialogTitle>
           </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             <MorphingDialogSubtitle className="text-sm text-muted-foreground">
-              All the gifts you have won in the raffle
+              {t('all_gifts')}
             </MorphingDialogSubtitle>
           </div>
         </div>
@@ -125,10 +129,10 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
             </div>
             <div className="px-6 flex flex-col items-center justify-center gap-1">
               <MorphingDialogTitle className="text-lg font-bold">
-                Winning gifts
+                {t('winning_gifts')}
               </MorphingDialogTitle>
               <MorphingDialogSubtitle className="text-sm text-gray-500 w-[70%]">
-                All the gifts you have won in the raffle
+                {t('all_gifts')}
               </MorphingDialogSubtitle>
             </div>
           </div>
@@ -136,7 +140,7 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
             {isEmpty && (
               <div className={styles.emptyMessage}>
                 <p style={{ width: "80%" }}>
-                  You don't have any winning gifts yet. Participate in the drawings to win!
+                  {t('you_dont_have_any_winning_gifts')}
                 </p>
                 <div className="flex items-center justify-center w-[100px] h-[100px]">
                   <Lottie animationData={moneyBag} loop={true} />
@@ -173,17 +177,17 @@ const UserPrizesList: React.FC<UserPrizesListProps> = observer(({
                       <div className={styles.prizeCardFooter}>
                         <Button
                           variant="secondary"
-                          className={styles.sellButton}
+                          className={styles.receiveButton}
                           onClick={() => onOpenSellDialog(prize)}
                         >
-                          Sell for tokens
+                          {t('sell_for_tokens')}
                         </Button>
                         <Button
                           variant="secondary"
                           className={styles.receiveButton}
                           onClick={() => onOpenReceiveDialog(prize.id)}
                         >
-                          Get gift
+                          {t('get_gift')}
                         </Button>
                       </div>
                     )}

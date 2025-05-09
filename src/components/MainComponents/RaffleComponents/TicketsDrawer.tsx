@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/drawer";
 import TicketsList from './TicketsList';
 import { Button } from '@/components/ui/button';
+import { useTranslate } from '@/utils/useTranslate';
 
 const TicketsDrawer: React.FC = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { t } = useTranslate();
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -28,14 +29,14 @@ const TicketsDrawer: React.FC = observer(() => {
           // variant="secondary"
           onClick={() => setIsOpen(true)}
         >
-          <FaTicketAlt /> Buy Tickets
+          <FaTicketAlt /> {t('buy_tickets')}
         </Button>
       </DrawerTrigger>
       <DrawerContent className={styles.drawerContent}>
         <DrawerHeader>
-          <DrawerTitle>Raffle Tickets</DrawerTitle>
+          <DrawerTitle>{t('raffle_tickets')}</DrawerTitle>
           <DrawerDescription>
-            Buy tickets for the raffle
+            {t('buy_tickets_subtitle')}
           </DrawerDescription>
         </DrawerHeader>
         <TicketsList onTransactionClose={handleClose} />

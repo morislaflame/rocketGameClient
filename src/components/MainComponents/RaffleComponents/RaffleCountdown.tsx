@@ -1,3 +1,5 @@
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { FaClock } from 'react-icons/fa';
 
@@ -6,10 +8,11 @@ interface RaffleCountdownProps {
   duration: number;  // Продолжительность в миллисекундах (4 часа = 4 * 60 * 60 * 1000)
 }
 
-const RaffleCountdown: React.FC<RaffleCountdownProps> = ({ startTime, duration }) => {
+const RaffleCountdown: React.FC<RaffleCountdownProps> = observer(({ startTime, duration }) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
   const [isExpired, setIsExpired] = useState<boolean>(false);
-  
+  const { t } = useTranslate();
+
   useEffect(() => {
     // Функция для форматирования времени
     const formatTimeLeft = (ms: number): string => {
@@ -50,9 +53,9 @@ const RaffleCountdown: React.FC<RaffleCountdownProps> = ({ startTime, duration }
   return (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
       <FaClock />
-      <span>{isExpired ? timeLeft : `Ends in: ${timeLeft}`}</span>
+      <span>{isExpired ? timeLeft : `${t('ends_in')}: ${timeLeft}`}</span>
     </div>
   );
-};
+});
 
 export default RaffleCountdown;

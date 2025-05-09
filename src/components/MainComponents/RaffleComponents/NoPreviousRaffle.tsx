@@ -1,17 +1,19 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import styles from './RaffleComponents.module.css';
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 
-const NoPreviousRaffle: React.FC = () => {
-
+const NoPreviousRaffle: React.FC = observer(() => {
+    const { t } = useTranslate();
     return (
         <Card className={styles.raffleCard}>
             <CardHeader>
-                <CardTitle>No previous raffles</CardTitle>
-                <CardDescription>Check back later!</CardDescription>
+                <CardTitle>{t('no_previous_raffles')}</CardTitle>
+                <CardDescription>{t('check_back_later')}</CardDescription>
             </CardHeader>
         </Card>
     )
-}
+});
 
 export default NoPreviousRaffle;

@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { FaCalendarAlt, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
 import styles from './RaffleComponents.module.css';
 import RaffleCountdown from './RaffleCountdown';
-
+import { observer } from 'mobx-react-lite';
+import { useTranslate } from '@/utils/useTranslate';
 interface RaffleHeaderProps {
   raffleId: number;
   isCurrent: boolean;               // определяет, показываем ли это для current-рафла или предыдущего
@@ -18,7 +19,7 @@ interface RaffleHeaderProps {
   raffleDuration?: number;          // Новое поле - продолжительность розыгрыша в мс
 }
 
-const RaffleHeader: React.FC<RaffleHeaderProps> = ({
+const RaffleHeader: React.FC<RaffleHeaderProps> = observer(({
   raffleId,
   isCurrent,
   isActive,
@@ -31,6 +32,7 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
   totalTickets = 0,      // Значение по умолчанию
   raffleDuration = 4 * 60 * 60 * 1000, // Значение по умолчанию - 4 часа
 }) => {
+  const { t } = useTranslate();
   return (
     <div className="flex flex-col w-full gap-2 ">
       {/* Верхняя строка: кнопка переключения и заголовок */}
@@ -49,7 +51,7 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
 
         {/* Заголовок */}
         <h2 className="text-3xl font-semibold leading-none tracking-tight">
-          Raffle #{raffleId}
+          {t('raffle')} #{raffleId}
         </h2>
 
         
@@ -70,7 +72,7 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
         {isActive && !timerActive && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>
-              {totalTickets}/{ticketThreshold} tickets to start the raffle
+              {t('tickets_to_start_the_raffle')}: {totalTickets}/{ticketThreshold}
             </span>
           </div>
         )}
@@ -78,12 +80,12 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = ({
         {endTime && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <FaCalendarAlt />
-            <span>End: {formatDate(endTime)}</span>
+            <span>{t('end')}: {formatDate(endTime)}</span>
           </div>
         )}
       </div>
     </div>
   );
-};
+});
 
 export default RaffleHeader;

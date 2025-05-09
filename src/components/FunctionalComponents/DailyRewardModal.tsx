@@ -12,10 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import styles from "./FunctionalComponents.module.css";
 import { getTriesImg } from "@/utils/getPlanetImg";
+import { useTranslate } from "@/utils/useTranslate";
 
 const DailyRewardModal: React.FC = observer(() => {
   const { user, dailyReward } = useContext(Context) as IStoreContext;
-
+  const { t } = useTranslate();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -59,14 +60,14 @@ const DailyRewardModal: React.FC = observer(() => {
                 {dailyReward.rewardInfo?.description}
             </div> */}
             <div className={styles.description}>
-                Claim Your Daily Reward
+                {t('claim_your_daily_reward')}
             </div>
             <div className={styles.descriptionPost}>
-                Check out the app every day and pick up even more rewards!
+                {t('check_out_the_app_every_day_and_pick_up_even_more_rewards')}
             </div>
         </DialogDescription>
         <DialogFooter>
-          <Button onClick={handleClaim}>Claim</Button>
+          <Button onClick={handleClaim}>{t('claim')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

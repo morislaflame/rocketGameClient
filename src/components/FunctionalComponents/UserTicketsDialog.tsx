@@ -11,6 +11,7 @@ import {
 import styles from "./FunctionalComponents.module.css";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getTicketSolidImg2 } from "@/utils/getTicketImg";
+import { useTranslate } from "@/utils/useTranslate";
 
 interface UserTicketsDialogProps {
   open: boolean;
@@ -24,19 +25,19 @@ const UserTicketsDialog: React.FC<UserTicketsDialogProps> = observer(({
   const { raffle } = useContext(Context) as IStoreContext;
   const tickets = raffle.userTickets?.tickets || [];
   const loading = raffle.loadingUserTickets;
-
+  const { t } = useTranslate();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles.dailyRewardModal}>
         <DialogHeader>
-          <DialogTitle>Your tickets</DialogTitle>
+          <DialogTitle>{t('your_tickets')}</DialogTitle>
           <DialogDescription>
-            All ticket numbers you purchased for this raffle
+            {t('all_ticket_numbers_you_purchased_for_this_raffle')}
           </DialogDescription>
         </DialogHeader>
         
         {loading ? (
-          <div className={styles.ticketsLoading}>Loading tickets...</div>
+          <div className={styles.ticketsLoading}>{t('loading_tickets')}</div>
         ) : tickets.length > 0 ? (
           <ScrollArea className="h-[170px] w-full">
             <div className={styles.ticketsGrid}>
@@ -50,7 +51,7 @@ const UserTicketsDialog: React.FC<UserTicketsDialogProps> = observer(({
           </ScrollArea>
         ) : (
           <div className={styles.noTickets}>
-            You don't have tickets in this raffle yet
+            {t('you_dont_have_tickets_yet')}
           </div>
         )}
       </DialogContent>

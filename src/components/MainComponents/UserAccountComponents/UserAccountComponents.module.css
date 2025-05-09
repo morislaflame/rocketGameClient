@@ -273,3 +273,8 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#0965C0", en
     display: flex;
     gap: 6px;
 }
+
+.receiveButton {
+    white-space: pre-line;
+    height: fit-content;
+}

@@ -12,13 +12,16 @@ import Lottie from "lottie-react";
 import { toast } from "sonner";
 import { useAnimationLoader } from '@/utils/useAnimationLoader';
 import { MediaRenderer } from '@/utils/media-renderer';
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
+
 
 interface RouletteProps {
   caseData: Case;
   onCaseOpened?: () => void;
 }
 
-const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
+const Roulette: React.FC<RouletteProps> = observer(({ caseData, onCaseOpened }) => {
   const { cases } = useContext(Context) as IStoreContext;
   const [settings, _setSettings] = useState(rouletteSettings);
   const [prizeList, setPrizeList] = useState<any[]>([]);
@@ -28,7 +31,8 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
   const [_wonItemId, setWonItemId] = useState<number | null>(null);
   const [openResult, setOpenResult] = useState<CaseOpenResult | null>(null);
   const [showDialog, setShowDialog] = useState(false);
-  
+  const { t } = useTranslate();
+
   // Используем хук для загрузки анимаций
   const [animations] = useAnimationLoader(
     caseData.case_items || [],
@@ -90,7 +94,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
         console.error('Error opening case:', error);
         
         // Проверяем сообщение об ошибке
-        const errorMessage = error?.response?.data?.message || "Failed to open case";
+        const errorMessage = error?.response?.data?.message || t('failed_to_open_case');
         
         // Показываем toast с сообщением об ошибке
         toast.error(errorMessage);
@@ -137,13 +141,13 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
         const timeUntil = new Date(availability.nextAvailableAt);
         const formattedTime = timeUntil.toLocaleTimeString();
         
-        toast.error(`Free case will be available in ${formattedTime}`);
+        toast.error(`${t('free_case_will_be_available_in')} ${formattedTime}`);
         return;
       }
     } 
     // Для платных кейсов проверяем наличие у пользователя
     else if (!hasUserCases()) {
-      toast.error("You need to purchase this case first");
+      toast.error(t('you_need_to_purchase_this_case_first'));
       return;
     }
     
@@ -292,9 +296,9 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
       <Dialog open={showDialog} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Congratulations!</DialogTitle>
+            <DialogTitle>{t('congratulations')}</DialogTitle>
             <DialogDescription>
-              {result?.message}
+              {t('you_have_won')}
             </DialogDescription>
           </DialogHeader>
           
@@ -304,11 +308,11 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
               <p className="text-lg font-medium">{wonItem.name}</p>
               
               {wonItem.type === 'attempts' && (
-                <p className="text-sm text-gray-500">+{wonItem.value} attempts</p>
+                <p className="text-sm text-gray-500">+{wonItem.value} {t('rocket_launches')}</p>
               )}
               
               {wonItem.type === 'tickets' && (
-                <p className="text-sm text-gray-500">+{wonItem.value} tickets</p>
+                <p className="text-sm text-gray-500">+{wonItem.value} {t('tickets_for_raffle')}</p>
               )}
 {/*               
               {wonItem.type === 'prize' && wonItem.prize && (
@@ -323,7 +327,7 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
               onClick={handleCloseDialog} 
               className="w-full"
             >
-              Close
+              {t('close')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -356,6 +360,6 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
       {renderPrizeDialog()}
     </div>
   );
-};
+});
 
 export default Roulette;

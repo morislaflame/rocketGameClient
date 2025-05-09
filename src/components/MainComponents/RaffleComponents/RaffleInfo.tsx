@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import questionImg from '@/assets/Question.png';
 import { getRaffleTicketImg } from '@/utils/getTicketImg';
 import tonImg from "@/assets/TonIcon.svg";
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 
 interface RaffleInfoProps {
   isActive: boolean;
@@ -26,7 +28,7 @@ interface RaffleInfoProps {
   winnerChance?: number;
 }
 
-const RaffleInfo: React.FC<RaffleInfoProps> = ({ 
+const RaffleInfo: React.FC<RaffleInfoProps> = observer(({ 
   winner, 
   totalParticipants,
   isActive,
@@ -38,6 +40,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
   const [showResult, setShowResult] = useState(false);
   const [animationData, setAnimationData] = useState(null);
   const winnerName = winner ? getUserName(winner as UserInfo) : 'Astronaut #1';
+  const { t } = useTranslate();
 
   useEffect(() => {
     if (rafflePrize?.media_file?.mimeType === 'application/json') {
@@ -133,7 +136,7 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground pt-3">
                 <FaGift />
-                <span>You'll soon recognize the gift!</span>
+                <span>{t('you_ll_soon_recognize_the_gift')}</span>
               </div>
             </div>
           </>
@@ -154,25 +157,25 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
           className={styles.showResultButton}
           variant='secondary'
         >
-          See the result
+          {t('see_the_result')}
         </Button>
       )}
       
       {winner && showResult && (
         <div className={styles.ticketsContainer}>
           <div className={styles.ticketsHeader}>
-            <strong className={styles.ticketsLabel}>Winner</strong>
+            <strong className={styles.ticketsLabel}>{t('winner')}</strong>
             <div className="flex items-center gap-2">
               <span>{winnerName}</span>
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-2 flex-col">
               <div className="flex items-center gap-2">
                 <FaUsers />
-                <span>Total participants: {totalParticipants}</span>
+                <span>{t('total_participants')}: {totalParticipants}</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaPercentage />
-                <span>Winner chance: {winnerChance}%</span>
+                <span>{t('winner_chance')}: {winnerChance}%</span>
               </div>
             </p>
           </div>
@@ -180,6 +183,6 @@ const RaffleInfo: React.FC<RaffleInfoProps> = ({
       )}
     </div>
   );
-};
+});
 
 export default RaffleInfo;

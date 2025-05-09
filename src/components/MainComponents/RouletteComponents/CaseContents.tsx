@@ -5,12 +5,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import tonImg from "@/assets/TonIcon.svg";
 import { MediaRenderer } from "@/utils/media-renderer";
 import { useAnimationLoader } from '@/utils/useAnimationLoader';
+import { useTranslate } from '@/utils/useTranslate';
+import { observer } from 'mobx-react-lite';
 
 interface CaseContentsProps {
   caseData: Case;
 }
 
-const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
+const CaseContents: React.FC<CaseContentsProps> = observer(({ caseData }) => {
+  const { t } = useTranslate();
   if (!caseData || !caseData.case_items || caseData.case_items.length === 0) {
     return null;
   }
@@ -111,15 +114,15 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     
     switch (item.type) {
       case 'attempts':
-        typeLabel = 'Rocket launches';
+        typeLabel = t('rocket_launches');
         valueLabel = item.isGrouped ? '' : `+${item.value}`;
         break;
       case 'tickets':
-        typeLabel = 'Tickets for raffle';
+        typeLabel = t('tickets_for_raffle');
         valueLabel = item.isGrouped ? '' : `+${item.value}`;
         break;
       case 'prize':
-        typeLabel = 'Gift';
+        typeLabel = t('gift');
         valueLabel = item.prize?.name || '';
         break;
       default:
@@ -130,7 +133,7 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     const hasTonPrice = item.type === 'prize' && item.prize?.tonPrice !== null && item.prize?.tonPrice !== undefined;
     
     return (
-      <Card key={item.id} className="flex-shrink-0 w-32 mx-2 overflow-hidden bg-[#141414]">
+      <Card key={item.id} className="flex-shrink-0 w-36 mx-2 overflow-hidden bg-[#141414]">
         <CardContent className="p-2">
           <div className="relative">
             {renderItemMedia(item)}
@@ -162,6 +165,6 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
       </ScrollArea>
     </div>
   );
-};
+});
 
 export default CaseContents;

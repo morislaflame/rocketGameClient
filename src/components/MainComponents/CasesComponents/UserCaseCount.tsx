@@ -3,6 +3,7 @@ import { Context, IStoreContext } from '@/store/StoreProvider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { observer } from 'mobx-react-lite';
 import { getCaseSolidImg } from '@/utils/getTicketImg';
+import { useTranslate } from '@/utils/useTranslate';
 
 interface UserCaseCountProps {
   caseId: number;
@@ -12,7 +13,7 @@ interface UserCaseCountProps {
 const UserCaseCount: React.FC<UserCaseCountProps> = observer(({ caseId, onCountChange }) => {
   const { cases } = useContext(Context) as IStoreContext;
   const [count, setCount] = useState<number>(0);
-
+  const { t } = useTranslate();
   // Функция для получения количества кейсов конкретного типа у пользователя
   const getUserCaseCount = (): number => {
     if (!cases.userCases || cases.userCases.length === 0) return 0;
@@ -55,7 +56,7 @@ const UserCaseCount: React.FC<UserCaseCountProps> = observer(({ caseId, onCountC
 
   return (
     <div className='flex items-center gap-2 w-full justify-center'>
-      <span className="text-sm font-medium">You have: {count}</span>
+      <span className="text-sm font-medium">{t('you_have')}: {count}</span>
       <img src={caseImg} alt="Case" className='w-4 h-4' />
     </div>
   );

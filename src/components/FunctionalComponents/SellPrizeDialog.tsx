@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { UserPrize } from "@/types/types";
 import styles from "./FunctionalComponents.module.css";
+import { useTranslate } from "@/utils/useTranslate";
+import { observer } from "mobx-react-lite";
 
 interface SellPrizeDialogProps {
   open: boolean;
@@ -19,25 +21,26 @@ interface SellPrizeDialogProps {
   isLoading: boolean;
 }
 
-const SellPrizeDialog: React.FC<SellPrizeDialogProps> = ({
+const SellPrizeDialog: React.FC<SellPrizeDialogProps> = observer(({
   open,
   onOpenChange,
   prize,
   onSell,
   isLoading
 }) => {
+  const { t } = useTranslate();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles.dailyRewardModal}>
         <DialogHeader>
-            <DialogTitle>Selling a gift</DialogTitle>
+            <DialogTitle>{t('selling_a_gift')}</DialogTitle>
             <DialogDescription>
-                You are about to sell the gift and receive tokens
+                {t('you_are_about_to_sell_the_gift_and_receive_tokens')}
             </DialogDescription>
         </DialogHeader>
         {prize && (
           <div className='flex flex-col items-center gap-1 w-full'>
-            <p>You will receive: {prize.prize.value} tokens</p>
+            <p>{t('you_will_receive')}: {prize.prize.value} {t('tokens')}</p>
           </div>
         )}
         <DialogFooter className="flex flex-col gap-1">
@@ -46,15 +49,15 @@ const SellPrizeDialog: React.FC<SellPrizeDialogProps> = ({
             onClick={onSell} 
             disabled={isLoading}
           >
-            Sell gift
+            {t('sell_gift')}
           </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t('close')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+});
 
 export default SellPrizeDialog;

@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import trophy from "@/assets/trophy.json";
 import { MediaRenderer } from "@/utils/media-renderer";
 import { useAnimationLoader } from '@/utils/useAnimationLoader';
+import { useTranslate } from "@/utils/useTranslate";
 
 const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
@@ -27,7 +28,8 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const pageSize = 10;
-  
+  const { t } = useTranslate();
+
   const [animations] = useAnimationLoader(
     raffle.raffleHistory || [],
     (item) => item.raffle_prize?.media_file, 
@@ -90,10 +92,10 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
           </div>
           <div className="flex flex-col items-start justify-center space-y-0">
             <MorphingDialogTitle className="text-[16px] font-medium">
-              Raffle History
+              {t('raffle_history')}
             </MorphingDialogTitle>
             <MorphingDialogSubtitle className="text-[10px] text-muted-foreground">
-              See all past raffles and winners
+              {t('see_all_past_raffles_and_winners')}
             </MorphingDialogSubtitle>
           </div>
         </div>
@@ -112,10 +114,10 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
             </div>
             <div className="px-6">
               <MorphingDialogTitle className="text-lg font-bold">
-                Raffle History
+              {t('raffle_history')}
               </MorphingDialogTitle>
               <MorphingDialogSubtitle className="text-sm text-gray-500">
-                See all past raffles and winners
+                {t('list_of_all_past_raffles_and_winners')}
               </MorphingDialogSubtitle>
             </div>
           </div>
@@ -137,20 +139,20 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
                     </div>
                     <div className={styles.raffleHistoryItemDetails}>
                       <h4 className="text-xl font-semibold leading-none tracking-tight pb-1">
-                        Raffle #{item.id}
+                        {t('raffle')} #{item.id}
                       </h4>
                       <p className="text-sm leading-none tracking-tight pb-2">
-                        Winner: {getUserName(item.winner as unknown as UserInfo)}
+                        {t('winner')}: {getUserName(item.winner as unknown as UserInfo)}
                       </p>
                       <div className="flex flex-col">
                         <p className="text-sm text-muted-foreground">
-                          Winning ticket: #{item.winningTicketNumber || "N/A"}
+                          {t('winning_ticket')}: #{item.winningTicketNumber || "N/A"}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Total tickets: {item.totalTickets || 0}
+                          {t('total_tickets')}: {item.totalTickets || 0}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Winner chance: {item.winnerChance || 0}%
+                          {t('winner_chance')}: {item.winnerChance || 0}%
                         </p>
                       </div>
                     </div>
@@ -159,7 +161,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
               </div>
             ) : (
               <div className={styles.emptyHistory}>
-                <p>Raffle history is empty</p>
+                <p>{t('raffle_history_is_empty')}</p>
               </div>
             )}
             {hasMore && (
@@ -169,7 +171,7 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
                   onClick={handleLoadMore}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Loading..." : "Load more"}
+                  {isLoading ? t('loading') : t('load_more')}
                 </Button>
               </div>
             )}

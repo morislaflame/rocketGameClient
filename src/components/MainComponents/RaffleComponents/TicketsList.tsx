@@ -13,6 +13,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { getTicketMutedImg } from "@/utils/getTicketImg";
+import { useTranslate } from "@/utils/useTranslate";
 
 interface TicketsListProps {
   onTransactionClose?: () => void;
@@ -25,6 +26,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
   const [isLoading, setIsLoading] = useState(true);
   const [txError, setTxError] = useState<string | null>(null);
   const [selectedBonuses, setSelectedBonuses] = useState<{ [key: number]: number | null }>({});
+  const { t } = useTranslate();
 
   useEffect(() => {
     loadRafflePackages();
@@ -92,7 +94,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
   const hasAvailableBonus = user.availableBonuses.length > 0;
 
   if (raffle.rafflePackages.length === 0) {
-    return <p>No tickets found</p>;
+    return <p>{t('no_tickets_found')}</p>;
   }
 
   return (
@@ -104,20 +106,20 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
           {txLoading ? (
             <div className="flex flex-col items-center gap-2">
               <AiOutlineLoading3Quarters size={48} className={styles.spinningIcon} />
-              <p>Transaction in process... Please wait.</p>
+              <p>{t('transaction_in_process')}</p>
             </div>
           ) : txError ? (
             <div className="flex flex-col items-center gap-2">
               <IoMdClose size={48} color="red" />
-              <p>Transaction not completed</p>
+              <p>{t('transaction_not_completed')}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2">
               <IoIosCheckmarkCircle size={48} color="green" />
-              <p>Transaction completed successfully!</p>
+              <p>{t('transaction_completed_successfully')}</p>
             </div>
           )}
-          {!txLoading && <button onClick={closeAlert}>Close</button>}
+          {!txLoading && <button onClick={closeAlert}>{t('close')}</button>}
         </div>
       )}
       {/* {!alertVisible && ( */}
@@ -163,7 +165,7 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
                 </Card>
               ))
             ) : (
-              <p>No tickets found</p>
+              <p>{t('no_tickets_found')}</p>
             )}
           </div>
         </div>

@@ -1,8 +1,10 @@
 // src/components/RocketComponents/TapToLaunchOverlay.tsx
 import { forwardRef } from "react";
 import styles from "../mainComponents.module.css";
+import { useTranslate } from "@/utils/useTranslate";
 
-const TapToLaunchOverlay = forwardRef<HTMLDivElement>((_, ref) => {
+const TapToLaunchOverlay = forwardRef<HTMLDivElement> ((_, ref) => {
+  const { t } = useTranslate();
   return (
     <div
       ref={ref}
@@ -19,7 +21,7 @@ const TapToLaunchOverlay = forwardRef<HTMLDivElement>((_, ref) => {
         willChange: "transform, opacity",
       }}
     >
-      Tap to launch
+      {t('tap_to_launch')}
     </div>
   );
 });

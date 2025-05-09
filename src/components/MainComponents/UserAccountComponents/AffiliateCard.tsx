@@ -1,9 +1,12 @@
 import { PARTNERS_ROUTE } from "@/utils/consts";
+import { useTranslate } from "@/utils/useTranslate";
+import { observer } from "mobx-react-lite";
 import { FaUserFriends } from "react-icons/fa"
 import { useNavigate } from "react-router-dom";
 
-const AffiliateCard = () => {
+const AffiliateCard = observer(() => {
   const navigate = useNavigate();
+  const { t } = useTranslate();
 
   return (
     <div 
@@ -19,14 +22,14 @@ const AffiliateCard = () => {
         <div className="flex items-center gap-2">
             <FaUserFriends /> 
             <div className="text-[16px] font-semibold">
-                Affiliate
+                {t('affiliate')}
             </div>
         </div>
         <div className="text-sm text-muted-foreground">
-            Invite friends and get rewards
+            {t('invite_friends')}
         </div>
     </div>
   )
-}
+});
 
 export default AffiliateCard

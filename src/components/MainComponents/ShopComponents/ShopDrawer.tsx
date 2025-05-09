@@ -13,10 +13,12 @@ import {
 import ProductList from './ProductList';
 import { Button } from '@/components/ui/button';
 import { FaPlusCircle } from "react-icons/fa";
+import { useTranslate } from "@/utils/useTranslate";
 
 const ShopDrawer: React.FC = observer(() => {
   const { product } = React.useContext(Context) as IStoreContext;
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslate();
 
   // Вызываем fetchProducts при открытии Drawer и устанавливаем состояние загрузки
   const handleShopOpen = useCallback(async () => {
@@ -38,14 +40,14 @@ const ShopDrawer: React.FC = observer(() => {
           onClick={handleShopOpen}
           variant="outline"
         >
-          <FaPlusCircle /> More
+          <FaPlusCircle /> {t('more')}
         </Button>
       </DrawerTrigger>
       <DrawerContent className={styles.drawerContent}>
         <DrawerHeader>
-          <DrawerTitle>Shop</DrawerTitle>
+          <DrawerTitle>{t('shop')}</DrawerTitle>
           <DrawerDescription>
-            Buy additional rocket launches
+            {t('buy_additional_rocket_launches')}
           </DrawerDescription>
         </DrawerHeader>
         <ProductList isLoading={isLoading} />

@@ -3,14 +3,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { GoAlertFill } from "react-icons/go";
 import gsap from "gsap";
 import styles from './FunctionalComponents.module.css';
+import { useTranslate } from "@/utils/useTranslate";
+import { observer } from "mobx-react-lite";
 
 interface SoonAlertProps {
   showAlert: boolean;
   onClose: () => void;
 }
 
-const SoonAlert: React.FC<SoonAlertProps> = ({ showAlert, onClose }) => {
+const SoonAlert: React.FC<SoonAlertProps> = observer(({ showAlert, onClose }) => {
   const alertRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslate();
 
   useEffect(() => {
     if (showAlert && alertRef.current) {
@@ -41,9 +44,9 @@ const SoonAlert: React.FC<SoonAlertProps> = ({ showAlert, onClose }) => {
         <GoAlertFill size={24} />
         <div className={styles.alertContent}>
           <div className={styles.alertContentText}>
-            <AlertTitle>Very soon...</AlertTitle>
+            <AlertTitle>{t('very_soon')}</AlertTitle>
             <AlertDescription>
-              Check for updates in our{" "}
+            {t('check_for_updates_in_our')}{" "}
               <a
                 href="https://t.me/rocketraffle"
                 target="_blank"
@@ -61,6 +64,6 @@ const SoonAlert: React.FC<SoonAlertProps> = ({ showAlert, onClose }) => {
       </Alert>
     )
   );
-};
+});
 
 export default SoonAlert;
