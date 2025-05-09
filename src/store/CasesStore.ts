@@ -28,6 +28,7 @@ export default class CasesStore {
   _userCases: any[] = [];
   _loadingPurchase: boolean = false;
   _loadingUserCases: boolean = false;
+  _checkedFreeCases: Record<number, boolean> = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -136,12 +137,23 @@ export default class CasesStore {
 
   // Проверка доступности бесплатного кейса
   async checkFreeCaseAvailability(caseId: number) {
+    if (this._checkedFreeCases[caseId]) {
+      return this._freeAvailability[caseId];
+    }
+    
     try {
       this.setLoading(true);
       this.setError("");
       const data = await checkFreeCaseAvailability(caseId);
       runInAction(() => {
         this.setFreeAvailability(caseId, data);
+        this._checkedFreeCases[caseId] = true;
+        
+        if (!data.isAvailable && data.secondsUntilAvailable) {
+          setTimeout(() => {
+            this._checkedFreeCases[caseId] = false;
+          }, data.secondsUntilAvailable * 1000 + 5000);
+        }
       });
       return data;
     } catch (error) {
@@ -325,6 +337,11 @@ export default class CasesStore {
     } finally {
       this.setLoadingPurchase(false);
     }
+  }
+
+  // Добавьте метод для сброса проверки конкретного кейса
+  resetFreeCaseCheck(caseId: number) {
+    this._checkedFreeCases[caseId] = false;
   }
 
   // Геттеры для доступа к состоянию

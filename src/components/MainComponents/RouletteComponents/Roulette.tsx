@@ -127,9 +127,22 @@ const Roulette: React.FC<RouletteProps> = ({ caseData, onCaseOpened }) => {
     return cases.userCases.some(userCase => userCase.caseId === caseData.id);
   };
 
-  const handleStart = () => {
-    // Проверяем, есть ли кейсы у пользователя
-    if (caseData.type !== 'free' && !hasUserCases()) {
+  const handleStart = async () => {
+    // Для бесплатного кейса проверяем его доступность
+    if (caseData.type === 'free') {
+      const availability = await cases.checkFreeCaseAvailability(caseData.id);
+      
+      if (availability && !availability.isAvailable) {
+        // Форматируем время до доступности
+        const timeUntil = new Date(availability.nextAvailableAt);
+        const formattedTime = timeUntil.toLocaleTimeString();
+        
+        toast.error(`Free case will be available in ${formattedTime}`);
+        return;
+      }
+    } 
+    // Для платных кейсов проверяем наличие у пользователя
+    else if (!hasUserCases()) {
       toast.error("You need to purchase this case first");
       return;
     }

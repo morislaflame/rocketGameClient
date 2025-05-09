@@ -130,7 +130,7 @@ const CaseContents: React.FC<CaseContentsProps> = ({ caseData }) => {
     const hasTonPrice = item.type === 'prize' && item.prize?.tonPrice !== null && item.prize?.tonPrice !== undefined;
     
     return (
-      <Card key={item.id} className="flex-shrink-0 w-36 mx-2 overflow-hidden bg-[#141414]">
+      <Card key={item.id} className="flex-shrink-0 w-32 mx-2 overflow-hidden bg-[#141414]">
         <CardContent className="p-2">
           <div className="relative">
             {renderItemMedia(item)}

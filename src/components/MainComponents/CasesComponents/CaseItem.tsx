@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Case } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import styles from './CasesComponents.module.css';
@@ -8,6 +8,7 @@ import tonImg from "@/assets/TonIcon.svg";
 import starImg from "@/assets/stars.svg";
 import { getPlanetImg } from '@/utils/getPlanetImg';
 import { BorderTrail } from '@/components/ui/border-trail';
+import { Context, IStoreContext } from '@/store/StoreProvider';
 
 interface CaseItemProps {
   caseItem: Case;
@@ -17,6 +18,65 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
   const navigate = useNavigate();
   const [userCaseCount, setUserCaseCount] = useState<number>(0);
   const planetImg = getPlanetImg();
+  const { cases } = useContext(Context) as IStoreContext;
+  const [countdown, setCountdown] = useState<string | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Проверяем доступность бесплатного кейса
+  useEffect(() => {
+    if (caseItem.type === 'free') {
+      const checkAvailability = async () => {
+        const availability = await cases.checkFreeCaseAvailability(caseItem.id);
+        if (availability && !availability.isAvailable) {
+          startCountdown(availability.secondsUntilAvailable);
+        }
+      };
+      
+      checkAvailability();
+    }
+    
+    // Очистка таймера при размонтировании
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [caseItem.id, caseItem.type, cases]);
+  
+  // Функция для запуска обратного отсчета
+  const startCountdown = (seconds: number) => {
+    if (!seconds) return;
+    
+    // Очищаем предыдущий таймер, если он был
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    
+    let remainingSeconds = seconds;
+    
+    const updateCountdown = () => {
+      const hours = Math.floor(remainingSeconds / 3600);
+      const minutes = Math.floor((remainingSeconds % 3600) / 60);
+      const secs = remainingSeconds % 60;
+      
+      setCountdown(
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+      );
+      
+      if (remainingSeconds > 0) {
+        remainingSeconds -= 1;
+        timerRef.current = setTimeout(updateCountdown, 1000);
+      } else {
+        setCountdown(null);
+        // Сбрасываем флаг проверки в store, чтобы можно было проверить снова
+        cases.resetFreeCaseCheck(caseItem.id);
+      }
+    };
+    
+    updateCountdown();
+  };
   
   // Функция для отображения изображения кейса
   const renderCaseImage = (caseItem: Case) => {
@@ -109,6 +169,15 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
         )}
         <div className={styles.caseImageContainer}>
           {renderCaseImage(caseItem)}
+          
+          {/* Таймер для бесплатного кейса */}
+          {caseItem.type === 'free' && countdown && (
+            <div className={styles.countdownOverlay}>
+              <div className={styles.countdownTimer}>
+                {countdown}
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-1 p-2">
             <div className="text-md font-medium">
@@ -138,8 +207,9 @@ const CaseItem: React.FC<CaseItemProps> = ({ caseItem }) => {
         <Button
           className={styles.openCaseButton}
           onClick={handleOpenCase}
+          disabled={caseItem.type === 'free' && countdown !== null}
         >
-          Open case
+          {caseItem.type === 'free' && countdown !== null ? 'Not available' : 'Open case'}
         </Button>
       </div>        
     </div>
