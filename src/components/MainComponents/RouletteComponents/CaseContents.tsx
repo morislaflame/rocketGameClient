@@ -135,8 +135,10 @@ const CaseContents: React.FC<CaseContentsProps> = observer(({ caseData }) => {
     return (
       <Card key={item.id} className="flex-shrink-0 w-36 mx-2 overflow-hidden bg-[#141414]">
         <CardContent className="p-2">
-          <div className="relative">
-            {renderItemMedia(item)}
+          <div className="relative flex">
+            <div className="flex items-center justify-center w-fit">
+              {renderItemMedia(item)}
+            </div>
             {hasTonPrice && (
               <div className="absolute top-0 right-0 text-white text-xs px-1 rounded-bl flex items-center">
                 <span>{Number(item.prize?.tonPrice).toFixed(1)}</span>

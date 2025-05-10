@@ -54,9 +54,15 @@ const RaffleHistoryMorphingDialog: React.FC = observer(() => {
   };
 
   const handleOpenHistory = async () => {
-    setOffset(0);
-    setHasMore(true);
-    await loadHistory(0, false);
+    if (!raffle.raffleHistory || raffle.raffleHistory.length === 0) {
+      setOffset(0);
+      setHasMore(true);
+      await loadHistory(0, false);
+    } else {
+      setOffset(raffle.raffleHistory.length);
+      setHasMore(true);
+      setIsLoading(false);
+    }
   };
 
   const handleLoadMore = async () => {

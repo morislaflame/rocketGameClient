@@ -30,6 +30,7 @@ export default class CasesStore {
   _loadingUserCases: boolean = false;
   _checkedFreeCases: Record<number, boolean> = {};
   _nextAvailableAt: { [key: number]: string | null } = {};
+  _casesCache: { [key: number]: Case } = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -100,12 +101,18 @@ export default class CasesStore {
 
   // Получение конкретного кейса по ID
   async fetchOneCase(id: number) {
+    if (this._casesCache[id]) {
+      this.setSelectedCase(this._casesCache[id]);
+      return this._casesCache[id];
+    }
+
     try {
       this.setLoading(true);
       this.setError("");
       const data = await fetchOneCase(id);
       runInAction(() => {
         this.setSelectedCase(data);
+        this._casesCache[id] = data;
       });
       return data;
     } catch (error) {
@@ -392,5 +399,9 @@ export default class CasesStore {
 
   get nextAvailableAt() {
     return this._nextAvailableAt;
+  }
+
+  get casesCache() {
+    return this._casesCache;
   }
 }

@@ -10,24 +10,40 @@ import CasesHeader from '@/components/MainComponents/CasesComponents/CasesHeader
 const CasesPage: React.FC = observer(() => {
   const { user, cases } = useContext(Context) as IStoreContext;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Загружаем информацию о пользователе и его кейсах при монтировании компонента
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true);
-      try {
-        if (user.isAuth) {
-          // Загружаем данные о пользователе и его кейсах параллельно
-          await Promise.all([
-            user.fetchMyInfo(),
-            cases.fetchUserCases()
-          ]);
+      if (!user.isAuth) return;
+      
+      // Проверяем, нужны ли какие-либо запросы
+      const needFetchUser = !user.user?.balance;
+      const needFetchCases = cases.userCases.length === 0 && !cases.loadingUserCases;
+      
+      // Выполняем запросы только если они необходимы
+      if (needFetchUser || needFetchCases) {
+        setLoading(true);
+        
+        try {
+          const promises = [];
+          
+          if (needFetchUser) {
+            promises.push(user.fetchMyInfo());
+          }
+          
+          if (needFetchCases) {
+            promises.push(cases.fetchUserCases());
+          }
+          
+          if (promises.length > 0) {
+            await Promise.all(promises);
+          }
+        } catch (error) {
+          console.error("Error loading data:", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     

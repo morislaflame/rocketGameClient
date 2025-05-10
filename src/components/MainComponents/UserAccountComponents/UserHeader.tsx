@@ -9,23 +9,23 @@ import { getUserName } from '@/utils/getUserName';
 import { getPlanetImg } from "@/utils/getPlanetImg";
 import avatarImg from '@/assets/AVATAR.png';
 import { Skeleton } from '@/components/ui/skeleton';
+import { observer } from 'mobx-react-lite';
 
-const UserHeader: React.FC = () => {
+const UserHeader: React.FC = observer(() => {
   const { user } = React.useContext(Context) as IStoreContext;
-  const [loading, setLoading] = React.useState(true);
-  const dataFetchedRef = useRef(false);
+  const [loading, setLoading] = React.useState(false);
   
   useEffect(() => {
-    if (!dataFetchedRef.current) {
-      const fetchData = async () => {
+    // Загружаем информацию только если её ещё нет
+    const loadUserInfo = async () => {
+      if (!user.user?.balance) {
         setLoading(true);
         await user.fetchMyInfo();
         setLoading(false);
-        dataFetchedRef.current = true;
-      };
-      
-      fetchData();
-    }
+      }
+    };
+    
+    loadUserInfo();
   }, [user]);
 
   const balance = user?.user?.balance ?? 0;
@@ -67,6 +67,6 @@ const UserHeader: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default UserHeader;

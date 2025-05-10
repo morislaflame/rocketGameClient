@@ -11,10 +11,12 @@ const Header: React.FC = observer(() => {
   const { user } = useContext(Context) as IStoreContext;
 
   useEffect(() => {
-    try {
-      user.fetchMyInfo();
-    } catch (error) {
-      console.error("Error during fetching my info:", error);
+    if (!user.user?.balance) {
+      try {
+        user.fetchMyInfo();
+      } catch (error) {
+        console.error("Error during fetching my info:", error);
+      }
     }
   }, [user]);
 

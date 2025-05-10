@@ -19,7 +19,7 @@ const RoulettePage: React.FC = observer(() => {
   const { caseId } = useParams<{ caseId: string }>();
   const { cases, user } = useContext(Context) as IStoreContext;
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [_userCaseCount, setUserCaseCount] = useState<number>(0);
   const [_loadingUserCases, setLoadingUserCases] = useState(false);
   const planetImg = getPlanetImg();
@@ -31,38 +31,74 @@ const RoulettePage: React.FC = observer(() => {
   // Загружаем данные о кейсе и кейсах пользователя при монтировании компонента
   useEffect(() => {
     const loadData = async () => {
-      if (caseId) {
+      if (!caseId) {
+        navigate('/cases');
+        return;
+      }
+      
+      const caseIdNum = parseInt(caseId);
+      
+      // Проверяем кеш и текущий выбранный кейс
+      const cachedCase = cases.casesCache[caseIdNum];
+      const isSameCase = cases.selectedCase && cases.selectedCase.id === caseIdNum;
+      
+      // Если кейс уже в кеше или является текущим выбранным, обновляем selectedCase
+      if (cachedCase && !isSameCase) {
+        cases.setSelectedCase(cachedCase);
+      }
+      
+      // Определяем необходимость загрузки данных
+      const needFetchCase = !cachedCase && !isSameCase;
+      const needFetchUserCases = cases.userCases.length === 0 && !cases.loadingUserCases;
+      const needFetchUserInfo = !user.user?.balance;
+      
+      // Если нужно загрузить хотя бы что-то, показываем индикатор загрузки
+      if (needFetchCase || needFetchUserCases || needFetchUserInfo) {
         setLoading(true);
         
-        // Загружаем данные о кейсе
-        const result = await cases.fetchOneCase(parseInt(caseId));
-        
-        // Если кейс не найден, вернуться на страницу кейсов
-        if (!result) {
+        try {
+          const promises = [];
+          
+          // Загружаем кейс только если необходимо
+          if (needFetchCase) {
+            const casePromise = cases.fetchOneCase(caseIdNum);
+            promises.push(casePromise);
+            
+            // Обработка ошибки загрузки кейса
+            const caseResult = await casePromise;
+            if (!caseResult) {
+              navigate('/cases');
+              return;
+            }
+          }
+          
+          // Загружаем кейсы пользователя если необходимо
+          if (needFetchUserCases) {
+            setLoadingUserCases(true);
+            promises.push(cases.fetchUserCases().then(() => {
+              setLoadingUserCases(false);
+            }));
+          }
+          
+          // Загружаем информацию о пользователе если необходимо
+          if (needFetchUserInfo) {
+            promises.push(user.fetchMyInfo());
+          }
+          
+          // Ждем завершения всех запросов
+          if (promises.length > 0) {
+            await Promise.all(promises);
+          }
+        } catch (error) {
+          console.error("Error loading case data:", error);
+        } finally {
           setLoading(false);
-          navigate('/cases');
-          return;
         }
-        
-        // Загружаем кейсы пользователя, если они еще не были загружены
-        if (!cases.userCases || cases.userCases.length === 0) {
-          setLoadingUserCases(true);
-          await cases.fetchUserCases();
-          setLoadingUserCases(false);
-        }
-
-        if (!user.user?.balance) {
-          await user.fetchMyInfo();
-        }
-        setLoading(false);
-      } else {
-        // Если ID кейса не указан, вернуться на страницу кейсов
-        navigate('/cases');
       }
     };
     
     loadData();
-  }, [caseId, cases, navigate]);
+  }, [caseId, cases, navigate, user]);
 
   useLayoutEffect(() => {
     if (containerRef.current) {

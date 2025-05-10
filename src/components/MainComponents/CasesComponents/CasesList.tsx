@@ -12,7 +12,10 @@ const CasesList: React.FC = observer(() => {
   const [sortedCases, setSortedCases] = useState<Case[]>([]);
 
   useEffect(() => {
-    cases.fetchCases();
+    // Загружаем кейсы только если список пуст и нет процесса загрузки
+    if (cases.cases.length === 0 && !cases.loading) {
+      cases.fetchCases();
+    }
   }, [cases]);
 
   useEffect(() => {

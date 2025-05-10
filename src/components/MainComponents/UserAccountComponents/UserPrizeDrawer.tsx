@@ -49,9 +49,14 @@ const UserPrizesDrawer: React.FC = observer(() => {
     try {
       setIsLoading(true);
       const result = await userPrize.sellUserPrize(prizeToSell.id);
-      if (result) {
-        // Обновляем баланс пользователя
-        await user.fetchMyInfo();
+      if (result && result.newBalance !== undefined) {
+        // Обновляем баланс пользователя напрямую в сторе
+        if (user.user) {
+          user.setUser({
+            ...user.user,
+            balance: result.newBalance
+          });
+        }
         setSellDialogOpen(false);
       }
     } catch (error) {
