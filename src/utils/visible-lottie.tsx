@@ -49,7 +49,7 @@ export const VisibleLottie: React.FC<VisibleLottieProps> = ({
   }, [isVisible]);
   
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="w-full h-full flex justify-center items-center">
       <Lottie
         lottieRef={lottieRef}
         animationData={animationData}

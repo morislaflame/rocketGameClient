@@ -68,7 +68,7 @@ const CasesList: React.FC = observer(() => {
   }
 
   // Функция для отображения секции кейсов
-  const renderCaseSection = (title: string, casesList: Case[]) => {
+  const renderCaseSection = (casesList: Case[]) => {
     if (casesList.length === 0) return null;
     
     return (
@@ -89,9 +89,9 @@ const CasesList: React.FC = observer(() => {
   // Отображение списка кейсов по секциям
   return (
     <div className="space-y-8">
-      {renderCaseSection('Free case', freeCases)}
-      {renderCaseSection('Standard cases', standardCases)}
-      {renderCaseSection('Author cases', authorCases)}
+      {renderCaseSection(freeCases)}
+      {renderCaseSection(standardCases)}
+      {renderCaseSection(authorCases)}
     </div>
   );
 });

@@ -54,7 +54,7 @@ const CaseContents: React.FC<CaseContentsProps> = observer(({ caseData }) => {
         result.push({
           id: 'tickets-group',
           type: 'tickets',
-          name: 'Tickets',
+          name: t('tickets'),
           imageUrl: ticketsItem.media_file?.url || ticketsItem.imageUrl,
           media_file: ticketsItem.media_file,
           isGrouped: true
@@ -70,7 +70,7 @@ const CaseContents: React.FC<CaseContentsProps> = observer(({ caseData }) => {
         result.push({
           id: 'attempts-group',
           type: 'attempts',
-          name: 'Attempts',
+          name: t('attempts'),
           imageUrl: attemptsItem.media_file?.url || attemptsItem.imageUrl,
           media_file: attemptsItem.media_file,
           isGrouped: true

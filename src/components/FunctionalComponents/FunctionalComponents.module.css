@@ -39,9 +39,9 @@
 }
 
 .dailyRewardModal {
-    background-color: hsl(0 1% 10%);
+    /* background-color: hsl(0 1% 10%); */
     border: 1px solid #2C2C2C;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 12px;
     z-index: 100;
     width: 350px;
@@ -220,4 +220,12 @@
       flex: 1;
       /* align-items: center; */
       max-width: 50%;
+}
+
+
+.languageSwitcher {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
 }

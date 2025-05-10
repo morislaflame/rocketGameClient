@@ -13,6 +13,7 @@ import { getPlanetImg } from '@/utils/getPlanetImg'
 import CaseContents from '@/components/MainComponents/RouletteComponents/CaseContents'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useBackButton from '@/utils/useBackButton'
+import { useTranslate } from '@/utils/useTranslate'
 
 const RoulettePage: React.FC = observer(() => {
   const { caseId } = useParams<{ caseId: string }>();
@@ -22,7 +23,7 @@ const RoulettePage: React.FC = observer(() => {
   const [_userCaseCount, setUserCaseCount] = useState<number>(0);
   const [_loadingUserCases, setLoadingUserCases] = useState(false);
   const planetImg = getPlanetImg();
-
+  const { t } = useTranslate();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useBackButton(true, () => navigate(-1));
@@ -103,10 +104,10 @@ const RoulettePage: React.FC = observer(() => {
         <div className='flex flex-col items-center gap-4 w-full h-full overflow-hidden '>
         <div className='flex flex-col items-center gap-2'>
           <h2 className="text-3xl font-semibold leading-none tracking-tight">
-              Case
+              {t('case')}
           </h2>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Open case and get a gift!
+            {t('open_case_and_get_a_gift')}
           </div>
           </div>
           <div className='flex flex-col items-center gap-2 bg-[#1a1919] rounded-md p-4 w-full'>

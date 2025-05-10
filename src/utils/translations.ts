@@ -145,7 +145,7 @@ type TranslationType = {
         en: 'Leaderboard'
     },
     view_your_position_on_the_leaderboard: {
-        ru: 'Посмотреть свою позицию в таблице лидеров',
+        ru: 'Ваша позиция в таблице лидеров',
         en: 'View your position on the leaderboard'
     },
     the_most_active_users_will_receive_more_rewards: {
@@ -189,6 +189,45 @@ type TranslationType = {
         ru: 'Бесплатный кейс будет доступен через',
         en: 'Free case will be available in'
     },
+    lootboxes: {
+        ru: 'Кейсы',
+        en: 'Cases'
+    },
+    win_and_take: {
+        ru: 'Выигрывай и забирай',
+        en: 'Win and take'
+    },
+
+    about_lootboxes: {
+        ru: 'О кейсах',
+        en: 'About Cases'
+    },
+    lootboxes_description_1: {
+        ru: 'Кейсы содержат различные призы и подарки, которые вы можете выиграть',
+        en: 'Cases contain various prizes and gifts that you can win'
+    },
+    lootboxes_description_2: {
+        ru: 'Чем дороже кейс, тем ценнее призы внутри него',
+        en: 'The more expensive the case, the more valuable the prizes inside'
+    },
+    lootboxes_description_3: {
+        ru: 'Выигранные подарки можно увидеть в личном кабинете в разделе "Выигранные подарки"',
+        en: 'Won gifts can be seen in your personal account in the "Won gifts" section'
+    },
+    lootboxes_description_4: {
+        ru: 'Ежедневно вы сможете попытать удачу с помощью бесплатного кейса',
+        en: 'You will be able to try your luck with the free case every day'
+    },
+
+    case: {
+        ru: 'Кейс',
+        en: 'Case'
+    },
+    open_case_and_get_a_gift: {
+        ru: 'Открой кейс и получи подарок',
+        en: 'Open case and get a gift'
+    },
+
     you_need_to_purchase_this_case_first: {
         ru: 'Вы должны сначала приобрести этот кейс',
         en: 'You need to purchase this case first'
@@ -204,6 +243,14 @@ type TranslationType = {
     rocket_launches: {
         ru: 'Запуски ракеты',
         en: 'Rocket launches'
+    },
+    attempts: {
+        ru: 'Попытки',
+        en: 'Attempts'
+    },
+    tickets: {
+        ru: 'Билеты',
+        en: 'Tickets'
     },
     gift: {
         ru: 'Подарок',
@@ -363,7 +410,7 @@ type TranslationType = {
         en: 'List of all past raffles and winners'
     },
     see_all_past_raffles_and_winners: {
-        ru: 'Посмотреть все прошедшие розыгрыши и победителей',
+        ru: 'Все прошедшие розыгрыши и победители',
         en: 'See all past raffles and winners'
     },
     very_soon: {
@@ -373,6 +420,24 @@ type TranslationType = {
     check_for_updates_in_our: {
         ru: 'Следите за обновлениями в нашем',
         en: 'Follow updates in our'
+    },
+
+    // Добавить в объект translations:
+    about_raffle: {
+        ru: 'О розыгрыше',
+        en: 'About Raffle'
+    },
+    raffle_description_1: {
+        ru: 'Розыгрыш начинается автоматически, когда продано необходимое количество билетов.',
+        en: 'The raffle starts automatically when the required number of tickets is sold.'
+    },
+    raffle_description_2: {
+        ru: 'После запуска, розыгрыш длится 4 часа, в это время есть возможность докупать билеты. В конце происходит случайный выбор победителей.',
+        en: 'After starting, the raffle lasts for 4 hours, during which you can buy more tickets. At the end, winners are randomly selected.'
+    },
+    raffle_description_3: {
+        ru: 'Чем больше у вас билетов, тем выше шанс выиграть призы!',
+        en: 'The more tickets you have, the higher your chance to win prizes!'
     },
   };
   

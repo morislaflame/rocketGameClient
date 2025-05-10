@@ -56,8 +56,8 @@
 }
 
 .trophyIcon {
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     /* background-color: hsl(0 0% 14.9%); */
 }
 
@@ -254,4 +254,26 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.aboutRaffleButtonLeft {
+  position: absolute;
+  left: 0;
+}
+
+.aboutRaffleButtonRight {
+  position: absolute;
+  right: 0;
+}
+
+.aboutRaffleDialog {
+  max-width: 85vw;
+  border-radius: 10px;
+}
+
+.aboutRaffleContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
 }

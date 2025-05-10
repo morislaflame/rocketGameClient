@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { observer } from "mobx-react-lite";
 import { FaTrophy } from "react-icons/fa";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,8 +21,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MediaRenderer } from "@/utils/media-renderer";
 import { useAnimationLoader } from '@/utils/useAnimationLoader';
 import { useTranslate } from "@/utils/useTranslate";
-import { IStoreContext } from "@/store/StoreProvider";
-import { Context } from "@/store/StoreProvider";
 
 interface UserPrizesListProps {
   isLoading: boolean;

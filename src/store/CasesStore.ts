@@ -29,6 +29,7 @@ export default class CasesStore {
   _loadingPurchase: boolean = false;
   _loadingUserCases: boolean = false;
   _checkedFreeCases: Record<number, boolean> = {};
+  _nextAvailableAt: { [key: number]: string | null } = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -72,6 +73,10 @@ export default class CasesStore {
 
   setLoadingUserCases(loading: boolean) {
     this._loadingUserCases = loading;
+  }
+
+  setNextAvailableAt(caseId: number, time: string | null) {
+    this._nextAvailableAt = { ...this._nextAvailableAt, [caseId]: time };
   }
 
   // Получение всех кейсов с опциональной фильтрацией
@@ -383,5 +388,9 @@ export default class CasesStore {
 
   get loadingUserCases() {
     return this._loadingUserCases;
+  }
+
+  get nextAvailableAt() {
+    return this._nextAvailableAt;
   }
 }

@@ -194,7 +194,7 @@ const RocketLaunch = observer(() => {
       )}
 
       <div
-        className="flex flex-col flex-1 items-center justify-end relative"
+        className="flex flex-col flex-1 items-center justify-end relative w-[70vw]"
         style={{
           cursor: isLaunching || showResult ? "default" : "pointer",
           willChange: 'transform',
@@ -243,7 +243,9 @@ const RocketLaunch = observer(() => {
             <span className={styles.resultText}>+{game.rocketResult}</span>
           </div>
         )}
-        <LeaderboardDrawer />
+        <div className='absolute bottom-0 left-0 w-full'>
+          <LeaderboardDrawer />
+        </div>
       </div>
 
       {game.error && <p style={{ color: "red" }}>Failed to launch rocket</p>}

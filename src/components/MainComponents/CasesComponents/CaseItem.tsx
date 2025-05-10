@@ -24,20 +24,48 @@ const CaseItem: React.FC<CaseItemProps> = observer(({ caseItem }) => {
   const [countdown, setCountdown] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const { t } = useTranslate();
+  
   // Проверяем доступность бесплатного кейса
   useEffect(() => {
     if (caseItem.type === 'free') {
+      // Сначала проверяем, есть ли уже сохраненное время доступности в сторе
+      const storedTime = cases.nextAvailableAt[caseItem.id];
+      
+      if (storedTime) {
+        const nextTime = new Date(storedTime);
+        const now = new Date();
+        
+        // Если сохраненное время в будущем, используем его
+        if (nextTime > now) {
+          startCountdown(Math.floor((nextTime.getTime() - now.getTime()) / 1000));
+          return; // Выходим из эффекта, не делая запрос
+        }
+      }
+      
+      // Если нет сохраненного времени или оно устарело, запрашиваем с сервера
       const checkAvailability = async () => {
-        const availability = await cases.checkFreeCaseAvailability(caseItem.id);
-        if (availability && !availability.isAvailable) {
-          startCountdown(availability.secondsUntilAvailable);
+        try {
+          const availability = await cases.checkFreeCaseAvailability(caseItem.id);
+          if (availability && !availability.isAvailable && availability.secondsUntilAvailable) {
+            // Вычисляем точное время следующей доступности
+            const nextTime = new Date();
+            nextTime.setSeconds(nextTime.getSeconds() + availability.secondsUntilAvailable);
+            
+            // Сохраняем в store
+            cases.setNextAvailableAt(caseItem.id, nextTime.toISOString());
+            
+            // Запускаем обратный отсчет
+            startCountdown(availability.secondsUntilAvailable);
+          }
+        } catch (error) {
+          console.error("Error checking free case availability:", error);
         }
       };
       
       checkAvailability();
     }
     
-    // Очистка таймера при размонтировании
+    // Очистка при размонтировании
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -58,6 +86,10 @@ const CaseItem: React.FC<CaseItemProps> = observer(({ caseItem }) => {
     
     let remainingSeconds = seconds;
     
+    // Текущее время + оставшиеся секунды = время доступности
+    const nextAvailableTime = new Date();
+    nextAvailableTime.setSeconds(nextAvailableTime.getSeconds() + remainingSeconds);
+    
     const updateCountdown = () => {
       const hours = Math.floor(remainingSeconds / 3600);
       const minutes = Math.floor((remainingSeconds % 3600) / 60);
@@ -69,10 +101,18 @@ const CaseItem: React.FC<CaseItemProps> = observer(({ caseItem }) => {
       
       if (remainingSeconds > 0) {
         remainingSeconds -= 1;
+        
+        // Обновляем время в сторе при каждом тике (опционально, можно реже)
+        const updatedNextTime = new Date();
+        updatedNextTime.setSeconds(updatedNextTime.getSeconds() + remainingSeconds);
+        cases.setNextAvailableAt(caseItem.id, updatedNextTime.toISOString());
+        
         timerRef.current = setTimeout(updateCountdown, 1000);
       } else {
         setCountdown(null);
-        // Сбрасываем флаг проверки в store, чтобы можно было проверить снова
+        // Удаляем время из стора, когда таймер заканчивается
+        cases.setNextAvailableAt(caseItem.id, null);
+        // Сбрасываем флаг проверки, чтобы можно было проверить снова
         cases.resetFreeCaseCheck(caseItem.id);
       }
     };

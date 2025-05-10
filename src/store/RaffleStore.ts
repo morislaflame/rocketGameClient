@@ -28,6 +28,8 @@ export default class RaffleStore {
     _loadingTicketPurchase: boolean = false;
     _loadingSelectedRaffle: boolean = false;
 
+    _packagesLoaded: boolean = false;
+
     constructor() {
         makeAutoObservable(this);
     }
@@ -86,6 +88,10 @@ export default class RaffleStore {
         this._loadingSelectedRaffle = loading;
     }
 
+    setPackagesLoaded(loaded: boolean) {
+        this._packagesLoaded = loaded;
+    }
+
     // Методы для загрузки данных
 
     async fetchRafflePackages() {
@@ -93,6 +99,7 @@ export default class RaffleStore {
             this.setLoadingRafflePackages(true);
             const packages = await getRaffleTicketPackages();
             this.setRafflePackages(packages);
+            this.setPackagesLoaded(true);
         } catch (error) {
             console.error("Error fetching raffle packages:", error);
         } finally {
@@ -265,5 +272,9 @@ export default class RaffleStore {
 
     get loadingSelectedRaffle() {
         return this._loadingSelectedRaffle;
+    }
+
+    get packagesLoaded() {
+        return this._packagesLoaded;
     }
 }

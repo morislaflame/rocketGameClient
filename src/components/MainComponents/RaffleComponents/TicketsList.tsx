@@ -1,5 +1,5 @@
 // src/components/MainComponents/RaffleComponents/TicketsList.tsx
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { Context, IStoreContext } from "@/store/StoreProvider";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -17,23 +17,47 @@ import { useTranslate } from "@/utils/useTranslate";
 
 interface TicketsListProps {
   onTransactionClose?: () => void;
+  isOpen?: boolean;
 }
 
-const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }) => {
+const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose, isOpen = false }) => {
   const { raffle, user } = useContext(Context) as IStoreContext;
   const [alertVisible, setAlertVisible] = useState(false);
   const [txLoading, setTxLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [txError, setTxError] = useState<string | null>(null);
   const [selectedBonuses, setSelectedBonuses] = useState<{ [key: number]: number | null }>({});
   const { t } = useTranslate();
+  const dataLoadedRef = useRef(false);
 
   useEffect(() => {
-    loadRafflePackages();
-    loadAvailableBonuses();
-  }, [raffle, user]);
+    if (isOpen && !dataLoadedRef.current) {
+      loadData();
+      dataLoadedRef.current = true;
+    }
+  }, [isOpen]);
 
-  // Автоматическое скрытие статуса транзакции через 2 секунды при успешном завершении
+  const loadData = async () => {
+    if (!raffle.packagesLoaded || raffle.rafflePackages.length === 0) {
+      setIsLoading(true);
+      try {
+        await raffle.fetchRafflePackages();
+      } catch (error) {
+        console.error("Error loading raffle packages:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    if (user.availableBonuses.length === 0) {
+      try {
+        await user.fetchAvailableBonuses();
+      } catch (error) {
+        console.error("Error loading available bonuses:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     if (alertVisible && !txLoading && !txError) {
       const timeout = setTimeout(() => {
@@ -42,25 +66,6 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
       return () => clearTimeout(timeout);
     }
   }, [alertVisible, txLoading, txError]);
-
-  const loadRafflePackages = async () => {
-    setIsLoading(true);
-    try {
-      await raffle.fetchRafflePackages();
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error loading raffle packages:", error);
-      setIsLoading(false);
-    }
-  };
-
-  const loadAvailableBonuses = async () => {
-    try {
-      await user.fetchAvailableBonuses();
-    } catch (error) {
-      console.error("Error loading available bonuses:", error);
-    }
-  };
 
   const handleTxStart = () => {
     setTxLoading(true);
@@ -73,7 +78,6 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
     if (error) {
       setTxError(error);
     }
-    // Статус транзакции остаётся видимым до закрытия (автоматически или вручную)
   };
 
   const closeAlert = () => {
@@ -92,10 +96,6 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
   };
 
   const hasAvailableBonus = user.availableBonuses.length > 0;
-
-  if (raffle.rafflePackages.length === 0) {
-    return <p>{t('no_tickets_found')}</p>;
-  }
 
   return (
     <>
@@ -122,14 +122,12 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
           {!txLoading && <button onClick={closeAlert}>{t('close')}</button>}
         </div>
       )}
-      {/* {!alertVisible && ( */}
-     
       <ScrollArea className="h-[40vh] w-[100%] rounded-md" scrollHideDelay={1000}>
         <div className={styles.ticketsList}>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px", width: "100%" }}>
             {isLoading ? (
               <ListSkeleton count={10} />
-            ) : raffle.rafflePackages.length ? (
+            ) : raffle.rafflePackages.length > 0 ? (
               raffle.rafflePackages.map((p: RafflePackage) => (
                 <Card key={p.id} className="flex flex-row justify-between p-4">
                   <CardHeader className="flex flex-col gap-1 p-0">
@@ -170,7 +168,6 @@ const TicketsList: React.FC<TicketsListProps> = observer(({ onTransactionClose }
           </div>
         </div>
       </ScrollArea>
-      {/* )} */}
     </>
   );
 });

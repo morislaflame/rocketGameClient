@@ -12,6 +12,8 @@ import homeIcon from "@/assets/HOME_LINE.png";
 import astronautIcon from "@/assets/ACC_LINE.png";
 import ticketIcon from "@/assets/TICKET 1.png";
 import caseIcon from "@/assets/CASE_LINE.png";
+import LanguageSwitcher from '../FunctionalComponents/LanguageSwitcher';
+
 
 const navigationItems = [
   { 
@@ -61,31 +63,34 @@ const Navigation: React.FC = () => {
 
   return (
     <div className={styles.navigation}>
-      <div className={styles.navButtons}>
-        {/* Индикатор активного раздела */}
-        <div
-          className={styles.activeIndicator}
-          style={{ left: `${indicatorLeft}px` }}
-        />
-        {navigationItems.map((item, index) => (
-          <div key={item.route} className={styles.navItem}>
-            <NavButton
-              img={
-                <img 
-                  src={index === current ? item.solidIcon : item.icon} 
-                  alt={item.label}
-                  width={32}
-                  height={32}
-                  className='z-10'
-                />
-              }
-              onClick={() => navigate(item.route)}
-            />
-            <span className={`${styles.navLabel} ${index === current ? styles.activeLabel : ''}`}>
-              {item.label}
-            </span>
-          </div>
-        ))}
+      <div className={styles.navigationContainer}>
+        <div className={styles.navButtons}>
+          {/* Индикатор активного раздела */}
+          <div
+            className={styles.activeIndicator}
+            style={{ left: `${indicatorLeft}px` }}
+          />
+          {navigationItems.map((item, index) => (
+            <div key={item.route} className={styles.navItem}>
+              <NavButton
+                img={
+                  <img 
+                    src={index === current ? item.solidIcon : item.icon} 
+                    alt={item.label}
+                    width={32}
+                    height={32}
+                    className='z-10'
+                  />
+                }
+                onClick={() => navigate(item.route)}
+              />
+              <span className={`${styles.navLabel} ${index === current ? styles.activeLabel : ''}`}>
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </div>
+        <LanguageSwitcher />
       </div>
     </div>
   );

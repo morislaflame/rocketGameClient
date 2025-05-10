@@ -12,7 +12,7 @@ import { useTranslate } from '@/utils/useTranslate';
 
 const UserTicketsInfo: React.FC = observer(() => {
   const { raffle } = useContext(Context) as IStoreContext;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isTicketsListOpen, setIsTicketsListOpen] = useState(false);
   const ticketsListRef = useRef<HTMLDivElement>(null);
@@ -20,13 +20,17 @@ const UserTicketsInfo: React.FC = observer(() => {
 
   useEffect(() => {
     const loadUserTickets = async () => {
-      setIsLoading(true);
-      try {
-        await raffle.fetchUserTickets();
-      } catch (error) {
-        console.error('Error fetching user tickets:', error);
-      } finally {
-        setIsLoading(false);
+      if (!raffle.userTickets && !raffle.loadingUserTickets) {
+        setIsLoading(true);
+        try {
+          await raffle.fetchUserTickets();
+        } catch (error) {
+          console.error('Error fetching user tickets:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(raffle.loadingUserTickets);
       }
     };
     loadUserTickets();
@@ -82,6 +86,11 @@ const UserTicketsInfo: React.FC = observer(() => {
     setIsTicketsListOpen(!isTicketsListOpen);
   };
 
+  const handleTransactionClose = () => {
+    // Если нужно закрыть список после транзакции, раскомментируйте:
+    // setIsTicketsListOpen(false);
+  };
+
   return (
     <div className={styles.ticketsContainer}>
       {haveTickets ? (
@@ -92,7 +101,7 @@ const UserTicketsInfo: React.FC = observer(() => {
             onClick={handleTicketsClick}
             style={{ cursor: 'pointer', textDecoration: 'underline' }}
           >
-            {t('your_tickets')}: {raffle.userTickets?.tickets.length} {t('of')} {raffle.userTickets?.raffle.totalTickets}
+            {t('your_tickets')}: {raffle.userTickets?.tickets.length} {t('of')} {raffle.userTickets?.totalRaffleTickets}
           </strong>
           <p className="text-sm text-muted-foreground">
             {t('your_chance_to_win')}: {raffle.userTickets?.chance}
@@ -110,7 +119,7 @@ const UserTicketsInfo: React.FC = observer(() => {
 
       {/* Рендеринг TicketsList с анимацией */}
       <div ref={ticketsListRef} className={styles.ticketsListWrapper} style={{ display: 'none' }}>
-        <TicketsList />
+        <TicketsList onTransactionClose={handleTransactionClose} isOpen={isTicketsListOpen} />
       </div>
 
       <Button className={styles.ticketsButton} onClick={toggleTicketsList}>

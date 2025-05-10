@@ -13,6 +13,8 @@ import { getRaffleTicketImg } from '@/utils/getTicketImg';
 import tonImg from "@/assets/TonIcon.svg";
 import { useTranslate } from '@/utils/useTranslate';
 import { observer } from 'mobx-react-lite';
+import { MediaRenderer } from '@/utils/media-renderer';
+import { useAnimationLoader } from '@/utils/useAnimationLoader';
 
 interface RaffleInfoProps {
   isActive: boolean;
@@ -38,18 +40,14 @@ const RaffleInfo: React.FC<RaffleInfoProps> = observer(({
   winnerChance
 }) => {
   const [showResult, setShowResult] = useState(false);
-  const [animationData, setAnimationData] = useState(null);
   const winnerName = winner ? getUserName(winner as UserInfo) : 'Astronaut #1';
   const { t } = useTranslate();
-
-  useEffect(() => {
-    if (rafflePrize?.media_file?.mimeType === 'application/json') {
-      fetch(rafflePrize.media_file.url)
-        .then(response => response.json())
-        .then(data => setAnimationData(data))
-        .catch(error => console.error('Error loading animation:', error));
-    }
-  }, [rafflePrize]);
+  
+  const [animations] = useAnimationLoader(
+    rafflePrize ? [rafflePrize] : [],
+    (item) => item.media_file, 
+    []
+  );
 
   const handleShowResult = () => {
     if (!winningTicket) return;
@@ -69,22 +67,17 @@ const RaffleInfo: React.FC<RaffleInfoProps> = observer(({
   );
 
   const renderPrizeMedia = () => {
-    if (rafflePrize?.media_file) {
-      const { url, mimeType } = rafflePrize.media_file;
-      if (mimeType === 'application/json' && animationData) {
-        return (
-          <Lottie
-            animationData={animationData}
-            loop={false}
-            autoplay={true}
-            style={{ width: '90%' }}
-          />
-        );
-      } else if (mimeType.startsWith('image/')) {
-        return <img src={url} alt={rafflePrize.name} className={styles.trophyIcon} />;
-      }
-    } else if (rafflePrize?.imageUrl) {
-      return <img src={rafflePrize.imageUrl} alt={rafflePrize.name} className={styles.trophyIcon} />;
+    if (rafflePrize) {
+      return (
+        <MediaRenderer
+          mediaFile={rafflePrize.media_file}
+          imageUrl={rafflePrize.imageUrl}
+          animations={animations}
+          name={rafflePrize.name}
+          className={styles.trophyIcon}
+          loop={false}
+        />
+      );
     }
     return <img src={questionImg} alt="No prize" className={styles.trophyIcon} />;
   };

@@ -290,11 +290,11 @@ const Roulette: React.FC<RouletteProps> = observer(({ caseData, onCaseOpened }) 
   const renderPrizeDialog = () => {
     if (!openResult) return null;
 
-    const { wonItem, result } = openResult;
+    const { wonItem } = openResult;
     
     return (
       <Dialog open={showDialog} onOpenChange={handleDialogOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className='max-w-[85vw] rounded-lg'>
           <DialogHeader>
             <DialogTitle>{t('congratulations')}</DialogTitle>
             <DialogDescription>

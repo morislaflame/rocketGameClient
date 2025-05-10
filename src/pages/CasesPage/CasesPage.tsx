@@ -4,15 +4,13 @@ import styles from './casesPage.module.css';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CasesList from '@/components/MainComponents/CasesComponents/CasesList';
 import { Context, IStoreContext } from '@/store/StoreProvider';
-import { getPlanetImg } from '@/utils/getPlanetImg';
-import { Skeleton } from '@/components/ui/skeleton';
 import { observer } from 'mobx-react-lite';
+import CasesHeader from '@/components/MainComponents/CasesComponents/CasesHeader';
 
 const CasesPage: React.FC = observer(() => {
   const { user, cases } = useContext(Context) as IStoreContext;
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
-  const planetImg = getPlanetImg();
 
   // Загружаем информацию о пользователе и его кейсах при монтировании компонента
   useEffect(() => {
@@ -53,24 +51,10 @@ const CasesPage: React.FC = observer(() => {
     <div className={styles.Container} ref={containerRef}>
       <ScrollArea className={styles.scrollArea}>
         <div className='flex flex-col items-center gap-2 w-full h-full overflow-hidden'>
-          <h2 className="text-3xl font-semibold leading-none tracking-tight">
-              LootBoxes
-          </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Win and take
-          </div>
-          
-          {/* Отображение баланса с учетом загрузки */}
-          <div className="flex items-center justify-center gap-2 bg-black/30 px-6 rounded-full">
-            {loading ? (
-              <Skeleton className="w-24 h-6" />
-            ) : (
-              <>
-                <img src={planetImg} alt="Planet" className="w-6 h-6" />
-                <span className="font-medium text-lg">{balance}</span>
-              </>
-            )}
-          </div>
+          <CasesHeader 
+            loading={loading}
+            balance={balance}
+          />
         </div>
         <CasesList />
       </ScrollArea>

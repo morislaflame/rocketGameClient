@@ -5,6 +5,8 @@ import styles from './RaffleComponents.module.css';
 import RaffleCountdown from './RaffleCountdown';
 import { observer } from 'mobx-react-lite';
 import { useTranslate } from '@/utils/useTranslate';
+import AboutRaffle from './AboutRaffle';
+
 interface RaffleHeaderProps {
   raffleId: number;
   isCurrent: boolean;               // определяет, показываем ли это для current-рафла или предыдущего
@@ -49,12 +51,13 @@ const RaffleHeader: React.FC<RaffleHeaderProps> = observer(({
           </Button>
         )}
 
+        {/* Кнопка About Raffle - противоположная сторона от кнопки переключения табов */}
+        <AboutRaffle position={isCurrent ? 'right' : 'left'} />
+
         {/* Заголовок */}
         <h2 className="text-3xl font-semibold leading-none tracking-tight">
           {t('raffle')} #{raffleId}
         </h2>
-
-        
       </div>
 
       {/* Блок с датами и таймером */}
